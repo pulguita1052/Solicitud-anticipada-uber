@@ -15,17 +15,20 @@ import { FloatingLabelInput } from '@ds/components/molecules/FloatingLabelInput/
 import { EMBARQUES_ACTIVOS } from '../../../mocks/facturacion';
 import styles from './FacturacionModals.module.css';
 
+/** Documento que se embarca: factura (pedido de cliente) o traspaso (movimiento entre sucursales). */
+export type Unidad = 'factura' | 'traspaso';
+
 const iconPlus = <ModalIcon src={iconoPlus} inset="-2.84% -2.27% -0.56% -1.14%" />;
 const iconCheck = <ModalIcon src={iconoCheck} inset="-2.84% -2.27% -0.56% -1.14%" />;
 
 /* ---------- Nuevo embarque — 6157:13865 ---------- */
-export function NuevoEmbarqueModal({ onCancel, onConfirm }: { onCancel: () => void; onConfirm: () => void }) {
+export function NuevoEmbarqueModal({ onCancel, onConfirm, unidad = 'factura' }: { onCancel: () => void; onConfirm: () => void; unidad?: Unidad }) {
   return (
     <ModalSheet icon={iconPlus} gap={10} doubleShadow>
       <div className={styles.col} style={{ gap: 18 }}>
         <ModalHeader title="Nuevo embarque" />
         <div className={styles.text}>
-          <p>No existe un embarque activo para este cliente.</p>
+          <p>{unidad === 'traspaso' ? 'No existe un embarque activo para esta sucursal destino.' : 'No existe un embarque activo para este cliente.'}</p>
           <p>
             <br />
             ¿Continuar con la creación de un nuevo embarque?
@@ -42,13 +45,13 @@ export function NuevoEmbarqueModal({ onCancel, onConfirm }: { onCancel: () => vo
 }
 
 /* ---------- Embarque creado — 6157:14047 ---------- */
-export function EmbarqueCreadoModal({ numero, onConfirm }: { numero: string; onConfirm: () => void }) {
+export function EmbarqueCreadoModal({ numero, onConfirm, unidad = 'factura' }: { numero: string; onConfirm: () => void; unidad?: Unidad }) {
   return (
     <ModalSheet icon={iconCheck} gap={10} doubleShadow>
       <div className={styles.col} style={{ gap: 18 }}>
         <ModalHeader title="Embarque creado" />
         <p className={styles.text} style={{ textAlign: 'center' }}>
-          Se registró correctamente el embarque para esta factura.
+          Se registró correctamente el embarque para {unidad === 'traspaso' ? 'este traspaso' : 'esta factura'}.
         </p>
         <div className={styles.box}>
           <p className={styles.boxTitle}>No. de embarque</p>
@@ -66,7 +69,9 @@ export function AgregarEmbarqueEleccionModal({
   onNuevo,
   onAgregar,
   onCancel,
+  unidad = 'factura',
 }: {
+  unidad?: Unidad;
   cantidad: number;
   onNuevo: () => void;
   onAgregar: () => void;
@@ -77,9 +82,9 @@ export function AgregarEmbarqueEleccionModal({
       <div className={styles.col} style={{ gap: 18 }}>
         <ModalHeader title="Agregar embarque" />
         <div className={styles.text}>
-          <p>Existen {cantidad} embarques activos para este mismo cliente.</p>
+          <p>Existen {cantidad} embarques activos para {unidad === 'traspaso' ? 'esta misma sucursal destino' : 'este mismo cliente'}.</p>
           <p>&#8203;</p>
-          <p>¿Deseas agregar esta factura a uno existente o generar uno nuevo?</p>
+          <p>¿Deseas agregar {unidad === 'traspaso' ? 'este traspaso' : 'esta factura'} a uno existente o generar uno nuevo?</p>
           <p>&#8203;</p>
         </div>
         <div className={styles.buttons}>
@@ -93,19 +98,20 @@ export function AgregarEmbarqueEleccionModal({
 }
 
 /* ---------- Agregar embarque (selector) — 6166:15101 ---------- */
-export function AgregarEmbarqueSelectorModal({ onCancel, onConfirm }: { onCancel: () => void; onConfirm: (numero: string) => void }) {
+export function AgregarEmbarqueSelectorModal({ onCancel, onConfirm, unidad = 'factura' }: { onCancel: () => void; onConfirm: (numero: string) => void; unidad?: Unidad }) {
   const [seleccion, setSeleccion] = useState<string | null>(null);
   const [abierto, setAbierto] = useState(false);
   const opciones = EMBARQUES_ACTIVOS;
   const sel = opciones.find((e) => e.numero === seleccion);
+  const docs = unidad === 'traspaso' ? 'traspaso(s)' : 'factura(s)';
   return (
     <ModalSheet icon={iconPlus} gap={10} doubleShadow>
       <div className={styles.col} style={{ gap: 18 }}>
         <ModalHeader title="Agregar embarque" />
-        <p className={styles.text}>Seleccione el embarque al que desea agregar la factura:</p>
+        <p className={styles.text}>Seleccione el embarque al que desea agregar {unidad === 'traspaso' ? 'el traspaso' : 'la factura'}:</p>
         <FloatingLabelInput
           label={sel ? 'Embarque' : ''}
-          value={sel ? `${sel.numero} · ${sel.facturas} factura(s) · ${sel.fecha}` : 'Embarque'}
+          value={sel ? `${sel.numero} · ${sel.facturas} ${docs} · ${sel.fecha}` : 'Embarque'}
           isSelect
           labelFont="select"
           onClick={() => setAbierto((a) => !a)}
@@ -122,7 +128,7 @@ export function AgregarEmbarqueSelectorModal({ onCancel, onConfirm }: { onCancel
                   setAbierto(false);
                 }}
               >
-                {o.numero} · {o.facturas} factura(s) · {o.fecha}
+                {o.numero} · {o.facturas} {docs} · {o.fecha}
               </button>
             ))}
           </div>
@@ -137,19 +143,19 @@ export function AgregarEmbarqueSelectorModal({ onCancel, onConfirm }: { onCancel
 }
 
 /* ---------- Factura agregada — 6178:15531 ---------- */
-export function FacturaAgregadaModal({ numero, facturas, fecha, onConfirm }: { numero: string; facturas: number; fecha: string; onConfirm: () => void }) {
+export function FacturaAgregadaModal({ numero, facturas, fecha, onConfirm, unidad = 'factura' }: { numero: string; facturas: number; fecha: string; onConfirm: () => void; unidad?: Unidad }) {
   return (
     <ModalSheet icon={iconCheck} gap={10} doubleShadow>
       <div className={styles.col} style={{ gap: 18 }}>
-        <ModalHeader title="Factura agregada" />
+        <ModalHeader title={unidad === 'traspaso' ? 'Traspaso agregado' : 'Factura agregada'} />
         <p className={styles.text} style={{ textAlign: 'center' }}>
-          Factura agregada correctamente al embarque:
+          {unidad === 'traspaso' ? 'Traspaso agregado' : 'Factura agregada'} correctamente al embarque:
         </p>
         <div className={styles.box}>
           <p className={styles.boxTitle}>No. de embarque</p>
           <p className={styles.boxValue}>{numero}</p>
           <p className={styles.boxDetail}>
-            ({facturas} facturas) {fecha}
+            ({facturas} {unidad === 'traspaso' ? 'traspasos' : 'facturas'}) {fecha}
           </p>
         </div>
         <Button variant="success" icon="check" checkWidth={31.012} label="Aceptar" className={styles.full} onClick={onConfirm} />

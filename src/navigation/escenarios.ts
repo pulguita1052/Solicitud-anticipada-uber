@@ -28,7 +28,8 @@ export const ESCENARIOS: Record<string, Semilla> = {
   inicial: {},
   'tareas-surtido': { etapa: 'surtido' },
   'tareas-unificado': { etapa: 'surtido-unificado', pedido: PEDIDO_COMPLETO },
-  'tareas-facturacion': { etapa: 'facturacion', pedido: PEDIDO_COMPLETO },
+  // Tarea "EMBARCAR TRASPASO" (flujo de traspaso: sin factura)
+  'tareas-traspaso': { etapa: 'traspaso', pedido: PEDIDO_COMPLETO },
 
   /* ───────── Surtido / Revisión ───────── */
   // 1394000 (CINTA, misceláneo) surtido completo 10/10
@@ -37,6 +38,19 @@ export const ESCENARIOS: Record<string, Semilla> = {
   'parcial-2546000': { pedido: pedidoCon({ '2546000': { surtido: 3 } }) },
   // 3095:16325 — 2546000 parcial revisado
   'parcial-2546000-revisado': { pedido: pedidoCon({ '2546000': { surtido: 3, revisado: 3, revisionCompleta: true } }) },
+
+  /* ───────── Traspaso (sin factura) ───────── */
+  // Datos del traspaso – antes de continuar a embarque
+  traspaso: { etapa: 'traspaso', pedido: PEDIDO_COMPLETO },
+  // Traspaso ya con embarque asignado → ofrece Uber si es candidato
+  'traspaso-embarcado': {
+    etapa: 'traspaso',
+    pedido: PEDIDO_COMPLETO,
+    factura: { embarque: EMBARQUE_DEFAULT },
+  },
+  // Formulario de Uber y confirmación para un traspaso (destino = sucursal; sin folio de factura)
+  'traspaso-uber-formulario': { etapa: 'uber', pedido: PEDIDO_COMPLETO, factura: { embarque: EMBARQUE_DEFAULT } },
+  'traspaso-uber-confirmada': { etapa: 'uber', pedido: PEDIDO_COMPLETO, factura: { embarque: EMBARQUE_DEFAULT } },
 
   /* ───────── Facturación ───────── */
   // Tarea "FACTURAR Y EMBARCAR PEDIDO" – formulario vacío

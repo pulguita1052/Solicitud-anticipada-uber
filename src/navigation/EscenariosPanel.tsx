@@ -1,6 +1,6 @@
 /**
  * Panel lateral (derecho) con los escenarios de verificación del flujo completo:
- * Tareas → Surtido → Facturación → Embarque → Uber. Cada tarjeta salta directamente a la pantalla
+ * Tareas → Surtido → Datos del traspaso → Embarque → Uber (flujo de pedido: Facturación). Cada tarjeta salta directamente a la pantalla
  * correspondiente con un seed de estado (query `?escenario=<id>`) y opcionalmente un `?paso=` o
  * `?overlay=` para preabrir un sub-estado. Se muestra en `/tareas`, `/surtido`, `/facturacion` y `/uber`.
  * Fuera del handheld (queda a la derecha del app-frame de 430 px) y oculto bajo 900 px de viewport.
@@ -16,7 +16,7 @@ type Escenario = {
   id: string;
   titulo: string;
   descripcion: string;
-  ruta: '/tareas' | '/surtido' | '/facturacion' | '/uber';
+  ruta: '/tareas' | '/surtido' | '/facturacion' | '/traspaso' | '/uber';
   paso?: string;
   overlay?: string;
   generar?: 'error';
@@ -35,7 +35,7 @@ const GRUPOS: Grupo[] = [
       {
         id: 'tareas-surtido',
         titulo: 'Asignación — Surtido',
-        descripcion: 'Empleado con tarea "SURTIDO Y REVISIÓN PEDIDO CLIENTE" asignada. Al aceptar entra al surtido pieza por pieza.',
+        descripcion: 'Empleado con tarea "SURTIDO Y REVISIÓN TRASPASO" asignada. Al aceptar entra al surtido pieza por pieza.',
         ruta: '/tareas',
         reglas: [
           'Solo el operador asignado puede aceptar la tarea.',
@@ -44,14 +44,56 @@ const GRUPOS: Grupo[] = [
         ],
       },
       {
-        id: 'tareas-facturacion',
-        titulo: 'Asignación — Facturación',
-        descripcion: 'Tarea "FACTURAR Y EMBARCAR PEDIDO" (Facturación 6004:1813). Al aceptar entra a la pantalla de datos de la factura.',
+        id: 'tareas-traspaso',
+        titulo: 'Asignación — Embarque de traspaso',
+        descripcion: 'Tarea "EMBARCAR TRASPASO" (antes "FACTURAR Y EMBARCAR PEDIDO"). Al aceptar entra a la pantalla de datos del traspaso.',
         ruta: '/tareas',
         reglas: [
-          'Requiere que el pedido esté totalmente surtido y revisado.',
-          'Aceptar navega a /facturacion en estado formulario.',
+          'Requiere que el traspaso esté totalmente surtido y revisado.',
+          'Aceptar navega a /traspaso.',
         ],
+      },
+    ],
+  },
+  {
+    titulo: 'Traspaso (sin factura)',
+    escenarios: [
+      {
+        id: 'traspaso',
+        titulo: 'Datos del traspaso',
+        descripcion: 'Empleado, traspaso, sucursal destino y dirección de la sucursal destino (solo lectura), más el resumen del contenido. Sin impresión ni factura.',
+        ruta: '/traspaso',
+        reglas: [
+          'Un traspaso es solo un movimiento de inventario entre sucursales: no genera factura.',
+          'Botones: "Cancelar" (regresa a tareas) y "Continuar a embarque".',
+          'Con embarques activos hacia la misma sucursal aparece "Agregar embarque"; si no, va directo a "Nuevo embarque".',
+        ],
+      },
+      {
+        id: 'traspaso-embarcado',
+        titulo: 'Traspaso embarcado → Uber',
+        descripcion: 'Traspaso ya con embarque. Se valida si es candidato y se ofrece Uber sobre la misma pantalla.',
+        ruta: '/traspaso',
+        reglas: [
+          'Mismas reglas de candidatura de ERB-53024; el monto es el valor de la mercancía del traspaso.',
+          '"Ahora no" deja la pantalla con el No. de embarque y "Regresar a tareas".',
+        ],
+      },
+      {
+        id: 'traspaso-uber-formulario',
+        titulo: 'Formulario Uber (traspaso)',
+        descripcion: 'Formulario de solicitud con la dirección de la sucursal destino (solo lectura).',
+        ruta: '/uber',
+        paso: 'formulario',
+        reglas: ['Sin historial de contacto: campos vacíos.'],
+      },
+      {
+        id: 'traspaso-uber-confirmada',
+        titulo: 'Solicitud creada (traspaso)',
+        descripcion: 'Confirmación con No. de solicitud, No. de traspaso, embarque y vehículo (sin factura).',
+        ruta: '/uber',
+        paso: 'confirmada',
+        reglas: ['Regresar a tareas cierra el flujo.'],
       },
     ],
   },
@@ -259,7 +301,7 @@ export function EscenariosPanel() {
         <span className={styles.badge}>Flujo</span>
         <h2 className={styles.title}>Escenarios</h2>
         <p className={styles.subtitle}>
-          Surtido → Facturación → Embarque → Uber. Selecciona un escenario para saltar a esa pantalla con el estado ya sembrado.
+          Surtido → Datos del traspaso → Embarque → Uber (flujo de pedido: Facturación). Selecciona un escenario para saltar a esa pantalla con el estado ya sembrado.
         </p>
       </header>
       <div className={styles.grupos}>

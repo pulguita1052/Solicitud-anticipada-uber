@@ -29,8 +29,8 @@ export function AsignacionTareas() {
       ? TAREAS.surtido
       : etapa === 'surtido-unificado'
         ? TAREAS.surtidoUnificado
-        : TAREAS.facturacion;
-  const rutaAceptar = etapa === 'surtido' || etapa === 'surtido-unificado' ? '/surtido' : '/facturacion';
+        : TAREAS.embarqueTraspaso;
+  const rutaAceptar = etapa === 'surtido' || etapa === 'surtido-unificado' ? '/surtido' : '/traspaso';
 
   return (
     <div className={styles.screen}>

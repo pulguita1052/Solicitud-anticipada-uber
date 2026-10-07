@@ -5,6 +5,7 @@
  */
 import foto1394000 from '@assets/images/producto-1394000.jpg';
 import foto2546000 from '@assets/images/producto-2546000.jpg';
+import { TRASPASO } from './traspaso';
 
 export type TipoRevision = 'forzosa' | 'simplificada';
 
@@ -77,9 +78,9 @@ export const EMPLEADO = { id: '9029', nombre: 'JUAN ANTONIO GUERRERO MEDINA' };
 
 export const TAREAS = {
   surtido: {
-    actividad: 'SURTIDO Y REVISIÓN PEDIDO CLIENTE', // 3048:10064
+    actividad: 'SURTIDO Y REVISIÓN TRASPASO', // 3048:10064 (renombrada para el flujo de traspaso)
     documentoLabel: 'DocumentoID',
-    documento: 'SURTIR PEDIDO CLIENTE', // 3048:10091
+    documento: 'SURTIR TRASPASO', // 3048:10091
   },
   /** ERB-47987: Surtido + revisión unificados (variante 6004:2304 en Figma). El operador surte y revisa
       en un solo paso; termina con el botón "Finalizar" que salta a la facturación. */
@@ -88,10 +89,11 @@ export const TAREAS = {
     documentoLabel: 'DocumentoID',
     documento: 'SURTIR Y REVISAR PEDIDO CLIENTE',
   },
-  facturacion: {
-    actividad: 'FACTURAR Y EMBARCAR PEDIDO', // Facturación 6004:1813
-    documentoLabel: 'PedidoID',
-    documento: PEDIDO_ID,
+  /** Traspaso: no se factura, solo se embarca (antes "FACTURAR Y EMBARCAR PEDIDO", Facturación 6004:1813). */
+  embarqueTraspaso: {
+    actividad: 'EMBARCAR TRASPASO',
+    documentoLabel: 'TraspasoID',
+    documento: TRASPASO.id,
   },
   fecha: '31/08/2023',
   hora: '11:30 a.m.',

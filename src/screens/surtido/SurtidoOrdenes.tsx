@@ -82,7 +82,7 @@ export function SurtidoOrdenes({ overlayInicial }: { overlayInicial?: Overlay })
     const promo = promocionIncompleta(pedido);
     if (promo) return setOverlay({ k: 'promoParcial' });
     dispatch({ type: 'finalizar' });
-    setEtapa('facturacion');
+    setEtapa('traspaso');
     navigate('/tareas');
     mostrarToast(TOAST_FINALIZADO);
   };
@@ -243,7 +243,7 @@ export function SurtidoOrdenes({ overlayInicial }: { overlayInicial?: Overlay })
             const codigos = (promocionIncompleta(pedido) ?? PROMOCIONES[0]).codigos;
             dispatch({ type: 'negarPromocion', codigos });
             dispatch({ type: 'finalizar' });
-            setEtapa('facturacion');
+            setEtapa('traspaso');
             navigate('/tareas');
             mostrarToast(TOAST_FINALIZADO);
           }}

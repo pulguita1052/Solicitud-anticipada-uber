@@ -2,7 +2,7 @@
  * Modo Surtido + Revisión unificado (ERB-47987, frame Figma 6004:2304 "Finalización Surtido + revisión - Automática").
  * Se muestra en `/surtido` cuando `etapa === 'surtido-unificado'`. Presenta un resumen breve del pedido y
  * un botón único "Finalizar" que salta directamente a la facturación (marca el pedido como finalizado y navega
- * a /tareas con etapa='facturacion').
+ * a /tareas con etapa='traspaso').
  */
 import { useNavigate } from 'react-router-dom';
 import { AppHeader } from '@ds/components/organisms/AppHeader/AppHeader';
@@ -30,7 +30,7 @@ export function SurtidoUnificado() {
 
   const finalizar = () => {
     if (!pedido.finalizado) dispatch({ type: 'finalizar' });
-    setEtapa('facturacion');
+    setEtapa('traspaso');
     mostrarToast(TOAST_FINALIZADO);
     navigate('/tareas');
   };

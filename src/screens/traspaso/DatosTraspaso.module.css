@@ -1,0 +1,65 @@
+/* Contenido del traspaso: resumen de partidas (sin respaldo en Figma; compuesto con tokens existentes) */
+.contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.contenidoTitulo {
+  color: var(--color-negro);
+  font: var(--font-h3-headline);
+  line-height: normal;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-radius: 5px;
+  background: var(--color-inactive);
+}
+
+.fila {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  color: var(--color-negro);
+}
+
+.fila + .fila {
+  border-top: 1px solid var(--color-divider);
+}
+
+.filaTexto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  font: var(--font-b1-body);
+}
+
+.filaTexto b {
+  font: var(--font-b2-body);
+}
+
+.filaPiezas {
+  flex-shrink: 0;
+  font: var(--font-b2-body);
+  color: var(--color-primary-azul-300);
+}
+
+.full {
+  width: 100%;
+  flex: none;
+}
+
+/* "Continuar a embarque" no cabe en media barra (175 px): Cancelar se queda compacto. */
+.cancelar {
+  flex: 0 0 120px;
+}

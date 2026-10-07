@@ -27,9 +27,11 @@ const currency = new Intl.NumberFormat('es-MX', { style: 'currency', currency: '
 export function OfrecimientoUberModal({
   monto,
   articulos,
+  totalLabel = 'Total',
   onCancelar,
   onContinuar,
 }: {
+  totalLabel?: string;
   monto: number;
   articulos: number;
   onCancelar: () => void;
@@ -42,7 +44,7 @@ export function OfrecimientoUberModal({
         <p className={styles.pregunta}>¿Desea crear y solicitar el reparto por Uber?</p>
         <div className={styles.info}>
           <div className={styles.row}>
-            <b>Total</b>
+            <b>{totalLabel}</b>
             <span className={styles.valBig}>{currency.format(monto)}</span>
           </div>
           <Divider variant="modal" />

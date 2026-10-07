@@ -1,12 +1,13 @@
 /**
  * Estado global: pedido (surtido/revisión), etapa del flujo y avisos (toasts).
- * Flujo definido por el usuario: surtido y revisión → factura → embarque → solicitud anticipada de Uber (PENDIENTE).
+ * Flujo definido por el usuario: surtido y revisión → factura → embarque → solicitud anticipada de Uber.
+ * Flujo de traspaso: surtido y revisión → datos del traspaso (sin factura) → embarque → Uber.
  */
 import { createContext, useCallback, useContext, useMemo, useReducer, useState, type Dispatch, type ReactNode } from 'react';
 import { estadoInicial, pedidoReducer, type PedidoAction, type PedidoState } from '../domain/pedido';
 import type { ToastKind } from '../design-system/components/organisms/Toast/Toast';
 
-export type Etapa = 'surtido' | 'surtido-unificado' | 'facturacion' | 'embarque' | 'uber';
+export type Etapa = 'surtido' | 'surtido-unificado' | 'facturacion' | 'traspaso' | 'embarque' | 'uber';
 
 export type ToastData = { id: number; kind: ToastKind; title: string; message: string };
 

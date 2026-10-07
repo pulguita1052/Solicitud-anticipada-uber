@@ -19,6 +19,7 @@ import { RESTRICCIONES_VEHICULO, type TipoVehiculo } from '../../domain/uber';
 import { FACTURACION } from '../../mocks/facturacion';
 import { precargar } from '../../mocks/uber';
 import { PEDIDO_ID } from '../../mocks/pedido';
+import { SUCURSAL_DESTINO, TRASPASO } from '../../mocks/traspaso';
 import { useStore } from '../../store/AppStore';
 import styles from './SolicitudUber.module.css';
 
@@ -46,9 +47,12 @@ export function SolicitudUber() {
   const navigate = useNavigate();
   const { factura, mostrarToast, setEtapa } = useStore();
 
-  const clienteId = '536983'; // FACTURACION.cliente ("536983 | FRANCISCO JAVIER HERNADEZ MELENDREZ")
-  const direccion =
-    FACTURACION.direccionesEntrega.find((d) => d.id === factura.direccionEntrega)?.texto ?? FACTURACION.direccionesEntrega[0].texto;
+  /** Sin folio de factura = flujo de traspaso (movimiento entre sucursales: destino = sucursal, sin factura). */
+  const esTraspaso = !factura.folio;
+  const clienteId = esTraspaso ? SUCURSAL_DESTINO.id : '536983'; // pedido: FACTURACION.cliente ("536983 | FRANCISCO JAVIER HERNADEZ MELENDREZ")
+  const direccion = esTraspaso
+    ? SUCURSAL_DESTINO.direccion
+    : (FACTURACION.direccionesEntrega.find((d) => d.id === factura.direccionEntrega)?.texto ?? FACTURACION.direccionesEntrega[0].texto);
   const embarqueNumero = factura.embarque?.numero ?? '—';
   const tituloEmbarque = `Solicitud de Uber - Embarque ${embarqueNumero}`;
 
@@ -138,8 +142,13 @@ export function SolicitudUber() {
               label="Cancelar"
               className={styles.flex1}
               onClick={() => {
-                setEtapa('facturacion');
-                navigate('/facturacion');
+                if (esTraspaso) {
+                  setEtapa('traspaso');
+                  navigate('/traspaso');
+                } else {
+                  setEtapa('facturacion');
+                  navigate('/facturacion');
+                }
               }}
             />
             <Button
@@ -163,7 +172,7 @@ export function SolicitudUber() {
         <div className={styles.center}>
           <div className={styles.checkBadge}>✓</div>
           <p className={styles.h1}>Solicitud creada</p>
-          <p className={styles.text}>Uber recibirá la solicitud. El repartidor se desplazará a la sucursal mientras el pedido termina de prepararse.</p>
+          <p className={styles.text}>Uber recibirá la solicitud. El repartidor se desplazará a la sucursal mientras {esTraspaso ? 'el traspaso' : 'el pedido'} termina de prepararse.</p>
           <div className={styles.info}>
             <div className={styles.infoRow}>
               <b>No. de solicitud</b>
@@ -171,19 +180,23 @@ export function SolicitudUber() {
             </div>
             <Divider variant="modal" />
             <div className={styles.infoRow}>
-              <b>No. de pedido</b>
-              <span>{PEDIDO_ID}</span>
+              <b>{esTraspaso ? 'No. de traspaso' : 'No. de pedido'}</b>
+              <span>{esTraspaso ? TRASPASO.id : PEDIDO_ID}</span>
             </div>
             <Divider variant="modal" />
             <div className={styles.infoRow}>
               <b>Embarque</b>
               <span>{embarqueNumero}</span>
             </div>
-            <Divider variant="modal" />
-            <div className={styles.infoRow}>
-              <b>Factura</b>
-              <span>{factura.folio ?? '—'}</span>
-            </div>
+            {!esTraspaso && (
+              <>
+                <Divider variant="modal" />
+                <div className={styles.infoRow}>
+                  <b>Factura</b>
+                  <span>{factura.folio ?? '—'}</span>
+                </div>
+              </>
+            )}
             <Divider variant="modal" />
             <div className={styles.infoRow}>
               <b>Vehículo</b>

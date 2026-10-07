@@ -6,6 +6,7 @@ import { SurtidoUnificado } from './screens/surtido/SurtidoUnificado';
 import { DetalleProducto } from './screens/surtido/DetalleProducto';
 import { useStore } from './store/AppStore';
 import { DatosFactura } from './screens/facturacion/DatosFactura';
+import { DatosTraspaso } from './screens/traspaso/DatosTraspaso';
 import { Configuraciones } from './screens/configuraciones/Configuraciones';
 import { Sonido } from './screens/configuraciones/Sonido';
 import { Impresion } from './screens/configuraciones/Impresion';
@@ -17,7 +18,7 @@ import { ProductosCheatsheet } from './navigation/ProductosCheatsheet';
 export function App() {
   const { pathname } = useLocation();
   const { etapa } = useStore();
-  const rutasConPanel = ['/tareas', '/surtido', '/facturacion', '/embarque', '/uber'];
+  const rutasConPanel = ['/tareas', '/surtido', '/facturacion', '/traspaso', '/embarque', '/uber'];
   const mostrarPanel = rutasConPanel.some((r) => pathname.startsWith(r));
   const mostrarProductos = pathname.startsWith('/surtido');
   return (
@@ -30,6 +31,7 @@ export function App() {
           <Route path="/surtido" element={etapa === 'surtido-unificado' ? <SurtidoUnificado /> : <SurtidoOrdenes />} />
           <Route path="/surtido/producto/:codigo" element={<DetalleProducto />} />
           <Route path="/facturacion" element={<DatosFactura />} />
+          <Route path="/traspaso" element={<DatosTraspaso />} />
           {/* Embarque vive dentro de DatosFactura como overlay (Figma no lo separa como pantalla). */}
           <Route path="/embarque" element={<DatosFactura />} />
           <Route path="/configuraciones" element={<Configuraciones />} />
