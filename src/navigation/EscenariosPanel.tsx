@@ -6,6 +6,7 @@
  * Fuera del handheld (queda a la derecha del app-frame de 430 px) y oculto bajo 900 px de viewport.
  */
 import { useEffect, useRef } from 'react';
+import { MODO_ARTIFACT, queryActual, useAbrirEscenario } from './query';
 import styles from './EscenariosPanel.module.css';
 
 /** Clave en sessionStorage para preservar el scroll del panel a través del reload
@@ -245,8 +246,7 @@ const GRUPOS: Grupo[] = [
 ];
 
 function currentQuery() {
-  if (typeof window === 'undefined') return { escenario: '', paso: '', overlay: '', generar: '', sinActivos: '' };
-  const p = new URLSearchParams(window.location.search);
+  const p = queryActual();
   return {
     escenario: p.get('escenario') ?? '',
     paso: p.get('paso') ?? '',
@@ -256,21 +256,28 @@ function currentQuery() {
   };
 }
 
-function urlFor(e: Escenario) {
+/** Ruta + query del escenario, relativa a la app (sin BASE_URL). */
+function rutaDe(e: Escenario) {
   const q = new URLSearchParams({ escenario: e.id });
   if (e.paso) q.set('paso', e.paso);
   if (e.overlay) q.set('overlay', e.overlay);
   if (e.generar) q.set('generar', e.generar);
   if (e.sinActivos) q.set('sinActivos', '1');
+  return `${e.ruta}?${q.toString()}`;
+}
+
+function urlFor(e: Escenario) {
   // Reload total: la semilla del store se lee en main.tsx; sin reload no se aplica el nuevo escenario.
   // BASE_URL es "/" en dev y "/Solicitud-anticipada-uber/" en GitHub Pages (vite base).
+  if (MODO_ARTIFACT) return '#';
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-  return `${base}${e.ruta}?${q.toString()}`;
+  return `${base}${rutaDe(e)}`;
 }
 
 export function EscenariosPanel() {
   const q = currentQuery();
   const panelRef = useRef<HTMLElement>(null);
+  const abrirEscenario = useAbrirEscenario();
 
   // Restaurar scroll al montar (después del reload).
   useEffect(() => {
@@ -318,7 +325,15 @@ export function EscenariosPanel() {
                   (e.sinActivos ? q.sinActivos === '1' : q.sinActivos !== '1');
                 return (
                   <li key={e.id}>
-                    <a href={urlFor(e)} onClick={guardarScroll} className={`${styles.item} ${activo ? styles.itemActivo : ''}`}>
+                    <a
+                      href={urlFor(e)}
+                      onClick={(ev) => {
+                        guardarScroll();
+                        if (abrirEscenario) {
+                          ev.preventDefault();
+                          abrirEscenario(rutaDe(e));
+                        }
+                      }} className={`${styles.item} ${activo ? styles.itemActivo : ''}`}>
                       <span className={styles.itemStep}>{i + 1}</span>
                       <span className={styles.itemBody}>
                         <span className={styles.itemTitulo}>{e.titulo}</span>

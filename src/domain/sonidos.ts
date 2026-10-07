@@ -5,7 +5,9 @@
  */
 type Clave = 'ok' | 'error';
 
-const urls: Record<Clave, string> = { ok: '/sounds/beep-ok.mp3', error: '/sounds/beep-error.mp3' };
+// BASE_URL: "/" en dev, "/Solicitud-anticipada-uber/" en GitHub Pages y "./" en la vista previa como Artifact.
+const base = import.meta.env.BASE_URL;
+const urls: Record<Clave, string> = { ok: `${base}sounds/beep-ok.mp3`, error: `${base}sounds/beep-error.mp3` };
 const buffers: Partial<Record<Clave, AudioBuffer>> = {};
 let ctx: AudioContext | null = null;
 

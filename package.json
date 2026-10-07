@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite --host",
     "build": "tsc -b && vite build",
+    "build:artifact": "tsc -b && VITE_ARTIFACT=1 vite build --outDir dist-artifact",
     "preview": "vite preview --host",
     "typecheck": "tsc -b --noEmit",
     "test:visual": "node tests/visual/run.mjs",

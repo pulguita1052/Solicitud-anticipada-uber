@@ -127,7 +127,7 @@ export const ESCENARIOS: Record<string, Semilla> = {
   },
 };
 
-export function semillaDesdeUrl(): Semilla | undefined {
-  const id = new URLSearchParams(window.location.search).get('escenario');
+export function semillaDesdeUrl(search: string = window.location.search): Semilla | undefined {
+  const id = new URLSearchParams(search).get('escenario');
   return id ? ESCENARIOS[id] : undefined;
 }

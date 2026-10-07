@@ -10,3 +10,4 @@ tests/visual/__diff__
 .idea/
 tsconfig.tsbuildinfo
 *.tsbuildinfo
+dist-artifact

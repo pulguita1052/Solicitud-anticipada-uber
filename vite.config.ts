@@ -6,7 +6,8 @@ import { fileURLToPath, URL } from 'node:url';
 // El base se aplica en el build (npm run build); en dev queda en "/".
 export default defineConfig(({ command }) => ({
   plugins: [react()],
-  base: command === 'build' ? '/Solicitud-anticipada-uber/' : '/',
+  // VITE_ARTIFACT=1 (npm run build:artifact): vista previa publicable como Artifact, con rutas relativas.
+  base: process.env.VITE_ARTIFACT === '1' ? './' : command === 'build' ? '/Solicitud-anticipada-uber/' : '/',
   resolve: {
     alias: {
       '@ds': fileURLToPath(new URL('./src/design-system', import.meta.url)),

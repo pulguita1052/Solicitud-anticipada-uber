@@ -22,6 +22,7 @@ import { SUCURSAL_ACTUAL, TIPO_PAGO_ACTUAL, tieneActivoParaCliente } from '../..
 import { evaluarCandidatura } from '../../domain/uber';
 import { montoPedido, producto, totalArticulos } from '../../domain/pedido';
 import { useStore } from '../../store/AppStore';
+import { queryActual } from '../../navigation/query';
 import {
   AgregarEmbarqueEleccionModal,
   AgregarEmbarqueSelectorModal,
@@ -42,7 +43,7 @@ type Overlay =
 
 /** Overlay a preabrir desde ?overlay=... (para los escenarios de verificación visual). */
 function overlayDesdeUrl(): Overlay | null {
-  const v = new URLSearchParams(window.location.search).get('overlay');
+  const v = queryActual().get('overlay');
   switch (v) {
     case 'nuevoEmbarque': return { k: 'nuevoEmbarque' };
     case 'embarqueCreado': return { k: 'embarqueCreado', numero: '147707' };
@@ -71,7 +72,7 @@ export function DatosTraspaso() {
   );
   const activo = tieneActivoParaCliente(SUCURSAL_DESTINO.id, SUCURSAL_DESTINO.direccion);
   /** `?sinActivos=1` fuerza el flujo sin embarques activos hacia esta sucursal ("Continuar a embarque" va directo a "Nuevo embarque"). */
-  const sinActivos = new URLSearchParams(window.location.search).get('sinActivos') === '1';
+  const sinActivos = queryActual().get('sinActivos') === '1';
   const embarquesActivos = sinActivos ? [] : EMBARQUES_ACTIVOS;
   /** Ofrecimiento de Uber sobre esta pantalla: al terminar de asignar el embarque y cumplir la candidatura. */
   const mostrarOfrecimiento = !!factura.embarque && candidatura.candidato && !ofrecimientoRechazado && overlay === null;

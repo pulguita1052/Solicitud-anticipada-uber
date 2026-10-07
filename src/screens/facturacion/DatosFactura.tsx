@@ -30,6 +30,7 @@ import { evaluarCandidatura } from '../../domain/uber';
 import { montoPedido, totalArticulos } from '../../domain/pedido';
 import { SUCURSAL_ACTUAL, TIPO_PAGO_ACTUAL, tieneActivoParaCliente } from '../../mocks/uber';
 import { useStore } from '../../store/AppStore';
+import { queryActual } from '../../navigation/query';
 import { AgregarEmbarqueEleccionModal, AgregarEmbarqueSelectorModal, EmbarqueCreadoModal, FacturaAgregadaModal, NuevoEmbarqueModal } from './overlays/FacturacionModals';
 import { ConsolidacionModal, OfrecimientoUberModal } from '../uber/UberModals';
 import styles from './DatosFactura.module.css';
@@ -45,7 +46,7 @@ type Overlay =
 
 /** Overlay a preabrir desde ?overlay=... (para los escenarios de verificación visual). */
 function overlayDesdeUrl(): Overlay | null {
-  const v = new URLSearchParams(window.location.search).get('overlay');
+  const v = queryActual().get('overlay');
   switch (v) {
     case 'nuevoEmbarque': return { k: 'nuevoEmbarque' };
     case 'embarqueCreado': return { k: 'embarqueCreado', numero: '147707' };
@@ -68,7 +69,7 @@ const currency = new Intl.NumberFormat('es-MX', { style: 'currency', currency: '
 
 /** Simula el escenario para pruebas: ?generar=error fuerza el estado de error. */
 function forzarError(): boolean {
-  return new URLSearchParams(window.location.search).get('generar') === 'error';
+  return queryActual().get('generar') === 'error';
 }
 
 const CLIENTE_ID = '536983'; // FACTURACION.cliente ("536983 | FRANCISCO JAVIER HERNADEZ MELENDREZ")
@@ -93,7 +94,7 @@ export function DatosFactura() {
   const activo = tieneActivoParaCliente(CLIENTE_ID, direccionActualTexto);
   /** `?sinActivos=1` fuerza el flujo donde el cliente no tiene embarques activos previos y "Continuar a
       embarque" salta directo al modal "Nuevo embarque". Sin el flag se usa `EMBARQUES_ACTIVOS` del mock. */
-  const sinActivos = new URLSearchParams(window.location.search).get('sinActivos') === '1';
+  const sinActivos = queryActual().get('sinActivos') === '1';
   const embarquesActivos = sinActivos ? [] : EMBARQUES_ACTIVOS;
   /** Modal de Uber sobre Datos factura: aparece al terminar de crear el embarque y cumplir la candidatura. */
   const mostrarOfrecimiento =

@@ -21,6 +21,7 @@ import { precargar } from '../../mocks/uber';
 import { PEDIDO_ID } from '../../mocks/pedido';
 import { SUCURSAL_DESTINO, TRASPASO } from '../../mocks/traspaso';
 import { useStore } from '../../store/AppStore';
+import { queryActual } from '../../navigation/query';
 import styles from './SolicitudUber.module.css';
 
 type Estado = 'formulario' | 'confirmada';
@@ -38,8 +39,7 @@ function nuevoNumeroSolicitud() {
 
 /** `?paso=formulario|confirmada` para saltar directamente a esa pantalla desde los escenarios. */
 function pasoInicialDesdeUrl(): Estado | null {
-  if (typeof window === 'undefined') return null;
-  const v = new URLSearchParams(window.location.search).get('paso');
+  const v = queryActual().get('paso');
   return v === 'formulario' || v === 'confirmada' ? v : null;
 }
 
