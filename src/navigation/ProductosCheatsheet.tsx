@@ -13,10 +13,6 @@ import styles from './ProductosCheatsheet.module.css';
 
 const currency = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
 
-function tipoDe(p: (typeof PRODUCTOS)[number]) {
-  return p.esMiscelaneo ? 'Misceláneo' : 'Normal';
-}
-
 /**
  * Etiqueta APYMSA de 18 dígitos que el lector emite y el input de escaneo valida
  * en `src/domain/codigos.ts` — [7 código][6 cantidad][5 peso]. Genera una por 1 pieza
@@ -59,7 +55,6 @@ export function ProductosCheatsheet() {
               <th>Etiqueta (18 dígitos)</th>
               <th className={styles.thPz}>Pzs</th>
               <th className={styles.thPr}>Precio</th>
-              <th className={styles.thTipo}>Tipo</th>
             </tr>
           </thead>
           <tbody>
@@ -78,9 +73,6 @@ export function ProductosCheatsheet() {
                 </td>
                 <td className={styles.tdPz}>{p.solicitado}</td>
                 <td className={styles.tdPr}>{currency.format(p.precioUnitario * p.solicitado)}</td>
-                <td className={styles.tdTipo}>
-                  <span className={p.esMiscelaneo ? styles.tipoMisc : styles.tipoNormal}>{tipoDe(p)}</span>
-                </td>
               </tr>
             ))}
           </tbody>
@@ -93,14 +85,13 @@ export function ProductosCheatsheet() {
               <td className={styles.tdPr}>
                 <b>{currency.format(total)}</b>
               </td>
-              <td />
             </tr>
           </tfoot>
         </table>
       </div>
       <p className={styles.hint}>
-        Pedido reducido a 2 artículos para simplificar la demo. Total: <b>$4,000</b>. Con el mínimo actual
-        de <b>$300</b> ambos productos individualmente siguen calificando (Cinta $3,000 · Interruptor $1,000).
+        Pedido reducido a 2 artículos para simplificar la demo. Para pedir la cantidad en un modal, escribe solo el
+        código de 7 dígitos (p. ej. <b>1394000</b>).
       </p>
     </aside>
   );

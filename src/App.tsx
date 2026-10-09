@@ -2,16 +2,13 @@ import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { Menu } from './screens/menu/Menu';
 import { AsignacionTareas } from './screens/tareas/AsignacionTareas';
 import { SurtidoOrdenes } from './screens/surtido/SurtidoOrdenes';
-import { SurtidoUnificado } from './screens/surtido/SurtidoUnificado';
 import { DetalleProducto } from './screens/surtido/DetalleProducto';
-import { useStore } from './store/AppStore';
 import { ToastHost } from './navigation/ToastHost';
 import { EscenariosPanel } from './navigation/EscenariosPanel';
 import { ProductosCheatsheet } from './navigation/ProductosCheatsheet';
 
 export function App() {
   const { pathname } = useLocation();
-  const { etapa } = useStore();
   const rutasConPanel = ['/tareas', '/surtido'];
   const mostrarPanel = rutasConPanel.some((r) => pathname.startsWith(r));
   const mostrarProductos = pathname.startsWith('/surtido');
@@ -22,7 +19,7 @@ export function App() {
           <Route path="/" element={<Navigate to="/menu" replace />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/tareas" element={<AsignacionTareas />} />
-          <Route path="/surtido" element={etapa === 'surtido-unificado' ? <SurtidoUnificado /> : <SurtidoOrdenes />} />
+          <Route path="/surtido" element={<SurtidoOrdenes />} />
           <Route path="/surtido/producto/:codigo" element={<DetalleProducto />} />
           <Route path="*" element={<Navigate to="/menu" replace />} />
         </Routes>

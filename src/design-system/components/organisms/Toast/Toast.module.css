@@ -125,3 +125,28 @@
   width: calc(100% - 89.72% - 4.16%);
   height: calc(100% - 38.03% - 37.97%);
 }
+
+/* ---- Amarillo: 1305:6294 */
+.warning .text {
+  right: 17.07%;
+}
+.warning .message b {
+  font-weight: 500; /* Roboto Medium */
+}
+.warning .bar {
+  left: 0.24%;
+  right: 2.16%;
+  background: #fdd01f; /* figma: I1305:6294;659:4091 (sin estilo) */
+}
+.warning .close {
+  inset: 43.4% 4.81% 44.34% 92.07%;
+}
+.warning .divider {
+  top: 18.87%;
+  bottom: 19.81%;
+}
+.warning .icon {
+  inset: 37.63% 89.78% 38.3% 4.09%;
+  width: calc(100% - 89.78% - 4.09%);
+  height: calc(100% - 37.63% - 38.3%);
+}

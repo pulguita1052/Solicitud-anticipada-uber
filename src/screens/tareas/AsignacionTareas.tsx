@@ -1,8 +1,8 @@
 /**
  * Figma: Asignación de tareas
- * nodeId: 3048:10014 (surtido y revisión) · 6004:1813 (facturar y embarcar, página Facturación)
- * URL: https://www.figma.com/design/zZBoCtJor0tdJ91umiqb7l/?node-id=3048-10014
- * Última sincronización: 2026-09-29
+ * nodeId: 86:37 (surtir pedido cliente) · 197:20499 (siguiente tarea: revisar pedido cliente) — 📲 Surtido - Un pedido x ronda
+ * URL: https://www.figma.com/design/zZBoCtJor0tdJ91umiqb7l/?node-id=86-37
+ * Última sincronización: 2026-10-09
  */
 import { useNavigate } from 'react-router-dom';
 import userIcon from '@assets/icons/user.svg';
@@ -24,14 +24,9 @@ import styles from './AsignacionTareas.module.css';
 export function AsignacionTareas() {
   const navigate = useNavigate();
   const { etapa } = useStore();
-  const tarea =
-    etapa === 'surtido'
-      ? TAREAS.surtido
-      : etapa === 'surtido-unificado'
-        ? TAREAS.surtidoUnificado
-        : TAREAS.facturacion;
-  // En esta rama solo existe el surtido: la tarea de facturación se muestra como siguiente paso, pero no se puede aceptar.
-  const puedeAceptar = etapa === 'surtido' || etapa === 'surtido-unificado';
+  // En esta rama solo existe el surtido: la tarea de revisión se muestra como siguiente paso, pero no se puede aceptar.
+  const puedeAceptar = etapa === 'surtido';
+  const tarea = puedeAceptar ? TAREAS.surtido : TAREAS.revision;
 
   return (
     <div className={styles.screen}>

@@ -1,54 +1,41 @@
 /**
- * Estado del pedido durante el surtido y la revisión.
- * Reglas: prototipo de Figma (docs/figma/flujos.md) + referencias técnicas (docs/tecnico/referencias.md).
+ * Estado del pedido durante el surtido (📲 Surtido - Un pedido x ronda, 24:16). La revisión es una tarea aparte.
+ * Reglas: prototipo de Figma (docs/figma/flujos-surtido.md) + flujo escrito por el usuario (2026-10-09).
  */
-import { PEDIDO_ID, PRODUCTOS, PROMOCIONES, type ProductoPedido, type TipoRevision } from '../mocks/pedido';
+import { PEDIDO_ID, PRODUCTOS, type ProductoPedido } from '../mocks/pedido';
 import type { OrderItemStatus } from '../design-system/components/molecules/OrderItemRow/OrderItemRow';
 
 export type ItemState = {
   codigo: string;
   surtido: number;
-  /** Piezas revisadas (escaneo forzoso). */
-  revisado: number;
-  /** "R" en la fila. Se restablece si cambia la cantidad surtida (sección "Revisión restablecida"). */
-  revisionCompleta: boolean;
+  /** Ya se escaneó la etiqueta (o el código) del producto: habilita editar la cantidad en el Detalle (sticky note 325:3051). */
+  escaneado: boolean;
   negado: boolean;
+  motivoNegado?: string;
 };
 
 export type PedidoState = {
   id: string;
   items: ItemState[];
-  /** Bandera de revisión activa (tarea "SURTIDO Y REVISIÓN PEDIDO CLIENTE"). */
-  banderaRevision: boolean;
   finalizado: boolean;
 };
 
 export type PedidoAction =
   | { type: 'surtir'; codigo: string; cantidad: number }
   | { type: 'fijarSurtido'; codigo: string; cantidad: number }
-  | { type: 'revisar'; codigo: string; cantidad: number }
-  | { type: 'completarRevision'; codigo: string }
-  | { type: 'cancelarRevision'; codigo: string }
-  | { type: 'negar'; codigo: string }
-  | { type: 'negarPromocion'; codigos: string[] }
+  | { type: 'negar'; codigo: string; motivo: string }
   | { type: 'finalizar' }
   | { type: 'reiniciar'; estado?: PedidoState };
 
 export function estadoInicial(): PedidoState {
   return {
     id: PEDIDO_ID,
-    banderaRevision: true,
     finalizado: false,
-    items: PRODUCTOS.map((p) => ({ codigo: p.codigo, surtido: 0, revisado: 0, revisionCompleta: false, negado: false })),
+    items: PRODUCTOS.map((p) => ({ codigo: p.codigo, surtido: 0, escaneado: false, negado: false })),
   };
 }
 
 export const producto = (codigo: string): ProductoPedido | undefined => PRODUCTOS.find((p) => p.codigo === codigo);
-
-/** Total de artículos (piezas) surtidas del pedido (excluye negados). */
-export function totalArticulos(s: PedidoState): number {
-  return s.items.reduce((n, i) => n + (i.negado ? 0 : i.surtido), 0);
-}
 
 export function statusDe(item: ItemState): OrderItemStatus {
   if (item.negado) return 'negado';
@@ -56,10 +43,6 @@ export function statusDe(item: ItemState): OrderItemStatus {
   if (item.surtido <= 0) return 'no-iniciado';
   if (item.surtido < p.solicitado) return 'parcial';
   return 'completado';
-}
-
-export function tipoRevision(p: ProductoPedido): TipoRevision {
-  return p.esMiscelaneo || p.multiploMayorQueEvento || p.costoUnitario < 100 ? 'simplificada' : 'forzosa';
 }
 
 export function conteos(s: PedidoState) {
@@ -74,21 +57,14 @@ export function conteos(s: PedidoState) {
   return c;
 }
 
-/** Partidas con piezas surtidas pendientes de revisión, en el orden del pedido. */
-export const pendientesDeRevision = (s: PedidoState) => s.items.filter((i) => !i.negado && i.surtido > 0 && !i.revisionCompleta);
+/** Partidas sin surtir (surtido 0 y no negadas): impiden finalizar (190:10418). */
+export const sinSurtir = (s: PedidoState) => s.items.filter((i) => statusDe(i) === 'no-iniciado');
 
-/** Todo surtido (completado o negado) y todo lo surtido revisado → finalización automática (4582:20084, espera 3000 ms). */
-export const listoParaFinalizar = (s: PedidoState) =>
-  s.items.every((i) => i.negado || statusDe(i) === 'completado') && pendientesDeRevision(s).length === 0;
+/** Partidas con 0 < surtido < solicitado: modal informativo antes de finalizar (182:9894). */
+export const parciales = (s: PedidoState) => s.items.filter((i) => statusDe(i) === 'parcial');
 
-/** Promoción AxB incompleta: algún código negado mientras otro de la misma promoción se surtió. */
-export function promocionIncompleta(s: PedidoState) {
-  for (const promo of PROMOCIONES) {
-    const its = s.items.filter((i) => promo.codigos.includes(i.codigo));
-    if (its.some((i) => i.negado) && its.some((i) => !i.negado && i.surtido > 0)) return promo;
-  }
-  return null;
-}
+/** Todo surtido completo o negado → finalización automática (197:22719 → 600 ms → 197:22893). */
+export const listoParaFinalizar = (s: PedidoState) => s.items.every((i) => i.negado || statusDe(i) === 'completado');
 
 function actualizar(s: PedidoState, codigo: string, f: (i: ItemState) => ItemState): PedidoState {
   return { ...s, items: s.items.map((i) => (i.codigo === codigo ? f(i) : i)) };
@@ -96,31 +72,17 @@ function actualizar(s: PedidoState, codigo: string, f: (i: ItemState) => ItemSta
 
 function conSurtido(i: ItemState, cantidad: number): ItemState {
   const p = producto(i.codigo)!;
-  const surtido = Math.max(0, Math.min(p.solicitado, cantidad));
-  if (surtido === i.surtido) return i;
-  // Cambió la cantidad surtida → la revisión se restablece (sección 3168:15884)
-  return { ...i, surtido, negado: false, revisado: 0, revisionCompleta: false };
+  return { ...i, surtido: Math.max(0, Math.min(p.solicitado, cantidad)) };
 }
 
 export function pedidoReducer(s: PedidoState, a: PedidoAction): PedidoState {
   switch (a.type) {
     case 'surtir':
-      return actualizar(s, a.codigo, (i) => conSurtido(i, i.surtido + a.cantidad));
+      return actualizar(s, a.codigo, (i) => ({ ...conSurtido(i, i.surtido + a.cantidad), escaneado: true }));
     case 'fijarSurtido':
       return actualizar(s, a.codigo, (i) => conSurtido(i, a.cantidad));
-    case 'revisar':
-      return actualizar(s, a.codigo, (i) => {
-        const revisado = Math.min(i.surtido, i.revisado + a.cantidad);
-        return { ...i, revisado, revisionCompleta: revisado >= i.surtido && i.surtido > 0 };
-      });
-    case 'completarRevision':
-      return actualizar(s, a.codigo, (i) => ({ ...i, revisado: i.surtido, revisionCompleta: true }));
-    case 'cancelarRevision':
-      return actualizar(s, a.codigo, (i) => (i.revisionCompleta ? i : { ...i, revisado: 0 }));
     case 'negar':
-      return actualizar(s, a.codigo, (i) => ({ ...i, negado: true, surtido: 0, revisado: 0, revisionCompleta: false }));
-    case 'negarPromocion':
-      return { ...s, items: s.items.map((i) => (a.codigos.includes(i.codigo) ? { ...i, negado: true, surtido: 0, revisado: 0, revisionCompleta: false } : i)) };
+      return actualizar(s, a.codigo, (i) => ({ ...i, negado: true, surtido: 0, motivoNegado: a.motivo }));
     case 'finalizar':
       return { ...s, finalizado: true };
     case 'reiniciar':

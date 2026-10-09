@@ -1,5 +1,14 @@
 # CHANGELOG de sincronización con Figma
 
+## 2026-10-09 — Rama `feature-surtido-multipedido`: surtido separado de la revisión (📲 Surtido - Un pedido x ronda, 24:16)
+
+- Se quita la revisión del surtido (modal de revisión, insignia "R", modo unificado). La tarea pasa a llamarse **SURTIR PEDIDO CLIENTE** (86:37) y al finalizar la siguiente es **REVISAR PEDIDO CLIENTE** (197:20499), bloqueada.
+- Finalización: automática a los 600 ms con todo surtido/negado (197:22893); manual desde el menú con validación de códigos sin surtir (190:10418) y modal informativo de parciales (182:9894). Toast **"Surtido finalizado"** (197:20533).
+- Detalle del producto: botones **Regresar / Negar producto**, cantidad editable solo tras escanear (spinner gris 325:3041), modal **Selección de motivo negado** (1232:6734 / 1246:7165) y toast amarillo **"No es posible negar el producto"** (1308:6293).
+- Modal de cantidad: inicia vacío con ✓ deshabilitado y valida cero / mayor a lo solicitado / mayor a la existencia.
+- Componentes: `Toast` con variante `warning`; `Stepper` con prop `disabled` y botones grises al llegar al límite.
+- Detalle del flujo y PENDIENTES en `docs/figma/flujos-surtido.md`.
+
 ## 2026-09-29 — Flujo completo: Surtido unificado + cableado Facturación → Embarque → Uber → Factura
 
 Iteración final tras auditoría del flujo contra Figma (Facturación 3287:5564):
