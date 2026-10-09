@@ -20,7 +20,7 @@ import { EMBARQUES_ACTIVOS } from '../../mocks/facturacion';
 import { SUCURSAL_DESTINO, TRASPASO } from '../../mocks/traspaso';
 import { SUCURSAL_ACTUAL, TIPO_PAGO_ACTUAL, tieneActivoParaCliente } from '../../mocks/uber';
 import { evaluarCandidatura } from '../../domain/uber';
-import { montoPedido, producto, totalArticulos } from '../../domain/pedido';
+import { montoPedido, totalArticulos } from '../../domain/pedido';
 import { useStore } from '../../store/AppStore';
 import { queryActual } from '../../navigation/query';
 import {
@@ -61,7 +61,7 @@ export function DatosTraspaso() {
   /** El operador rechazó el ofrecimiento de Uber ("Ahora no"); no se vuelve a mostrar hasta recargar. */
   const [ofrecimientoRechazado, setOfrecimientoRechazado] = useState(false);
 
-  // Contenido del traspaso = piezas surtidas (las partidas negadas no viajan).
+  // Resumen del traspaso: códigos totales surtidos (las partidas negadas no viajan) y piezas totales.
   const partidas = pedido.items.filter((i) => !i.negado && i.surtido > 0);
   const piezas = totalArticulos(pedido);
   const valor = montoPedido(pedido);
@@ -96,42 +96,34 @@ export function DatosTraspaso() {
             <div className={facturaStyles.totalBlock}>
               <p className={facturaStyles.totalLabel}>Total de piezas</p>
               <p className={facturaStyles.totalValue}>{piezas}</p>
-              <div className={facturaStyles.folioBox}>
-                <div className={facturaStyles.folioRow}>
-                  <span>Partidas</span>
-                  <b>{partidas.length}</b>
-                </div>
-                {factura.embarque && (
+              {factura.embarque && (
+                <div className={facturaStyles.folioBox}>
                   <div className={facturaStyles.folioRow}>
                     <span>No. de embarque</span>
                     <b>{factura.embarque.numero}</b>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
             <div className={facturaStyles.inputs}>
               <FloatingLabelInput label="Empleado" icon={idCard} value={TRASPASO.empleado} />
-              <FloatingLabelInput label="Traspaso" icon={listAlt} value={TRASPASO.traspaso} />
+              <FloatingLabelInput label="Petición de traspaso" icon={listAlt} value={TRASPASO.solicitud} />
               <FloatingLabelInput label="Sucursal destino" icon={ordersIcon} value={TRASPASO.sucursalDestino} />
               <FloatingLabelInput label="Dirección de la sucursal destino" icon={locationOn} value={TRASPASO.direccionSucursal} tall />
             </div>
           </div>
           <div className={styles.contenido}>
-            <p className={styles.contenidoTitulo}>Contenido del traspaso</p>
-            <ul className={styles.lista}>
-              {partidas.map((i) => {
-                const p = producto(i.codigo)!;
-                return (
-                  <li key={i.codigo} className={styles.fila}>
-                    <div className={styles.filaTexto}>
-                      <b>{p.codigo}</b>
-                      <span>{p.descripcion}</span>
-                    </div>
-                    <span className={styles.filaPiezas}>{i.surtido} pzas</span>
-                  </li>
-                );
-              })}
-            </ul>
+            <p className={styles.contenidoTitulo}>Resumen del traspaso</p>
+            <div className={facturaStyles.folioBox}>
+              <div className={facturaStyles.folioRow}>
+                <span>Códigos totales</span>
+                <b>{partidas.length}</b>
+              </div>
+              <div className={facturaStyles.folioRow}>
+                <span>Piezas totales</span>
+                <b>{piezas}</b>
+              </div>
+            </div>
           </div>
           <div className={facturaStyles.gap90} />
         </div>
@@ -140,8 +132,8 @@ export function DatosTraspaso() {
       {!factura.embarque ? (
         <BottomBar>
           <div className="row">
-            <Button variant="error" label="Cancelar" className={styles.cancelar} onClick={() => navigate('/tareas')} />
-            <Button variant="success" label="Continuar a embarque" className={facturaStyles.flex1} onClick={continuarEmbarque} />
+            <Button variant="error" label="Cancelar" className={facturaStyles.flex1} onClick={() => navigate('/tareas')} />
+            <Button variant="success" label={'Continuar\na embarque'} className={`${facturaStyles.flex1} ${styles.dosLineas}`} onClick={continuarEmbarque} />
           </div>
         </BottomBar>
       ) : (

@@ -26,6 +26,7 @@ Todos los componentes viven en `src/design-system/components/`. La cabecera de c
 | `OrderItemRow` | 3086:11540 | Fila de la lista de productos con chip de estado, ubicación e insignia R opcional. |
 | `ProductSummary` | 3062:12611 / 3199:6382 | Foto (bordered/framed) + Código + Descripción. |
 | `FloatingLabelInput` | 3872:16599 | Campo con etiqueta flotante (INPUT/SELECT PRUEBA). Soporta `isSelect` con ícono ▼. |
+| `DataTable` | — (sin respaldo en Figma) | Tabla de la HH: hasta 3 columnas visibles; con más (o con columnas `ancho: 'contenido'` que no caben), scroll horizontal y flecha ▶. `columnasFijas` (0–2) deja la 1.ª y/o 2.ª columna fijas. |
 
 ## Organismos
 

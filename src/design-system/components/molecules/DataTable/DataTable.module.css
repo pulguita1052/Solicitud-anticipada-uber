@@ -1,0 +1,105 @@
+/* Tabla de la HH (sin respaldo en Figma; compuesta con tokens existentes).
+   Cada columna mide 1/3 del ancho visible (o 1/n si hay menos de 3); el ancho se calcula con unidades de contenedor. */
+.tabla {
+  position: relative;
+  width: 100%;
+}
+
+.conFlecha {
+  padding-right: 28px; /* espacio de la flecha ▶ */
+}
+
+.scroll {
+  container-type: inline-size;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-secondary-gris) transparent;
+}
+
+.table {
+  --dt-col: calc(100cqi / var(--dt-visibles));
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: auto; /* "auto" para que las columnas al contenido midan su texto más largo */
+  width: max-content;
+  min-width: 100%;
+  color: var(--color-negro);
+}
+
+.table th,
+.table td {
+  box-sizing: border-box;
+  width: var(--dt-col);
+  min-width: var(--dt-col);
+  max-width: var(--dt-col);
+  text-align: left;
+  vertical-align: middle;
+  background: var(--color-blanco);
+  overflow-wrap: break-word; /* parte palabras solo si no caben completas */
+}
+
+/* Encabezado: texto en negritas, sin bordes (fuera del recuadro de la tabla). */
+.table th {
+  padding: 0 0 14px;
+  font: var(--font-h3-headline);
+}
+
+/* Celdas: recuadro con divisores entre filas y columnas. */
+.table td {
+  padding: 18px 12px;
+  font: var(--font-b3-body);
+  border-right: 1px solid var(--color-divider);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.table tbody tr:first-child td {
+  border-top: 1px solid var(--color-divider);
+}
+
+.table td:first-child {
+  border-left: 1px solid var(--color-divider);
+}
+
+.table tbody tr:first-child td:first-child { border-top-left-radius: 4px; }
+.table tbody tr:first-child td:last-child { border-top-right-radius: 4px; }
+.table tbody tr:last-child td:first-child { border-bottom-left-radius: 4px; }
+.table tbody tr:last-child td:last-child { border-bottom-right-radius: 4px; }
+
+/* Columna al ancho de su contenido: una sola línea; si no cabe, la tabla se desplaza. */
+.table .alContenido {
+  width: auto;
+  max-width: none;
+  white-space: nowrap;
+}
+
+/* Su encabezado queda junto a la sombra de las columnas fijas: se separa un poco del borde. */
+.table th.alContenido {
+  padding-left: 8px;
+}
+
+/* Columnas fijas: se quedan a la izquierda mientras las demás se desplazan. */
+.fija {
+  position: sticky;
+  left: calc(var(--dt-col) * var(--dt-i));
+  z-index: 1;
+}
+
+.ultimaFija {
+  box-shadow: 4px 0 6px -4px rgba(0, 0, 0, 0.18);
+}
+
+/* Flecha ▶: indica (y avanza) que hay más columnas a la derecha. */
+.flecha {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 28px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-negro);
+  font: var(--font-h3-headline);
+  text-align: right;
+  cursor: pointer;
+}
