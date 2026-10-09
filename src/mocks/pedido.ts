@@ -28,7 +28,7 @@ export type ProductoPedido = {
   esMiscelaneo: boolean;
   multiploMayorQueEvento: boolean;
   costoUnitario: number;
-  /** Precio unitario de venta (para calcular el monto del pedido en el ofrecimiento de Uber). */
+  /** Precio unitario de venta (para calcular el monto del pedido). */
   precioUnitario: number;
 };
 

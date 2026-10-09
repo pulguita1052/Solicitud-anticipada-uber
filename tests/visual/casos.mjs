@@ -7,8 +7,4 @@ export const CASOS = [
   { id: 'surtido-parcial-2546000', figma: '3089:13509', url: '/surtido?escenario=parcial-2546000' },
   { id: 'detalle-1964000', figma: '3199:6362', url: '/surtido/producto/1964000?escenario=revisado-1964000' },
   { id: 'detalle-2546000-parcial', figma: '3091:14568', url: '/surtido/producto/2546000?escenario=parcial-2546000' },
-  { id: 'factura-formulario', figma: '3841:818', url: '/facturacion?escenario=facturacion' },
-  { id: 'config-menu', figma: '5917:1679', url: '/configuraciones' },
-  { id: 'config-sonido', figma: '5170:12983', url: '/configuraciones/sonido' },
-  { id: 'config-impresion-procesos', figma: '5918:1978', url: '/configuraciones/impresion' },
 ];

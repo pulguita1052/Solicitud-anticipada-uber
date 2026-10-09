@@ -18,6 +18,10 @@ Antes de cualquier tarea de UI, lee y sigue @FIGMA_REPLICA.md.
 | Tema(s) / modes | Solo claro (colecciones con un único modo) |
 | Idioma de la UI | Español (MX) |
 
+## Rama `feature-surtido-multipedido` (2026-10-09)
+
+Alcance reducido a **solo el flujo de surtido**: Menú → Asignación de tareas → Surtido de órdenes (+ revisión, detalle de producto, modo unificado). Al finalizar el surtido, Asignación de tareas muestra la siguiente tarea "FACTURAR Y EMBARCAR PEDIDO" con **Aceptar deshabilitado**. Se quitaron las pantallas de facturación, embarque, Uber y configuraciones (siguen en `main`). Lo de abajo describe `main`.
+
 ## Estado (2026-09-29)
 
 **F0–F7 ejecutados para las 4 páginas del alcance + Solicitud anticipada de Uber (ERB-53024).** Ver `docs/figma/CHANGELOG.md`.
@@ -40,4 +44,3 @@ Notas de trabajo con el MCP:
 - `npm run build` — compila producción (TypeScript + Vite).
 - `npm run typecheck` — verifica tipos.
 - `npm run test:visual` — corre la comparación visual contra Figma (requiere `npm run dev` en otro terminal).
-- `npm run test:domain` — corre las pruebas unitarias de la lógica de Uber (candidatura ERB-53024).

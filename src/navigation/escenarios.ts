@@ -21,8 +21,6 @@ const PEDIDO_COMPLETO: PedidoState = {
   finalizado: true,
 };
 
-const EMBARQUE_DEFAULT = { numero: '147707', facturas: 2, fecha: '2026-09-17 15:48' };
-
 export const ESCENARIOS: Record<string, Semilla> = {
   /* ───────── Menú y tareas ───────── */
   inicial: {},
@@ -37,80 +35,6 @@ export const ESCENARIOS: Record<string, Semilla> = {
   'parcial-2546000': { pedido: pedidoCon({ '2546000': { surtido: 3 } }) },
   // 3095:16325 — 2546000 parcial revisado
   'parcial-2546000-revisado': { pedido: pedidoCon({ '2546000': { surtido: 3, revisado: 3, revisionCompleta: true } }) },
-
-  /* ───────── Facturación ───────── */
-  // Tarea "FACTURAR Y EMBARCAR PEDIDO" – formulario vacío
-  facturacion: { etapa: 'facturacion', pedido: PEDIDO_COMPLETO },
-  // Estado "facturada" con folio (Figma 6004:7618) – sin embarque
-  'factura-facturada': { etapa: 'facturacion', pedido: PEDIDO_COMPLETO, factura: { folio: '1099204', copias: 1, direccionEntrega: 1 } },
-  // Estado "facturada + embarcada" – ya con embarque asignado (final del flujo Facturación)
-  'factura-embarcada': {
-    etapa: 'facturacion',
-    pedido: PEDIDO_COMPLETO,
-    factura: { folio: '1099204', copias: 1, direccionEntrega: 1, embarque: EMBARQUE_DEFAULT },
-  },
-  // Error al generar factura – usar con `?generar=error` para forzar el fallo
-  'factura-error': { etapa: 'facturacion', pedido: PEDIDO_COMPLETO },
-
-  /* ───────── Embarque (modales sobre Datos factura) ───────── */
-  // Modal "Nuevo embarque" (6157:13865) preabierto sobre la factura ya generada
-  'embarque-nuevo': {
-    etapa: 'facturacion',
-    pedido: PEDIDO_COMPLETO,
-    factura: { folio: '1099204', copias: 1, direccionEntrega: 1 },
-  },
-  // Modal "Embarque creado" (6157:14047) preabierto — al aceptar dispara Uber
-  'embarque-creado': {
-    etapa: 'facturacion',
-    pedido: PEDIDO_COMPLETO,
-    factura: { folio: '1099204', copias: 1, direccionEntrega: 1 },
-  },
-  // Modal "Agregar embarque" — elección entre nuevo o agregar a uno existente (6182:16269)
-  'embarque-agregar': {
-    etapa: 'facturacion',
-    pedido: PEDIDO_COMPLETO,
-    factura: { folio: '1099204', copias: 1, direccionEntrega: 1 },
-  },
-
-  /* ───────── Uber (ERB-53024) ───────── */
-  /* Mismo estado embarcado + dirección 2 (Huerto 221) — la dirección tiene historial de solicitudes previas
-     y dispara la precarga de nombre/teléfono/referencias/dpto. */
-  'uber-con-historial': {
-    etapa: 'uber',
-    pedido: PEDIDO_COMPLETO,
-    factura: { folio: '1099204', copias: 1, direccionEntrega: 2, embarque: EMBARQUE_DEFAULT },
-  },
-  /* Ofrecimiento default (dirección 1, sin historial) */
-  'uber-embarcado': {
-    etapa: 'uber',
-    pedido: PEDIDO_COMPLETO,
-    factura: { folio: '1099204', copias: 1, direccionEntrega: 1, embarque: EMBARQUE_DEFAULT },
-  },
-  /* Ofrecimiento + modal inferior de consolidación abierto (cliente 536983 ya tiene solicitud CREADA
-     para Huerto 221 en ACTIVOS_POR_CLIENTE_DIRECCION). Usar con `?paso=consolidacion`. */
-  'uber-consolidacion': {
-    etapa: 'uber',
-    pedido: PEDIDO_COMPLETO,
-    factura: { folio: '1099204', copias: 1, direccionEntrega: 2, embarque: EMBARQUE_DEFAULT },
-  },
-  /* Formulario vacío (cliente sin historial). Va con `?paso=formulario`. */
-  'uber-formulario-vacio': {
-    etapa: 'uber',
-    pedido: PEDIDO_COMPLETO,
-    factura: { folio: '1099204', copias: 1, direccionEntrega: 1, embarque: EMBARQUE_DEFAULT },
-  },
-  /* Formulario con precarga (cliente 536983 + Huerto 221). Descripción del paquete siempre vacía. */
-  'uber-formulario-lleno': {
-    etapa: 'uber',
-    pedido: PEDIDO_COMPLETO,
-    factura: { folio: '1099204', copias: 1, direccionEntrega: 2, embarque: EMBARQUE_DEFAULT },
-  },
-  /* Pantalla final "Solicitud creada" */
-  'uber-confirmada': {
-    etapa: 'uber',
-    pedido: PEDIDO_COMPLETO,
-    factura: { folio: '1099204', copias: 1, direccionEntrega: 1, embarque: EMBARQUE_DEFAULT },
-  },
 };
 
 export function semillaDesdeUrl(): Semilla | undefined {
