@@ -1,33 +1,34 @@
 /**
- * Figma: modales del Surtido de órdenes
- *   Modal ingresar cantidad de piezas 3236:16208 · Modal Menu 3126:14186 · Modal pendientes parciales 3126:14406
- *   Finalizar surtido y revisión 4582:25330 · Modal promocion parcial 4582:23615 · Modal escaneo promocion 4582:23837
- *   Modal retirar promocion 4582:24109
- * URL: https://www.figma.com/design/zZBoCtJor0tdJ91umiqb7l/?node-id=3236-16208
- * Última sincronización: 2026-09-29
+ * Figma: modales del Surtido de órdenes (📲 Surtido - Un pedido x ronda, 24:16)
+ *   Modal ingresar cantidad 131:6184 (= 3236:16208) · Modal Menú 182:9267 (= 3126:14186)
+ *   Modal pendientes parciales 182:9894 (= 3126:14406) · Finalizar surtido (automático) 197:23064
+ *   Modal códigos negados / sin surtir 190:10418 · Selección de motivo negado 1246:7590 (act.) / 1246:7339 (inact.)
+ * URL: https://www.figma.com/design/zZBoCtJor0tdJ91umiqb7l/?node-id=24-16
+ * Última sincronización: 2026-10-09
  */
 import { Fragment, useState } from 'react';
 import iconoCantidad from '@assets/icons/modal-icono-cantidad.svg';
 import iconoMenu from '@assets/icons/modal-icono-menu.svg';
 import iconoPregunta from '@assets/icons/modal-icono-pregunta.svg';
 import iconoNegado from '@assets/icons/modal-icono-negado.svg';
-import elipse34 from '@assets/icons/modal-escaneo-elipse-34.svg';
-import elipse33 from '@assets/icons/modal-escaneo-elipse-33.svg';
-import barcode from '@assets/icons/barcode.svg';
+import iconoMotivo from '@assets/icons/modal-icono-motivo-negado.svg';
+import selectCheck from '@assets/icons/select-check.svg';
+import selectPoligono from '@assets/icons/select-poligono.svg';
 import botonCancelar from '@assets/icons/boton-cancelar.svg';
 import grupo45 from '@assets/icons/grupo-45-cancelar.svg';
 import { ModalHeader, ModalIcon, ModalSheet } from '@ds/components/organisms/ModalSheet/ModalSheet';
 import { Button } from '@ds/components/atoms/Button/Button';
 import { Chip } from '@ds/components/atoms/Chip/Chip';
 import { Divider } from '@ds/components/atoms/Divider/Divider';
-import { ScanInput } from '@ds/components/molecules/ScanInput/ScanInput';
 import styles from './overlays.module.css';
 
 const iconPregunta = <ModalIcon src={iconoPregunta} inset="-2.84% -2.27% -0.56% -1.14%" />;
 
-/* ---------- Ingresa la cantidad surtida en contenedor — 3236:16208 ---------- */
-export function CantidadModal({ codigo, sugerida, onCancel, onConfirm }: { codigo: string; sugerida: number; onCancel: () => void; onConfirm: (n: number) => void }) {
-  const [valor, setValor] = useState(String(sugerida));
+/* ---------- Ingresa la cantidad surtida en contenedor — 131:6184 ----------
+   Sticky note 321:3020: inicialmente no hay cantidad y el botón de continuar está deshabilitado (#BDBDBD, 321:3021). */
+export function CantidadModal({ codigo, onCancel, onConfirm }: { codigo: string; onCancel: () => void; onConfirm: (n: number) => void }) {
+  const [valor, setValor] = useState('');
+  const vacio = valor === '';
   return (
     <ModalSheet icon={<ModalIcon src={iconoCantidad} inset="-2.84% -3.98% -0.56% -2.84%" offsetX={-1} />} gap={10}>
       <div className={styles.col} style={{ gap: 16 }}>
@@ -44,18 +45,18 @@ export function CantidadModal({ codigo, sugerida, onCancel, onConfirm }: { codig
           autoFocus
           aria-label="Cantidad"
           onChange={(e) => setValor(e.target.value.replace(/\D/g, ''))}
-          onKeyDown={(e) => e.key === 'Enter' && onConfirm(parseInt(valor, 10) || 0)}
+          onKeyDown={(e) => e.key === 'Enter' && !vacio && onConfirm(parseInt(valor, 10))}
         />
         <div className={styles.buttons}>
           <Button asset={botonCancelar} label="Cancelar" className={styles.half} onClick={onCancel} />
-          <Button variant="success" icon="check" label="Aceptar" className={styles.half} onClick={() => onConfirm(parseInt(valor, 10) || 0)} />
+          <Button variant="success" icon="check" label="Aceptar" disabled={vacio} className={styles.half} onClick={() => onConfirm(parseInt(valor, 10))} />
         </div>
       </div>
     </ModalSheet>
   );
 }
 
-/* ---------- Menú (⋮) — 3126:14186 ---------- */
+/* ---------- Menú (⋮) — 182:9267 ---------- */
 export function MenuModal({ onRepetirAudio, onFinalizar, onCancel }: { onRepetirAudio: () => void; onFinalizar: () => void; onCancel: () => void }) {
   return (
     <ModalSheet icon={<ModalIcon src={iconoMenu} inset="-2.75% -1.7% -0.66% -1.7%" />} gap={10}>
@@ -71,7 +72,7 @@ export function MenuModal({ onRepetirAudio, onFinalizar, onCancel }: { onRepetir
   );
 }
 
-/* ---------- Finalizar surtido (códigos parciales) — 3126:14406 ---------- */
+/* ---------- Finalizar surtido (códigos parciales) — 182:9894 ---------- */
 export type ParcialRow = { codigo: string; surtido: number; solicitado: number; existencia: number };
 
 export function ParcialesModal({ rows, onCancel, onConfirm }: { rows: ParcialRow[]; onCancel: () => void; onConfirm: () => void }) {
@@ -113,17 +114,17 @@ export function ParcialesModal({ rows, onCancel, onConfirm }: { rows: ParcialRow
   );
 }
 
-/* ---------- Finalizar surtido y revisión — 4582:25330 ---------- */
+/* ---------- Finalizar surtido (todo surtido) — 197:23064 ---------- */
 export function FinalizarModal({ onCancel, onConfirm }: { onCancel: () => void; onConfirm: () => void }) {
   return (
     <ModalSheet icon={iconPregunta} gap={10} doubleShadow>
       <div className={styles.col} style={{ gap: 18 }}>
         <p className={styles.subtitle} style={{ width: '100%', textAlign: 'center' }}>
-          Finalizar surtido y revisión
+          Finalizar surtido
         </p>
         <Divider variant="modal" />
         <p className={styles.text}>
-          Haz surtido y revisaado el total de productos solicitados ¿Deseas finalizar la ronda?
+          Haz surtido el total de productos solicitados ¿Deseas finalizar la ronda?
           <br />
           <br />
         </p>
@@ -136,76 +137,20 @@ export function FinalizarModal({ onCancel, onConfirm }: { onCancel: () => void; 
   );
 }
 
-/* ---------- Promoción ---------- */
-export type PromoRow = { codigo: string; negado: boolean; surtido: number; solicitado: number };
-
-function PromoList({ rows }: { rows: PromoRow[] }) {
+/* ---------- No es posible finalizar surtido (códigos sin surtir) — 190:10418 ---------- */
+export function SinSurtirModal({ onCancel }: { onCancel: () => void }) {
   return (
-    <div className={styles.promoList}>
-      {rows.map((r) => (
-        <div key={r.codigo} className={styles.promoRow}>
-          <span className={styles.code20}>{r.codigo}</span>
-          {r.negado ? <Chip status="negado-promocion" /> : <Chip status="completado" value={r.surtido} total={r.solicitado} />}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-/** Finalizar surtido — promoción parcial (4582:23615) */
-export function PromoParcialModal({ rows, onEliminar, onCancel }: { rows: PromoRow[]; onEliminar: () => void; onCancel: () => void }) {
-  return (
-    <ModalSheet icon={iconPregunta} gap={10} doubleShadow>
-      <div className={styles.col} style={{ gap: 24 }}>
-        <div className={styles.col} style={{ gap: 18 }}>
-          <div className={styles.col} style={{ gap: 18 }}>
-            <p className={styles.subtitle} style={{ width: '100%', textAlign: 'center' }}>
-              Finalizar surtido
-            </p>
-            <Divider variant="modal" />
-          </div>
-          <div className={styles.text}>
-            <p>La siguiente promoción no se surtió completamente.</p>
-            <p>&#8203;</p>
-            <p>
-              Para continuar, <b>completa la promoción </b>o <b>elimina los productos del pedido.</b>
-            </p>
-          </div>
-          <p className={styles.subtitle}>Códigos de la promoción</p>
-          <PromoList rows={rows} />
-        </div>
-        <div className={styles.col} style={{ gap: 15, alignItems: 'center' }}>
-          <Button variant="outline" label="Eliminar productos" className={styles.full} onClick={onEliminar} />
-          <Button variant="error" icon="cross" label="Cancelar" className={styles.full} onClick={onCancel} />
-        </div>
-      </div>
-    </ModalSheet>
-  );
-}
-
-/** Escanea un producto de la promoción (4582:23837) */
-export function PromoEscaneoModal({ rows, onScan, onCancel }: { rows: PromoRow[]; onScan: (c: string) => void; onCancel: () => void }) {
-  const icon = (
-    <div className={styles.scanIcon} aria-hidden>
-      <img className={styles.e34} src={elipse34} alt="" />
-      <div className={styles.e33}>
-        <img src={elipse33} alt="" />
-      </div>
-      <img className={styles.barcode} src={barcode} alt="" />
-    </div>
-  );
-  return (
-    <ModalSheet icon={icon} gap={10} doubleShadow>
-      <div className={styles.col} style={{ gap: 24 }}>
-        <div className={styles.col} style={{ gap: 18 }}>
-          <p className={styles.subtitle} style={{ width: '100%', textAlign: 'center', whiteSpace: 'normal' }}>
-            Escanea un producto de la promoción
+    <ModalSheet icon={<ModalIcon src={iconoNegado} inset="-2.84% -2.27% -0.56% -1.14%" />} gap={10} doubleShadow>
+      <div className={styles.col} style={{ gap: 18 }}>
+        <p className={styles.subtitle} style={{ width: '100%', textAlign: 'center' }}>
+          No es posible finalizar surtido
+        </p>
+        <Divider variant="modal" />
+        <div className={styles.text}>
+          <p>
+            Tienes <b>códigos sin surtir</b>, para finalizar el surtido primero deberás negarlos entrando al detalle del producto.
           </p>
-          <Divider variant="modal" />
-          <PromoList rows={rows} />
-        </div>
-        <div className={styles.col} style={{ gap: 18, alignItems: 'center' }}>
-          <ScanInput onScan={onScan} />
+          <p>&#8203;</p>
         </div>
         <Button variant="error" icon="cross" label="Cancelar" className={styles.full} onClick={onCancel} />
       </div>
@@ -213,24 +158,52 @@ export function PromoEscaneoModal({ rows, onScan, onCancel }: { rows: PromoRow[]
   );
 }
 
-/** Promoción negada (4582:24109) */
-export function PromoNegadaModal({ rows, onConfirm }: { rows: PromoRow[]; onConfirm: () => void }) {
+/* ---------- Selección de motivo negado — 1246:7339 (inact.) / 1246:7590 (act.) ---------- */
+export function MotivoNegadoModal({
+  codigo,
+  descripcion,
+  motivos,
+  onCancel,
+  onConfirm,
+}: {
+  codigo: string;
+  descripcion: string;
+  motivos: string[];
+  onCancel: () => void;
+  onConfirm: (motivo: string) => void;
+}) {
+  const [motivo, setMotivo] = useState('');
   return (
-    <ModalSheet icon={<ModalIcon src={iconoNegado} inset="-2.84% -2.27% -0.56% -1.14%" />} gap={10} doubleShadow>
+    <ModalSheet icon={<ModalIcon src={iconoMotivo} inset="-2.84% -2.27% -0.56% -1.14%" />} gap={10} doubleShadow>
       <div className={styles.col} style={{ gap: 18 }}>
-        <div className={styles.col} style={{ gap: 18 }}>
-          <p className={styles.subtitle} style={{ width: '100%', textAlign: 'center' }}>
-            Promoción negada
-          </p>
-          <Divider variant="modal" />
-        </div>
-        <p className={styles.text}>
-          <b>Retira</b> los siguientes productos del contenedor:
+        <p className={styles.subtitle} style={{ width: '100%', textAlign: 'center' }}>
+          Selección de motivo negado
         </p>
-        <p className={styles.subtitle}>Códigos de la promoción</p>
-        <PromoList rows={rows} />
-        <div className={styles.col} style={{ gap: 15, alignItems: 'center' }}>
-          <Button variant="success" icon="check" checkWidth={31.012} label="Aceptar" className={styles.full} onClick={onConfirm} />
+        <Divider variant="modal" />
+        <div className={styles.col} style={{ gap: 10 }}>
+          <div className={styles.codeRow}>
+            <b>Código</b>
+            <span>{codigo}</span>
+          </div>
+          <p className={styles.descripcion}>{descripcion}</p>
+        </div>
+        <label className={styles.select}>
+          <img src={selectCheck} alt="" width={18} height={18} />
+          <select value={motivo} onChange={(e) => setMotivo(e.target.value)} aria-label="Motivo negado">
+            <option value="" disabled>
+              Seleccionar una opción
+            </option>
+            {motivos.map((m) => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            ))}
+          </select>
+          <img className={styles.selectArrow} src={selectPoligono} alt="" width={13} height={6} />
+        </label>
+        <div className={styles.buttons}>
+          <Button asset={grupo45} label="Cancelar" className={styles.flex1} onClick={onCancel} />
+          <Button variant="success" icon="check" label="Aceptar" disabled={!motivo} className={styles.flex1} onClick={() => onConfirm(motivo)} />
         </div>
       </div>
     </ModalSheet>

@@ -1,14 +1,13 @@
 /**
- * Figma: Detalle de producto (botón dinámico)
- * nodeId: 3199:6362 — variantes 3236:4114, 3236:4640, 3199:6170, 3232:3951, 3091:14568, 3107:18312
- * URL: https://www.figma.com/design/zZBoCtJor0tdJ91umiqb7l/?node-id=3199-6362
- * Última sincronización: 2026-09-29
+ * Figma: Detalle de producto — 📲 Surtido - Un pedido x ronda, sección "Detalle del producto" (131:4807)
+ * nodeId: 131:6465 — motivo negado 1232:6734 (inact.) / 1246:7165 (act.) · toast 1308:6293
+ * URL: https://www.figma.com/design/zZBoCtJor0tdJ91umiqb7l/?node-id=131-6465
+ * Última sincronización: 2026-10-09
  *
- * Reglas del segundo botón (tabla "image 4", 3232:3913):
- *   bandera activa · surtido = 0            → "Negar producto" habilitado
- *   bandera activa · surtido ≥ 1            → "Revisar producto" habilitado
- *   bandera activa · surtido ≥ 1 + revisado → "Revisar producto" deshabilitado (se reactiva si cambia la cantidad)
- *   bandera inactiva · surtido = 0 / ≥ 1    → "Negar mercancía" habilitado / deshabilitado
+ * Reglas:
+ *   - La cantidad surtida solo se edita si ya se escaneó el producto (sticky note 325:3051; spinner gris 325:3041).
+ *   - "Negar producto" con cantidad surtida > 0 → aviso "No es posible negar el producto" (1308:6293).
+ *   - Con cantidad 0 → "Selección de motivo negado"; el ✓ se habilita al elegir motivo (1246:7339 → 1246:7590).
  */
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -19,55 +18,41 @@ import { Button } from '@ds/components/atoms/Button/Button';
 import { Stepper } from '@ds/components/atoms/Stepper/Stepper';
 import { LabeledField } from '@ds/components/molecules/LabeledField/LabeledField';
 import { ProductSummary } from '@ds/components/molecules/ProductSummary/ProductSummary';
-import { producto, tipoRevision } from '../../domain/pedido';
+import { producto } from '../../domain/pedido';
+import { MOTIVOS_NEGADO } from '../../mocks/pedido';
 import { useStore } from '../../store/AppStore';
-import { RevisionModal } from './overlays/RevisionModal';
-import { useRevision } from './useRevision';
+import { MotivoNegadoModal } from './overlays/SurtidoModals';
 import styles from './DetalleProducto.module.css';
 
-export function DetalleProducto({ revisando: revisandoInicial = false }: { revisando?: boolean }) {
+const TOAST_NO_NEGAR = {
+  kind: 'warning' as const,
+  title: 'No es posible negar el producto',
+  message: (
+    <>
+      Para poder negar un producto la <b>cantidad surtida debe ser cero. </b>
+    </>
+  ),
+};
+
+export function DetalleProducto() {
   const { codigo = '' } = useParams();
   const navigate = useNavigate();
-  const { pedido, dispatch } = useStore();
-  const { escanearRevision, toastRevision } = useRevision();
+  const { pedido, dispatch, mostrarToast } = useStore();
+  const [negando, setNegando] = useState(false);
   const item = pedido.items.find((i) => i.codigo === codigo);
   const p = producto(codigo);
-  const [cantidad, setCantidad] = useState(item?.surtido ?? 0);
-  const [revisando, setRevisando] = useState(revisandoInicial);
   if (!item || !p) return null;
 
-  const cambio = cantidad !== item.surtido;
-  const revisado = item.revisionCompleta && !cambio;
+  const regresar = () => navigate('/surtido');
 
-  const aceptar = () => {
-    if (cambio) dispatch({ type: 'fijarSurtido', codigo, cantidad });
-    navigate('/surtido');
+  const negar = () => {
+    if (item.surtido > 0) return mostrarToast(TOAST_NO_NEGAR);
+    setNegando(true);
   };
-
-  let segundo: { label: string; enabled: boolean; onClick: () => void };
-  if (!pedido.banderaRevision) {
-    segundo = { label: 'Negar mercancía', enabled: cantidad === 0, onClick: () => negar() };
-  } else if (cantidad === 0) {
-    segundo = { label: 'Negar producto', enabled: true, onClick: () => negar() };
-  } else {
-    segundo = {
-      label: 'Revisar producto',
-      enabled: !revisado,
-      onClick: () => {
-        if (cambio) dispatch({ type: 'fijarSurtido', codigo, cantidad });
-        setRevisando(true);
-      },
-    };
-  }
-
-  function negar() {
-    dispatch({ type: 'negar', codigo });
-    navigate('/surtido');
-  }
 
   return (
     <div className={styles.screen}>
-      <AppHeader onBack={() => navigate('/surtido')} />
+      <AppHeader onBack={regresar} />
       <ContentPanel title="Detalle del producto" bottom={0}>
         <div className={styles.body}>
           <div className={styles.datos}>
@@ -89,38 +74,31 @@ export function DetalleProducto({ revisando: revisandoInicial = false }: { revis
           </div>
           <div className={styles.cantidad}>
             <p className={styles.cantidadLabel}>Cantidad surtida:</p>
-            <Stepper value={cantidad} min={0} max={p.solicitado} onChange={setCantidad} />
+            <Stepper
+              value={item.surtido}
+              min={0}
+              max={p.solicitado}
+              disabled={!item.escaneado || item.negado}
+              onChange={(cantidad) => dispatch({ type: 'fijarSurtido', codigo, cantidad })}
+            />
           </div>
         </div>
       </ContentPanel>
       <BottomBar variant="footer">
-        <Button variant="default" label="Aceptar" className={styles.flex1} onClick={aceptar} />
-        <Button variant="default" label={segundo.label} disabled={!segundo.enabled} className={styles.flex1} onClick={segundo.onClick} />
+        <Button variant="default" label="Regresar" className={styles.flex1} onClick={regresar} />
+        <Button variant="default" label="Negar producto" disabled={item.negado} className={styles.flex1} onClick={negar} />
       </BottomBar>
 
-      {revisando && (
-        <RevisionModal
-          producto={p}
-          tipo={tipoRevision(p)}
-          revisado={item.revisado}
-          total={item.surtido}
-          onScan={(v) => {
-            if (escanearRevision(codigo, v)) {
-              // 3120:11941 → 3107:18312: 800 ms y vuelve al Detalle con el aviso
-              window.setTimeout(() => {
-                setRevisando(false);
-                toastRevision();
-              }, 800);
-            }
-          }}
-          onConfirm={() => {
-            dispatch({ type: 'completarRevision', codigo });
-            setRevisando(false);
-            toastRevision();
-          }}
-          onCancel={() => {
-            dispatch({ type: 'cancelarRevision', codigo });
-            setRevisando(false);
+      {negando && (
+        <MotivoNegadoModal
+          codigo={p.codigo}
+          descripcion={p.descripcion}
+          motivos={MOTIVOS_NEGADO}
+          onCancel={() => setNegando(false)}
+          onConfirm={(motivo) => {
+            dispatch({ type: 'negar', codigo, motivo });
+            // PENDIENTE: el prototipo no define el destino del ✓ (1246:7612); se regresa a Surtido de órdenes.
+            regresar();
           }}
         />
       )}

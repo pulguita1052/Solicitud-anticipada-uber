@@ -12,29 +12,25 @@ function pedidoCon(cambios: Record<string, Parcial>): PedidoState {
   return { ...s, items: s.items.map((i) => ({ ...i, ...(cambios[i.codigo] ?? {}) })) };
 }
 
-/** Pedido con las 2 partidas surtidas + revisadas + finalizado (15 piezas, $4,000). Base para escenarios avanzados. */
-const PEDIDO_COMPLETO: PedidoState = {
-  ...pedidoCon({
-    '1394000': { surtido: 10, revisado: 10, revisionCompleta: true },
-    '2546000': { surtido: 5, revisado: 5, revisionCompleta: true },
-  }),
-  finalizado: true,
-};
-
 export const ESCENARIOS: Record<string, Semilla> = {
   /* ───────── Menú y tareas ───────── */
   inicial: {},
   'tareas-surtido': { etapa: 'surtido' },
-  'tareas-unificado': { etapa: 'surtido-unificado', pedido: PEDIDO_COMPLETO },
-  'tareas-facturacion': { etapa: 'facturacion', pedido: PEDIDO_COMPLETO },
+  // 197:20499 — tras finalizar el surtido, la siguiente tarea es REVISAR PEDIDO CLIENTE (bloqueada en esta rama)
+  'tareas-revision': {
+    etapa: 'revision',
+    pedido: { ...pedidoCon({ '1394000': { surtido: 10, escaneado: true }, '2546000': { surtido: 5, escaneado: true } }), finalizado: true },
+  },
 
-  /* ───────── Surtido / Revisión ───────── */
-  // 1394000 (CINTA, misceláneo) surtido completo 10/10
-  'surtido-1394000': { pedido: pedidoCon({ '1394000': { surtido: 10, revisado: 10, revisionCompleta: true } }) },
-  // 3089:13509 — 2546000 parcial 3 de 5
-  'parcial-2546000': { pedido: pedidoCon({ '2546000': { surtido: 3 } }) },
-  // 3095:16325 — 2546000 parcial revisado
-  'parcial-2546000-revisado': { pedido: pedidoCon({ '2546000': { surtido: 3, revisado: 3, revisionCompleta: true } }) },
+  /* ───────── Surtido ───────── */
+  // 2546000 parcial 3 de 5 → al finalizar aparece el modal de códigos parciales (182:9894)
+  'parcial-2546000': { pedido: pedidoCon({ '1394000': { surtido: 10, escaneado: true }, '2546000': { surtido: 3, escaneado: true } }) },
+  // 1394000 completo y 2546000 sin surtir → "No es posible finalizar surtido" (190:10418); negarlo desde el Detalle
+  'sin-surtir-2546000': { pedido: pedidoCon({ '1394000': { surtido: 10, escaneado: true } }) },
+  // 1394000 completo + 2546000 negado → finalización automática (197:22893)
+  'completo-con-negado': {
+    pedido: pedidoCon({ '1394000': { surtido: 10, escaneado: true }, '2546000': { negado: true, motivoNegado: 'Sin existencia' } }),
+  },
 };
 
 export function semillaDesdeUrl(): Semilla | undefined {

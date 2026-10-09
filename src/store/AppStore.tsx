@@ -1,15 +1,16 @@
 /**
- * Estado global: pedido (surtido/revisión), etapa del flujo y avisos (toasts).
- * Alcance de esta rama: surtido y revisión. Al finalizar, la etapa pasa a 'facturacion' solo para mostrar
- * la siguiente tarea (FACTURAR Y EMBARCAR PEDIDO) en Asignación de tareas; esa tarea no se puede abrir aquí.
+ * Estado global: pedido (surtido), etapa del flujo y avisos (toasts).
+ * Alcance de esta rama: surtido (📲 Surtido - Un pedido x ronda, sin revisión). Al finalizar, la etapa pasa a
+ * 'revision' solo para mostrar la siguiente tarea (REVISAR PEDIDO CLIENTE, 197:20499) en Asignación de tareas;
+ * esa tarea no se puede abrir aquí.
  */
 import { createContext, useCallback, useContext, useMemo, useReducer, useState, type Dispatch, type ReactNode } from 'react';
 import { estadoInicial, pedidoReducer, type PedidoAction, type PedidoState } from '../domain/pedido';
 import type { ToastKind } from '../design-system/components/organisms/Toast/Toast';
 
-export type Etapa = 'surtido' | 'surtido-unificado' | 'facturacion';
+export type Etapa = 'surtido' | 'revision';
 
-export type ToastData = { id: number; kind: ToastKind; title: string; message: string };
+export type ToastData = { id: number; kind: ToastKind; title: string; message: ReactNode };
 
 type Store = {
   pedido: PedidoState;

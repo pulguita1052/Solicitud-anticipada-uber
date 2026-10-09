@@ -5,40 +5,6 @@
   width: 100%;
 }
 
-.count {
-  display: flex;
-  gap: 10px; /* figma: 3062:12642 */
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  font: 700 48px/normal var(--font-family-roboto); /* figma: 3062:12642 (sin estilo, 48 px) */
-  white-space: nowrap;
-}
-
-.countBlue {
-  color: var(--color-primary-azul-300);
-}
-
-.countGray {
-  color: var(--color-inactive-text);
-}
-
-.countLabel {
-  width: 100%;
-  color: var(--color-negro);
-  font: var(--font-b1-body);
-  line-height: normal;
-  text-align: center;
-}
-
-.scanRow {
-  display: flex;
-  flex: 1 0 0;
-  align-items: center;
-  width: 100%;
-  min-height: 1px;
-}
-
 .buttons {
   display: flex;
   gap: 16px; /* figma: 3308:17321 */
@@ -110,23 +76,6 @@
 }
 
 /* Lista de códigos de promoción — 4582:23624 */
-.promoList {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  width: 366px;
-  overflow-x: clip;
-  overflow-y: auto;
-}
-
-.promoRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  height: 23px;
-}
-
 .code20 {
   color: var(--color-negro);
   font: var(--font-h2-headline);
@@ -134,7 +83,6 @@
   white-space: nowrap;
 }
 
-/* Lista de parciales — 3126:14412 */
 .partialList {
   display: flex;
   flex-direction: column;
@@ -168,40 +116,51 @@
 }
 
 /* Ícono compuesto del modal de escaneo de promoción — 4582:23920 */
-.scanIcon {
-  position: absolute;
-  left: calc(50% - 44px);
-  top: -43px;
-  width: 88px;
-  height: 88px;
+
+/* Descripción del producto en "Selección de motivo negado" — 1246:7600 (máx. 2 líneas) */
+.descripcion {
+  width: 100%;
+  max-height: 31px;
+  overflow: hidden;
+  color: var(--color-negro);
+  font: var(--font-b1-body);
+  line-height: normal;
+  text-overflow: ellipsis;
 }
 
-.scanIcon .e34 {
-  position: absolute;
-  inset: 0;
-  width: 88px;
-  height: 88px;
+/* Select de motivo — 1246:7601 */
+.select {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  height: 50px;
+  padding: 0 12px;
+  border: 1px solid var(--color-negro);
+  border-radius: 5px;
+  background: var(--color-blanco);
 }
 
-.scanIcon .e33 {
-  position: absolute;
-  left: 6.5px;
-  top: 5px;
-  width: 76px;
-  height: 76px;
+.select select {
+  flex: 1 0 0;
+  min-width: 1px;
+  height: 100%;
+  padding-right: 25px;
+  border: 0;
+  background: transparent;
+  color: var(--color-negro);
+  font: var(--font-b1-body);
+  line-height: normal;
+  outline: none;
+  appearance: none;
+  cursor: pointer;
 }
 
-.scanIcon .e33 img {
+/* Polígono 2 (rotado 180°) — 1246:7607 */
+.selectArrow {
   position: absolute;
-  inset: -9.87%;
-  width: calc(100% + 19.74%);
-  height: calc(100% + 19.74%);
-}
-
-.scanIcon .barcode {
-  position: absolute;
-  left: 30.37px; /* 6.5 + 23.87 */
-  top: 31.9px; /* 5 + 26.9 */
-  width: 28.259px;
-  height: 22.204px;
+  right: 12px;
+  transform: rotate(180deg);
+  pointer-events: none;
 }

@@ -1,5 +1,6 @@
 /**
  * Figma: Notificaciones Toast Verde (192:16685, Toast=Inicio) · Notificaciones Toast Rojo (131:6148, Property 1=Default)
+ *        · Notificaciones Toast Amarillo (instancia 1305:6294 en "NO POSIBLE negar producto" 1308:6293)
  *        Maestros en "📲 Surtido - Un pedido x ronda" › NO TOCAR
  * nodeId: 192:16685
  * URL: https://www.figma.com/design/zZBoCtJor0tdJ91umiqb7l/?node-id=192-16685
@@ -9,14 +10,19 @@ import closeIcon from '@assets/icons/toast-close.svg';
 import divider from '@assets/icons/toast-trazado-54.svg';
 import successIcon from '@assets/icons/toast-success.svg';
 import errorIcon from '@assets/icons/toast-error.svg';
+import warningIcon from '@assets/icons/toast-warning.svg';
+import type { ReactNode } from 'react';
 import styles from './Toast.module.css';
 
-export type ToastKind = 'success' | 'error';
+export type ToastKind = 'success' | 'error' | 'warning';
+
+const ICONOS: Record<ToastKind, string> = { success: successIcon, error: errorIcon, warning: warningIcon };
 
 type Props = {
   kind: ToastKind;
   title: string;
-  message: string;
+  /** Admite negritas (p. ej. "cantidad surtida debe ser cero." en Roboto Medium, 1308:6293). */
+  message: ReactNode;
   onClose?: () => void;
   /** Variante "Toast=Fin" (192:16686): la barra inferior se contrae hacia la izquierda. */
   fin?: boolean;
@@ -37,7 +43,7 @@ export function Toast({ kind, title, message, onClose, fin }: Props) {
       <div className={styles.divider}>
         <img src={divider} alt="" />
       </div>
-      <img className={styles.icon} src={kind === 'success' ? successIcon : errorIcon} alt="" />
+      <img className={styles.icon} src={ICONOS[kind]} alt="" />
     </div>
   );
 }
