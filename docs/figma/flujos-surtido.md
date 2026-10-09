@@ -38,13 +38,18 @@ fin → Asignación de tareas con "REVISAR PEDIDO CLIENTE" (197:20499) + toast "
 - Error de red al finalizar (2105:9790).
 - Validaciones de etiqueta única (sección 1018:4173) y "Longitud > 51 y < 100" (1007:4015).
 
-## PENDIENTE
+## Decisiones confirmadas por el usuario (2026-10-09)
 
-| Punto | Decisión provisional |
+| Punto | Decisión |
 |---|---|
 | Destino del ✓ de "Selección de motivo negado" (1246:7612 navega a un nodo vacío) | Niega el producto y regresa a Surtido de órdenes. |
 | Opciones del select de motivo | Solo "Sin existencia" (la única visible en Figma). |
 | Existencia de 1394000 (no aparece en Figma) | 100, la de la cinta 1394001 (131:6465). |
-| Aviso para un código que no pertenece al pedido | Solo sonido de error (igual que antes). |
-| Overlay "Vista foto" (162:6994) al tocar la foto del Detalle | No implementado. |
+
+## PENDIENTE
+
+| Punto | Estado |
+|---|---|
+| Aviso para un código que no pertenece al pedido | Por ahora solo sonido de error. El usuario compartirá el aviso. |
+| Overlay "Vista foto" (162:6994) al tocar la foto del Detalle | Se implementa más adelante. |
 | Mock de 2 productos vs. 11 de Figma | Se conserva el de 2; por eso las pantallas no entran en la prueba píxel a píxel. |
