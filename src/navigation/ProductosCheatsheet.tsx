@@ -4,8 +4,7 @@
  * se oculta bajo 900 px de viewport, y no altera la lógica de negocio. Se muestra solo en `/surtido`.
  *
  * Los datos vienen del mismo mock que alimenta la app (PRODUCTOS, mocks/pedido.ts) para que la tabla
- * siempre refleje el estado real del pedido; los precios se suman al total y se validan contra el
- * mínimo de Uber (`REGLAS_UBER.montoMinimo`).
+ * siempre refleje el estado real del pedido; los precios se suman al total del pedido.
  */
 import { useState } from 'react';
 import { etiqueta } from '../domain/codigos';

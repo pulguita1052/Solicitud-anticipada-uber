@@ -8,8 +8,7 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview --host",
     "typecheck": "tsc -b --noEmit",
-    "test:visual": "node tests/visual/run.mjs",
-    "test:domain": "node --experimental-strip-types tests/domain/uber.test.mjs"
+    "test:visual": "node tests/visual/run.mjs"
   },
   "dependencies": {
     "@fontsource/roboto": "^5.1.0",

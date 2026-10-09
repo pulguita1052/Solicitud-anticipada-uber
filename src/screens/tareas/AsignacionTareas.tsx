@@ -30,7 +30,8 @@ export function AsignacionTareas() {
       : etapa === 'surtido-unificado'
         ? TAREAS.surtidoUnificado
         : TAREAS.facturacion;
-  const rutaAceptar = etapa === 'surtido' || etapa === 'surtido-unificado' ? '/surtido' : '/facturacion';
+  // En esta rama solo existe el surtido: la tarea de facturación se muestra como siguiente paso, pero no se puede aceptar.
+  const puedeAceptar = etapa === 'surtido' || etapa === 'surtido-unificado';
 
   return (
     <div className={styles.screen}>
@@ -74,7 +75,8 @@ export function AsignacionTareas() {
             icon="check"
             label="Aceptar"
             className={styles.half}
-            onClick={() => navigate(rutaAceptar)}
+            disabled={!puedeAceptar}
+            onClick={() => navigate('/surtido')}
           />
         </div>
       </BottomBar>
