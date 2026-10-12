@@ -9,6 +9,7 @@
 - Assets: `modal-icono-rechazar-traspaso.svg`, `info.svg`, `producto-1394001.jpg` (131:6465). Se carga Roboto 600 (SemiBold) para los datos del traspaso.
 - `ProductSummary` deja el recuadro vacío si el producto no tiene foto.
 - Datos reales de 0486600, 1365800 y 0245134 (reemplaza a 2389475, D46) con sus fotos, proporcionados por el usuario.
+- `OrderItemRow` acepta `foto`: miniatura de 60 × 60 sin borde en cada card de Surtido de órdenes (sin respaldo en Figma, D47).
 - Verificación visual: menús 0.74 % / 0.99 %; modales 1.26–1.92 %; listas 1.76–3.33 % (antialiasing del texto + contadores de Figma, D40/D41); asignación 4.21 % (D42).
 - Panel de escenarios separado por propuesta. Detalle del flujo, decisiones y PENDIENTES en `docs/figma/flujos-surtido.md`.
 
