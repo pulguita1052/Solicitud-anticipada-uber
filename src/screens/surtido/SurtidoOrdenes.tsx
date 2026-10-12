@@ -129,13 +129,13 @@ export function SurtidoOrdenes() {
 
   /**
    * Botón "Rechazar traspaso" del menú ⋮:
-   *   propuesta #1 — solo con todos los productos en 0; mientras tanto "Finalizar surtido" queda gris (7020:25441).
+   *   propuesta #1 — azul y activo solo con todos los productos en 0; con alguna pieza surtida queda gris.
+   *     "Finalizar surtido" siempre rojo y activo. Indicación del usuario (2026-10-12): difiere de 7020:25441,
+   *     donde "Rechazar traspaso" es rojo y "Finalizar surtido" gris.
    *   propuesta #2 — siempre, junto a "Finalizar surtido" activo (7053:26441).
    */
   const ofrecerRechazo = pedido.propuesta === 2 || sinPiezasSurtidas(pedido);
-  const menuRechazo = ofrecerRechazo
-    ? { variant: pedido.propuesta === 1 ? ('error' as const) : ('default' as const), onClick: () => setOverlay({ k: 'rechazar' }) }
-    : undefined;
+  const menuRechazo = { disabled: !ofrecerRechazo, onClick: () => setOverlay({ k: 'rechazar' }) };
 
   /** Menú › Finalizar surtido: ¿códigos sin surtir? (237:3071) → ¿códigos parciales? (237:3067) → fin. */
   const finalizarManual = () => {
@@ -194,7 +194,6 @@ export function SurtidoOrdenes() {
           onFinalizar={finalizarManual}
           onCancel={cerrar}
           rechazar={menuRechazo}
-          finalizarDisabled={pedido.propuesta === 1 && ofrecerRechazo}
         />
       )}
       {ov?.k === 'sinSurtir' && <SinSurtirModal onCancel={cerrar} />}

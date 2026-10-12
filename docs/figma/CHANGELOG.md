@@ -3,7 +3,7 @@
 ## 2026-10-12 — Rama `feature-rechazar-traspaso`: rechazar completo el surtido de un traspaso (❌ Negar totalidad traspaso, 6874:864)
 
 - La tarea pasa a ser **SURTIR TRASPASO · PedidoID 123456** (7020:21323). Productos de Figma: 4 en la propuesta #1 (7020:22451) y 2 en la #2 (7053:26345); la cantidad solicitada vive ahora en cada partida (`ItemState.solicitado`).
-- **Propuesta #1**: el menú ⋮ ofrece "Rechazar traspaso" (rojo) y deja "Finalizar surtido" gris solo mientras todos los productos estén en 0 (7020:25441).
+- **Propuesta #1**: el menú ⋮ ofrece "Rechazar traspaso" (azul) solo mientras todos los productos estén en 0; con alguna pieza surtida se deshabilita. "Finalizar surtido" siempre rojo y activo. Por indicación del usuario difiere de 7020:25441 (D45).
 - **Propuesta #2**: "Rechazar traspaso" (azul) y "Finalizar surtido" siempre activos (7053:26441); la confirmación lleva la leyenda "Las piezas surtidas se marcarán como rechazadas." (7053:26522).
 - Modales nuevos `RechazarTraspasoModal` (7020:25766) y `MotivoRechazoModal` (7040:25916 / 7040:26148). Al rechazar: Asignación de tareas con otra tarea de demo bloqueada + toast **"Traspaso rechazado"** (7114:10987 + 7114:11110).
 - Assets: `modal-icono-rechazar-traspaso.svg`, `info.svg`, `producto-1394001.jpg` (131:6465). Se carga Roboto 600 (SemiBold) para los datos del traspaso.

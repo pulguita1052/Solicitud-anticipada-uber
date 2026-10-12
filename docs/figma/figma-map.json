@@ -307,11 +307,10 @@
       "diff": "3.33%"
     },
     "7020:25284": {
-      "name": "Menú con Rechazar traspaso / Finalizar deshabilitado (propuesta #1)",
+      "name": "Menú con Rechazar traspaso (propuesta #1, colores cambiados por el usuario, D45)",
       "code": "src/screens/surtido/overlays/SurtidoModals.tsx",
       "route": "/surtido?escenario=p1-inicio",
-      "status": "verificado",
-      "diff": "0.74%"
+      "status": "implementado con cambio del usuario"
     },
     "7020:25471": {
       "name": "Rechazar traspaso — confirmación (propuesta #1)",

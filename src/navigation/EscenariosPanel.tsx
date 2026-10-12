@@ -39,7 +39,7 @@ const GRUPOS: Grupo[] = [
         descripcion: 'Traspaso de 4 productos sin surtir (7020:22451). Menú ⋮ ofrece "Rechazar traspaso" (7020:25441).',
         ruta: '/surtido',
         reglas: [
-          'Mientras todos los productos estén en 0, "Finalizar surtido" queda deshabilitado.',
+          'Con todos los productos en 0, "Rechazar traspaso" (azul) y "Finalizar surtido" (rojo) están activos.',
           'Rechazar traspaso › ✓ › motivo › ✓ regresa a Asignación de tareas con el toast "Traspaso rechazado".',
           'El ✓ del motivo se habilita al elegir una opción. Cualquier ✕ regresa al surtido.',
         ],
@@ -47,9 +47,9 @@ const GRUPOS: Grupo[] = [
       {
         id: 'p1-con-surtido',
         titulo: 'Surtido de órdenes — con piezas surtidas',
-        descripcion: '0486600 surtido 4 de 11. Menú ⋮ ya no ofrece "Rechazar traspaso" y "Finalizar surtido" está activo.',
+        descripcion: '0486600 surtido 4 de 11. En el menú ⋮ "Rechazar traspaso" está deshabilitado y "Finalizar surtido" activo.',
         ruta: '/surtido',
-        reglas: ['Si en el Detalle se regresa la cantidad a 0, vuelve a aparecer "Rechazar traspaso".'],
+        reglas: ['Si en el Detalle se regresa la cantidad a 0, se vuelve a habilitar "Rechazar traspaso".'],
       },
       {
         id: 'p1-rechazado',

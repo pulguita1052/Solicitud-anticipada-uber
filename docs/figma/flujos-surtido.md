@@ -64,9 +64,9 @@ Rama `feature-rechazar-traspaso`. Permite rechazar (negar) completo el surtido d
 Asignación de tareas — SURTIR TRASPASO · PedidoID 123456 (7020:21323 / 7053:26774)
  ✓ → Surtido de órdenes (7020:22451: 4 productos · 7053:26345: 2 productos)
       ⋮ → Menú
-         Propuesta #1 (7020:25441)
-           todos los productos en 0 → Repetir audio · Rechazar traspaso (rojo) · Finalizar surtido (gris, deshabilitado)
-           alguna pieza surtida     → menú de siempre (182:9267): Repetir audio · Finalizar surtido
+         Propuesta #1 (indicación del usuario 2026-10-12; difiere de 7020:25441, D45)
+           todos los productos en 0 → Repetir audio · Rechazar traspaso (azul) · Finalizar surtido (rojo, activo)
+           alguna pieza surtida     → Repetir audio · Rechazar traspaso (gris, deshabilitado) · Finalizar surtido (rojo, activo)
          Propuesta #2 (7053:26441), sin importar lo surtido o negado
                                     → Repetir audio · Rechazar traspaso (azul) · Finalizar surtido (rojo, activo)
       Rechazar traspaso → "Rechazar traspaso" (7020:25766 / 7053:26522)
@@ -90,7 +90,7 @@ Asignación de tareas — SURTIR TRASPASO · PedidoID 123456 (7020:21323 / 7053:
 
 | Punto | Interpretación |
 |---|---|
-| "Todos los productos en 0" (propuesta #1) | Ningún producto con cantidad surtida > 0; un producto negado cuenta como 0. Si en el Detalle se regresa la cantidad a 0, vuelve a aparecer el botón. |
+| "Todos los productos en 0" (propuesta #1) | Ningún producto con cantidad surtida > 0; un producto negado cuenta como 0. Si en el Detalle se regresa la cantidad a 0, se vuelve a habilitar el botón. |
 | ✕ de la confirmación y del motivo | Cierran el modal y regresan a Surtido de órdenes. |
 | Efecto del rechazo en la propuesta #2 | El traspaso queda rechazado con su motivo (`motivoRechazo`); no hay pantalla que muestre las piezas marcadas como rechazadas. |
 

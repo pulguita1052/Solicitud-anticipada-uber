@@ -20,6 +20,7 @@ export const CASOS = [
   /* Propuesta #1 */
   { id: 'p1-tareas', figma: '7020:21323', url: '/tareas?escenario=p1-tareas' },
   { id: 'p1-surtido', figma: '7020:22451', url: '/surtido?escenario=p1-inicio' },
+  // D45: los colores del menú de la propuesta #1 cambiaron por indicación del usuario; se espera diferencia en los botones.
   { id: 'p1-menu', figma: '7020:25284', url: '/surtido?escenario=p1-inicio', acciones: menu },
   { id: 'p1-rechazar', figma: '7020:25471', url: '/surtido?escenario=p1-inicio', acciones: rechazar },
   { id: 'p1-motivo', figma: '7040:25851', url: '/surtido?escenario=p1-inicio', acciones: motivo },
