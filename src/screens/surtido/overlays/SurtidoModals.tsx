@@ -4,7 +4,11 @@
  *   Modal pendientes parciales 182:9894 (= 3126:14406) · Finalizar surtido (automático) 197:23064
  *   Modal códigos negados / sin surtir 190:10418 · Selección de motivo negado 1246:7590 (act.) / 1246:7339 (inact.)
  * URL: https://www.figma.com/design/zZBoCtJor0tdJ91umiqb7l/?node-id=24-16
- * Última sincronización: 2026-10-09
+ * Figma: ❌ Negar totalidad traspaso (6874:864)
+ *   Menú con "Rechazar traspaso" 7020:25441 (propuesta #1) / 7053:26441 (propuesta #2)
+ *   Rechazar traspaso (confirmación) 7020:25766 / 7053:26522 (con leyenda) · motivo 7040:25916 (inact.) / 7040:26148 (act.)
+ * URL: https://www.figma.com/design/zZBoCtJor0tdJ91umiqb7l/?node-id=6874-864
+ * Última sincronización: 2026-10-12
  */
 import { Fragment, useState } from 'react';
 import iconoCantidad from '@assets/icons/modal-icono-cantidad.svg';
@@ -12,12 +16,14 @@ import iconoMenu from '@assets/icons/modal-icono-menu.svg';
 import iconoPregunta from '@assets/icons/modal-icono-pregunta.svg';
 import iconoNegado from '@assets/icons/modal-icono-negado.svg';
 import iconoMotivo from '@assets/icons/modal-icono-motivo-negado.svg';
+import iconoRechazar from '@assets/icons/modal-icono-rechazar-traspaso.svg';
+import iconoInfo from '@assets/icons/info.svg';
 import selectCheck from '@assets/icons/select-check.svg';
 import selectPoligono from '@assets/icons/select-poligono.svg';
 import botonCancelar from '@assets/icons/boton-cancelar.svg';
 import grupo45 from '@assets/icons/grupo-45-cancelar.svg';
 import { ModalHeader, ModalIcon, ModalSheet } from '@ds/components/organisms/ModalSheet/ModalSheet';
-import { Button } from '@ds/components/atoms/Button/Button';
+import { Button, type ButtonVariant } from '@ds/components/atoms/Button/Button';
 import { Chip } from '@ds/components/atoms/Chip/Chip';
 import { Divider } from '@ds/components/atoms/Divider/Divider';
 import styles from './overlays.module.css';
@@ -56,15 +62,30 @@ export function CantidadModal({ codigo, onCancel, onConfirm }: { codigo: string;
   );
 }
 
-/* ---------- Menú (⋮) — 182:9267 ---------- */
-export function MenuModal({ onRepetirAudio, onFinalizar, onCancel }: { onRepetirAudio: () => void; onFinalizar: () => void; onCancel: () => void }) {
+/* ---------- Menú (⋮) — 182:9267 · con "Rechazar traspaso" 7020:25441 (propuesta #1) / 7053:26441 (propuesta #2) ---------- */
+export function MenuModal({
+  onRepetirAudio,
+  onFinalizar,
+  onCancel,
+  rechazar,
+  finalizarDisabled,
+}: {
+  onRepetirAudio: () => void;
+  onFinalizar: () => void;
+  onCancel: () => void;
+  /** Botón "Rechazar traspaso": rojo en la propuesta #1, azul en la #2. */
+  rechazar?: { variant: ButtonVariant; onClick: () => void };
+  /** Propuesta #1: "Finalizar surtido" gris mientras se ofrece rechazar (7114:10977). */
+  finalizarDisabled?: boolean;
+}) {
   return (
     <ModalSheet icon={<ModalIcon src={iconoMenu} inset="-2.75% -1.7% -0.66% -1.7%" />} gap={10}>
       <div className={styles.col} style={{ gap: 15 }}>
         <ModalHeader title="Menú" gap={17} dividerWidth={415.902} />
         <div className={styles.col} style={{ gap: 15, alignItems: 'center' }}>
           <Button variant="default" label="Repetir audio" className={styles.full} onClick={onRepetirAudio} />
-          <Button variant="error" label="Finalizar surtido" className={styles.full} onClick={onFinalizar} />
+          {rechazar && <Button variant={rechazar.variant} label="Rechazar traspaso" className={styles.full} onClick={rechazar.onClick} />}
+          <Button variant="error" label="Finalizar surtido" disabled={finalizarDisabled} className={styles.full} onClick={onFinalizar} />
         </div>
       </div>
       <Button variant="error" icon="cross" label="Cancelar" className={styles.full} onClick={onCancel} />
@@ -203,6 +224,114 @@ export function MotivoNegadoModal({
         </label>
         <div className={styles.buttons}>
           <Button asset={grupo45} label="Cancelar" className={styles.flex1} onClick={onCancel} />
+          <Button variant="success" icon="check" label="Aceptar" disabled={!motivo} className={styles.flex1} onClick={() => onConfirm(motivo)} />
+        </div>
+      </div>
+    </ModalSheet>
+  );
+}
+
+/* ---------- Rechazar traspaso (confirmación) — 7020:25766 · con leyenda 7053:26522 ---------- */
+export type DatosTraspaso = { sucursalDestino: string; peticion: string; tipo: string };
+
+const iconRechazar = <ModalIcon src={iconoRechazar} inset="-2.84% -2.27% -0.56% -1.14%" />;
+
+export function RechazarTraspasoModal({
+  traspaso,
+  leyenda,
+  onCancel,
+  onConfirm,
+}: {
+  traspaso: DatosTraspaso;
+  /** Propuesta #2: "Las piezas surtidas se marcarán como rechazadas." (7060:28002). */
+  leyenda?: boolean;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  return (
+    <ModalSheet icon={iconRechazar} gap={10} doubleShadow>
+      <div className={styles.col} style={{ gap: 18 }}>
+        <p className={styles.subtitle} style={{ width: '100%', textAlign: 'center' }}>
+          Rechazar traspaso
+        </p>
+        <Divider variant="modal" />
+        {leyenda && (
+          <div className={styles.aviso}>
+            <img src={iconoInfo} alt="" width={20} height={20} />
+            <p>Las piezas surtidas se marcarán como rechazadas.</p>
+          </div>
+        )}
+        <p className={styles.text16}>¿Deseas rechazar el traspaso?</p>
+        <div className={styles.traspaso}>
+          <div className={styles.dato}>
+            <p className={styles.datoLabel}>Sucursal destino</p>
+            <p className={styles.sucursal}>{traspaso.sucursalDestino}</p>
+          </div>
+          <div className={styles.datosRow}>
+            <div className={styles.dato}>
+              <p className={styles.datoLabel}>Petición</p>
+              <p className={styles.datoValor}>{traspaso.peticion}</p>
+            </div>
+            <div className={styles.dato}>
+              <p className={styles.datoLabel}>Tipo</p>
+              <p className={styles.datoValor}>{traspaso.tipo}</p>
+            </div>
+          </div>
+        </div>
+        <div className={styles.text16}>
+          <p>Se solicitará el motivo de esta acción.</p>
+          <p>&#8203;</p>
+        </div>
+        <div className={styles.buttons}>
+          <Button variant="error" icon="cross" label="Cancelar" className={styles.flex1} onClick={onCancel} />
+          <Button variant="success" icon="check" label="Aceptar" className={styles.flex1} onClick={onConfirm} />
+        </div>
+      </div>
+    </ModalSheet>
+  );
+}
+
+/* ---------- Rechazar traspaso (motivo) — 7040:25916 (inact.) / 7040:26148 (act.) ---------- */
+export function MotivoRechazoModal({
+  motivos,
+  onCancel,
+  onConfirm,
+}: {
+  motivos: string[];
+  onCancel: () => void;
+  onConfirm: (motivo: string) => void;
+}) {
+  const [motivo, setMotivo] = useState('');
+  return (
+    <ModalSheet icon={iconRechazar} gap={10} doubleShadow>
+      <div className={styles.col} style={{ gap: 18 }}>
+        <p className={styles.subtitle} style={{ width: '100%', textAlign: 'center' }}>
+          Rechazar traspaso
+        </p>
+        <Divider variant="modal" />
+        <p className={styles.text16} style={{ textAlign: 'left' }}>
+          Seleccione el motivo de rechazo de traspaso:
+        </p>
+        <label className={styles.selectRechazo}>
+          <select value={motivo} onChange={(e) => setMotivo(e.target.value)} aria-label="Motivo">
+            <option value="" disabled>
+              Motivo
+            </option>
+            {motivos.map((m) => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            ))}
+          </select>
+          {motivo && (
+            <span className={styles.selectLabel} aria-hidden>
+              Motivo
+            </span>
+          )}
+          <img className={styles.selectArrow} src={selectPoligono} alt="" width={13} height={6} />
+        </label>
+        <div className={styles.buttons}>
+          <Button variant="error" icon="cross" label="Cancelar" className={styles.flex1} onClick={onCancel} />
           <Button variant="success" icon="check" label="Aceptar" disabled={!motivo} className={styles.flex1} onClick={() => onConfirm(motivo)} />
         </div>
       </div>

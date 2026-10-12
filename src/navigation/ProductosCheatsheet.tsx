@@ -3,12 +3,13 @@
  * durante el surtido. Vive fuera del `.app-frame` (mismo tratamiento que EscenariosPanel a la derecha),
  * se oculta bajo 900 px de viewport, y no altera la lógica de negocio. Se muestra solo en `/surtido`.
  *
- * Los datos vienen del mismo mock que alimenta la app (PRODUCTOS, mocks/pedido.ts) para que la tabla
- * siempre refleje el estado real del pedido; los precios se suman al total del pedido.
+ * Los datos vienen del mismo estado que alimenta la app (partidas del traspaso de la propuesta activa + CATALOGO)
+ * para que la tabla siempre refleje el pedido real; los precios se suman al total del pedido.
  */
 import { useState } from 'react';
 import { etiqueta } from '../domain/codigos';
-import { PRODUCTOS } from '../mocks/pedido';
+import { producto } from '../domain/pedido';
+import { useStore } from '../store/AppStore';
 import styles from './ProductosCheatsheet.module.css';
 
 const currency = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
@@ -23,9 +24,11 @@ function etiquetaPz1(codigo: string) {
 }
 
 export function ProductosCheatsheet() {
+  const { pedido } = useStore();
   const [copiado, setCopiado] = useState<string | null>(null);
-  const total = PRODUCTOS.reduce((n, p) => n + p.precioUnitario * p.solicitado, 0);
-  const piezas = PRODUCTOS.reduce((n, p) => n + p.solicitado, 0);
+  const filas = pedido.items.map((i) => ({ codigo: i.codigo, solicitado: i.solicitado, precioUnitario: producto(i.codigo)!.precioUnitario }));
+  const total = filas.reduce((n, p) => n + p.precioUnitario * p.solicitado, 0);
+  const piezas = filas.reduce((n, p) => n + p.solicitado, 0);
 
   const copiar = async (codigo: string) => {
     try {
@@ -58,7 +61,7 @@ export function ProductosCheatsheet() {
             </tr>
           </thead>
           <tbody>
-            {PRODUCTOS.map((p, i) => (
+            {filas.map((p, i) => (
               <tr key={p.codigo}>
                 <td className={styles.tdNum}>{i + 1}</td>
                 <td>
@@ -90,8 +93,8 @@ export function ProductosCheatsheet() {
         </table>
       </div>
       <p className={styles.hint}>
-        Pedido reducido a 2 artículos para simplificar la demo. Para pedir la cantidad en un modal, escribe solo el
-        código de 7 dígitos (p. ej. <b>1394000</b>).
+        Traspaso de la propuesta #{pedido.propuesta} ({filas.length} artículos). Para pedir la cantidad en un modal, escribe
+        solo el código de 7 dígitos (p. ej. <b>{filas[0].codigo}</b>).
       </p>
     </aside>
   );

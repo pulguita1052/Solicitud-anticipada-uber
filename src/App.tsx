@@ -9,7 +9,7 @@ import { ProductosCheatsheet } from './navigation/ProductosCheatsheet';
 
 export function App() {
   const { pathname } = useLocation();
-  const rutasConPanel = ['/tareas', '/surtido'];
+  const rutasConPanel = ['/menu', '/tareas', '/surtido'];
   const mostrarPanel = rutasConPanel.some((r) => pathname.startsWith(r));
   const mostrarProductos = pathname.startsWith('/surtido');
   return (

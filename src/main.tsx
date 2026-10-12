@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import '@fontsource/roboto/100.css';
 import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/600.css';
 import '@fontsource/roboto/700.css';
 import './styles/global.css';
 import { App } from './App';

@@ -164,3 +164,129 @@
   transform: rotate(180deg);
   pointer-events: none;
 }
+
+/* ---------- Rechazar traspaso — ❌ Negar totalidad traspaso (6874:864) ---------- */
+
+/* Texto 16 px Regular centrado (7053:26527, 7053:26542) */
+.text16 {
+  width: 100%;
+  color: var(--color-negro);
+  font: 400 16px/var(--line-height-auto) var(--font-family-roboto); /* figma: 7053:26527 (sin estilo) */
+  text-align: center;
+}
+
+/* Leyenda de la propuesta #2 — 7060:28002 */
+.aviso {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 8px 0;
+  border-radius: 5px;
+  background: var(--color-primary-azul-0);
+}
+
+.aviso p {
+  color: var(--color-primary-azul-300);
+  font: 400 14px/1.35 var(--font-family-roboto); /* figma: 7060:28009 (sin estilo) */
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Datos del traspaso — 7053:26528 */
+.traspaso {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: flex-start;
+  width: 100%;
+  padding: 15px 30px;
+  overflow: hidden;
+  border-radius: 5px;
+  background: var(--color-inactive);
+  color: var(--color-negro);
+  line-height: var(--line-height-auto);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.datosRow {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.dato {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  min-width: 1px;
+}
+
+.datoLabel {
+  font: 400 14px/var(--line-height-auto) var(--font-family-roboto); /* figma: 7053:26530 */
+}
+
+.sucursal {
+  color: var(--color-primary-azul-300);
+  font: 600 24px/var(--line-height-auto) var(--font-family-roboto); /* figma: 7053:26531 (Roboto SemiBold, sin estilo) */
+}
+
+.datoValor {
+  font: 600 15px/var(--line-height-auto) var(--font-family-roboto); /* figma: 7053:26535 (Roboto SemiBold, sin estilo) */
+}
+
+/* SELECT PRUEBA — 7040:26154 (con valor) / 7040:26325 (vacío) */
+.selectRechazo {
+  position: relative;
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  padding: 0 13px;
+  border: 1px solid var(--color-negro);
+  border-radius: 5px;
+  background: var(--color-blanco);
+}
+
+.selectRechazo select {
+  flex: 1 0 0;
+  min-width: 1px;
+  height: 100%;
+  padding-right: 24px;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  color: var(--color-negro);
+  font: 400 15px/var(--line-height-auto) var(--font-family-roboto); /* figma: 7040:26158 (sin estilo) */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+/* PLACEHOLDER flotante — 7040:26159 */
+.selectLabel {
+  position: absolute;
+  top: -8px;
+  left: 8px;
+  display: flex;
+  align-items: center;
+  height: 14px;
+  padding: 0 5px;
+  background: var(--color-blanco);
+  color: var(--color-negro);
+  font: 400 13px/var(--line-height-auto) var(--font-family-roboto); /* figma: 7040:26160 (sin estilo) */
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.selectRechazo .selectArrow {
+  right: 13px;
+}

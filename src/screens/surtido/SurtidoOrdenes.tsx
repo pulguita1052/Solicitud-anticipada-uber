@@ -3,7 +3,8 @@
  * nodeId: 109:357 · 131:4492 — secciones 99:219 (interfaz principal), 182:7444 (finalización manual),
  *         197:19260 (finalización automática)
  * URL: https://www.figma.com/design/zZBoCtJor0tdJ91umiqb7l/?node-id=99-219
- * Última sincronización: 2026-10-09
+ * Rechazo del traspaso: ❌ Negar totalidad traspaso (6874:864) — propuesta #1 7020:21322 · propuesta #2 7053:26344
+ * Última sincronización: 2026-10-12
  */
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -15,16 +16,34 @@ import { OrderItemRow } from '@ds/components/molecules/OrderItemRow/OrderItemRow
 import { ScanInput, type ScanInputHandle } from '@ds/components/molecules/ScanInput/ScanInput';
 import { Divider } from '@ds/components/atoms/Divider/Divider';
 import { leerCodigo } from '../../domain/codigos';
-import { conteos, listoParaFinalizar, parciales, producto, sinSurtir, statusDe } from '../../domain/pedido';
+import { conteos, listoParaFinalizar, parciales, producto, sinPiezasSurtidas, sinSurtir, statusDe } from '../../domain/pedido';
+import { MOTIVOS_RECHAZO, TRASPASO } from '../../mocks/pedido';
 import { decir, sonar } from '../../domain/sonidos';
 import { useStore } from '../../store/AppStore';
-import { CantidadModal, FinalizarModal, MenuModal, ParcialesModal, SinSurtirModal } from './overlays/SurtidoModals';
+import {
+  CantidadModal,
+  FinalizarModal,
+  MenuModal,
+  MotivoRechazoModal,
+  ParcialesModal,
+  RechazarTraspasoModal,
+  SinSurtirModal,
+} from './overlays/SurtidoModals';
 import styles from './SurtidoOrdenes.module.css';
 
-type Overlay = { k: 'cantidad'; codigo: string } | { k: 'menu' } | { k: 'sinSurtir' } | { k: 'parciales' } | { k: 'finalizar' };
+type Overlay =
+  | { k: 'cantidad'; codigo: string }
+  | { k: 'menu' }
+  | { k: 'sinSurtir' }
+  | { k: 'parciales' }
+  | { k: 'finalizar' }
+  | { k: 'rechazar' }
+  | { k: 'motivoRechazo' };
 
 /** 192:16730 / 197:20533 */
 export const TOAST_FINALIZADO = { kind: 'success' as const, title: 'Surtido finalizado', message: '¡Se completó la ronda de surtido exitosamente!' };
+/** 7114:11110 (Toast=Inicio, 192:16700) */
+export const TOAST_RECHAZADO = { kind: 'success' as const, title: 'Traspaso rechazado', message: 'Se negó el surtido del traspaso correctamente.' };
 /** 325:3026 — "Estructura del CB no válida" */
 const TOAST_CODIGO_INVALIDO = { kind: 'error' as const, title: 'Código inválido', message: 'El código de barras capturado no es válido.' };
 /** 1509:9441 — el código escaneado pertenece a un producto ya negado */
@@ -66,7 +85,7 @@ export function SurtidoOrdenes() {
     // Código de 7 caracteres → modal de cantidad manual (330:3096 → 131:6184)
     if (l.tipo === 'codigo') return setOverlay({ k: 'cantidad', codigo: l.codigo });
     // Etiqueta de 18 caracteres → cantidad de los caracteres 8 al 14 (1007:4012 → 131:4198)
-    if (item.surtido >= producto(l.codigo)!.solicitado) return sonar('error');
+    if (item.surtido >= item.solicitado) return sonar('error');
     sonar('ok');
     dispatch({ type: 'surtir', codigo: l.codigo, cantidad: l.cantidad });
   };
@@ -77,7 +96,7 @@ export function SurtidoOrdenes() {
     const error =
       n <= 0
         ? TOAST_CANTIDAD.cero
-        : item.surtido + n > p.solicitado
+        : item.surtido + n > item.solicitado
           ? TOAST_CANTIDAD.mayorPendiente
           : item.surtido + n > p.existencia
             ? TOAST_CANTIDAD.mayorExistencia
@@ -99,6 +118,24 @@ export function SurtidoOrdenes() {
     navigate('/tareas');
     mostrarToast(TOAST_FINALIZADO);
   };
+
+  // ---- Rechazo del traspaso: confirmación → motivo → Asignación de tareas con otra tarea + toast (7114:10987 + 7114:11110)
+  const rechazar = (motivo: string) => {
+    dispatch({ type: 'rechazar', motivo });
+    setEtapa('rechazado');
+    navigate('/tareas');
+    mostrarToast(TOAST_RECHAZADO);
+  };
+
+  /**
+   * Botón "Rechazar traspaso" del menú ⋮:
+   *   propuesta #1 — solo con todos los productos en 0; mientras tanto "Finalizar surtido" queda gris (7020:25441).
+   *   propuesta #2 — siempre, junto a "Finalizar surtido" activo (7053:26441).
+   */
+  const ofrecerRechazo = pedido.propuesta === 2 || sinPiezasSurtidas(pedido);
+  const menuRechazo = ofrecerRechazo
+    ? { variant: pedido.propuesta === 1 ? ('error' as const) : ('default' as const), onClick: () => setOverlay({ k: 'rechazar' }) }
+    : undefined;
 
   /** Menú › Finalizar surtido: ¿códigos sin surtir? (237:3071) → ¿códigos parciales? (237:3067) → fin. */
   const finalizarManual = () => {
@@ -134,7 +171,7 @@ export function SurtidoOrdenes() {
                   codigo={it.codigo}
                   status={statusDe(it)}
                   surtido={it.surtido}
-                  solicitado={p.solicitado}
+                  solicitado={it.solicitado}
                   ubicacion={p.ubicacion}
                   onClick={() => navigate(`/surtido/producto/${it.codigo}`)}
                 />
@@ -156,6 +193,8 @@ export function SurtidoOrdenes() {
           }}
           onFinalizar={finalizarManual}
           onCancel={cerrar}
+          rechazar={menuRechazo}
+          finalizarDisabled={pedido.propuesta === 1 && ofrecerRechazo}
         />
       )}
       {ov?.k === 'sinSurtir' && <SinSurtirModal onCancel={cerrar} />}
@@ -164,7 +203,7 @@ export function SurtidoOrdenes() {
           rows={parciales(pedido).map((i) => ({
             codigo: i.codigo,
             surtido: i.surtido,
-            solicitado: producto(i.codigo)!.solicitado,
+            solicitado: i.solicitado,
             existencia: producto(i.codigo)!.existencia,
           }))}
           onCancel={cerrar}
@@ -180,6 +219,15 @@ export function SurtidoOrdenes() {
           onConfirm={terminar}
         />
       )}
+      {ov?.k === 'rechazar' && (
+        <RechazarTraspasoModal
+          traspaso={TRASPASO}
+          leyenda={pedido.propuesta === 2}
+          onCancel={cerrar}
+          onConfirm={() => setOverlay({ k: 'motivoRechazo' })}
+        />
+      )}
+      {ov?.k === 'motivoRechazo' && <MotivoRechazoModal motivos={MOTIVOS_RECHAZO} onCancel={cerrar} onConfirm={rechazar} />}
     </div>
   );
 }

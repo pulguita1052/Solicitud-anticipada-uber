@@ -1,5 +1,5 @@
 {
-  "fecha": "2026-09-29T22:20:00.601Z",
+  "fecha": "2026-10-12T18:40:11.744Z",
   "resultados": [
     {
       "id": "menu",
@@ -9,72 +9,65 @@
       "tam": "430x932"
     },
     {
-      "id": "asignacion-surtido",
-      "figma": "3048:10014",
-      "pct": "4.47",
+      "id": "p1-tareas",
+      "figma": "7020:21323",
+      "pct": "4.21",
       "estado": "REVISAR",
       "tam": "430x932"
     },
     {
-      "id": "surtido-inicial",
-      "figma": "3048:10138",
-      "pct": "3.71",
+      "id": "p1-surtido",
+      "figma": "7020:22451",
+      "pct": "3.33",
       "estado": "REVISAR",
       "tam": "430x932"
     },
     {
-      "id": "surtido-revisado-1964000",
-      "figma": "3086:11303",
-      "pct": "4.59",
-      "estado": "REVISAR",
-      "tam": "430x932"
-    },
-    {
-      "id": "surtido-parcial-2546000",
-      "figma": "3089:13509",
-      "pct": "3.71",
-      "estado": "REVISAR",
-      "tam": "430x932"
-    },
-    {
-      "id": "detalle-1964000",
-      "figma": "3199:6362",
-      "pct": "1.85",
-      "estado": "REVISAR",
-      "tam": "430x932"
-    },
-    {
-      "id": "detalle-2546000-parcial",
-      "figma": "3091:14568",
-      "pct": "3.13",
-      "estado": "REVISAR",
-      "tam": "430x932"
-    },
-    {
-      "id": "factura-formulario",
-      "figma": "3841:818",
-      "pct": "4.89",
-      "estado": "REVISAR",
-      "tam": "430x932"
-    },
-    {
-      "id": "config-menu",
-      "figma": "5917:1679",
-      "pct": "0.79",
+      "id": "p1-menu",
+      "figma": "7020:25284",
+      "pct": "0.74",
       "estado": "OK",
       "tam": "430x932"
     },
     {
-      "id": "config-sonido",
-      "figma": "5170:12983",
-      "pct": "1.79",
+      "id": "p1-rechazar",
+      "figma": "7020:25471",
+      "pct": "1.42",
       "estado": "REVISAR",
       "tam": "430x932"
     },
     {
-      "id": "config-impresion-procesos",
-      "figma": "5918:1978",
-      "pct": "1.05",
+      "id": "p1-motivo",
+      "figma": "7040:25851",
+      "pct": "1.26",
+      "estado": "REVISAR",
+      "tam": "430x932"
+    },
+    {
+      "id": "p2-surtido",
+      "figma": "7053:26345",
+      "pct": "1.76",
+      "estado": "REVISAR",
+      "tam": "430x932"
+    },
+    {
+      "id": "p2-parcial",
+      "figma": "7053:27466",
+      "pct": "1.78",
+      "estado": "REVISAR",
+      "tam": "430x932"
+    },
+    {
+      "id": "p2-menu",
+      "figma": "7053:26392",
+      "pct": "0.99",
+      "estado": "OK",
+      "tam": "430x932"
+    },
+    {
+      "id": "p2-rechazar",
+      "figma": "7053:26457",
+      "pct": "1.92",
       "estado": "REVISAR",
       "tam": "430x932"
     }

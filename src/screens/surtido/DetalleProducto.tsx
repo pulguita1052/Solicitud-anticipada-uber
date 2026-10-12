@@ -68,7 +68,7 @@ export function DetalleProducto() {
               </div>
               <div className={styles.pair}>
                 <LabeledField label="Existencia" value={p.existencia} valueBold />
-                <LabeledField label="Solicitado" value={p.solicitado} />
+                <LabeledField label="Solicitado" value={item.solicitado} />
               </div>
             </div>
           </div>
@@ -77,7 +77,7 @@ export function DetalleProducto() {
             <Stepper
               value={item.surtido}
               min={0}
-              max={p.solicitado}
+              max={item.solicitado}
               disabled={!item.escaneado || item.negado}
               onChange={(cantidad) => dispatch({ type: 'fijarSurtido', codigo, cantidad })}
             />

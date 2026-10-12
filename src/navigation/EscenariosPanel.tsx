@@ -1,7 +1,7 @@
 /**
- * Panel lateral (derecho) con los escenarios de verificación del flujo de surtido:
- * Tareas → Surtido. Cada tarjeta salta directamente a la pantalla
- * correspondiente con un seed de estado (query `?escenario=<id>`). Se muestra en `/tareas` y `/surtido`.
+ * Panel lateral (derecho) con los escenarios de las dos propuestas para rechazar un traspaso:
+ * Tareas → Surtido → Rechazo. Cada tarjeta salta directamente a la pantalla correspondiente con un seed de estado
+ * (query `?escenario=<id>`), que también fija la propuesta. Se muestra en `/menu`, `/tareas` y `/surtido`.
  * Fuera del handheld (queda a la derecha del app-frame de 430 px) y oculto bajo 900 px de viewport.
  */
 import { useEffect, useRef } from 'react';
@@ -24,63 +24,72 @@ type Grupo = { titulo: string; escenarios: Escenario[] };
 
 const GRUPOS: Grupo[] = [
   {
-    titulo: 'Tareas',
+    titulo: 'Propuesta #1 — Rechazar solo sin piezas surtidas',
     escenarios: [
       {
-        id: 'tareas-surtido',
-        titulo: 'Asignación — Surtir pedido',
-        descripcion: 'Empleado con tarea "SURTIR PEDIDO CLIENTE" asignada (86:37). Al aceptar entra a Surtido de órdenes.',
+        id: 'p1-tareas',
+        titulo: 'Asignación — Surtir traspaso',
+        descripcion: 'Tarea "SURTIR TRASPASO" del pedido 123456 (7020:21323). Al aceptar entra a Surtido de órdenes.',
         ruta: '/tareas',
         reglas: ['El "Cancelar" regresa al menú sin cambios.'],
       },
       {
-        id: 'tareas-revision',
-        titulo: 'Asignación — Siguiente tarea (Revisión)',
-        descripcion: 'Al finalizar el surtido aparece la tarea "REVISAR PEDIDO CLIENTE" (197:20499) como siguiente paso.',
+        id: 'p1-inicio',
+        titulo: 'Surtido de órdenes — todo en 0',
+        descripcion: 'Traspaso de 4 productos sin surtir (7020:22451). Menú ⋮ ofrece "Rechazar traspaso" (7020:25441).',
+        ruta: '/surtido',
+        reglas: [
+          'Mientras todos los productos estén en 0, "Finalizar surtido" queda deshabilitado.',
+          'Rechazar traspaso › ✓ › motivo › ✓ regresa a Asignación de tareas con el toast "Traspaso rechazado".',
+          'El ✓ del motivo se habilita al elegir una opción. Cualquier ✕ regresa al surtido.',
+        ],
+      },
+      {
+        id: 'p1-con-surtido',
+        titulo: 'Surtido de órdenes — con piezas surtidas',
+        descripcion: '0486600 surtido 4 de 11. Menú ⋮ ya no ofrece "Rechazar traspaso" y "Finalizar surtido" está activo.',
+        ruta: '/surtido',
+        reglas: ['Si en el Detalle se regresa la cantidad a 0, vuelve a aparecer "Rechazar traspaso".'],
+      },
+      {
+        id: 'p1-rechazado',
+        titulo: 'Asignación — Traspaso rechazado',
+        descripcion: 'Después de rechazar (7114:10987 + toast 7114:11110) se muestra otra tarea de demo.',
         ruta: '/tareas',
-        reglas: ['Fuera del alcance de esta rama: "Aceptar" está deshabilitado.'],
+        reglas: ['La nueva tarea no se puede tomar: "Aceptar" está deshabilitado.'],
       },
     ],
   },
   {
-    titulo: 'Surtido',
+    titulo: 'Propuesta #2 — Rechazar siempre',
     escenarios: [
       {
-        id: 'inicial',
-        titulo: 'Surtido de órdenes — inicio',
-        descripcion: 'Pedido sin surtir. Copia una etiqueta del panel izquierdo y pégala en el campo de escaneo.',
-        ruta: '/surtido',
-        reglas: [
-          'Etiqueta de 18 dígitos: surte la cantidad de los dígitos 8 al 13.',
-          'Código de 7 dígitos: pide la cantidad en un modal (no permite 0, más de lo solicitado ni más de la existencia).',
-          'Con todo surtido o negado, a los 600 ms aparece "Finalizar surtido".',
-          'Al finalizar regresa a Asignación de tareas con la tarea de revisión (sin poder aceptarla).',
-        ],
+        id: 'p2-tareas',
+        titulo: 'Asignación — Surtir traspaso',
+        descripcion: 'Tarea "SURTIR TRASPASO" del pedido 123456 (7053:26774). Al aceptar entra a Surtido de órdenes.',
+        ruta: '/tareas',
+        reglas: ['El "Cancelar" regresa al menú sin cambios.'],
       },
       {
-        id: 'parcial-2546000',
-        titulo: 'Códigos parciales',
-        descripcion: '2546000 surtido 3 de 5. Menú ⋮ › Finalizar surtido muestra el modal informativo de parciales (182:9894).',
+        id: 'p2-inicio',
+        titulo: 'Surtido de órdenes — todo en 0',
+        descripcion: 'Traspaso de 2 productos sin surtir (7053:26345). Menú ⋮ con "Rechazar traspaso" y "Finalizar surtido" activos.',
         ruta: '/surtido',
-        reglas: ['El modal es informativo: con ✓ se finaliza aunque haya parciales.'],
+        reglas: ['La confirmación siempre avisa: "Las piezas surtidas se marcarán como rechazadas."'],
       },
       {
-        id: 'sin-surtir-2546000',
-        titulo: 'Códigos sin surtir',
-        descripcion: '2546000 en 0. Menú ⋮ › Finalizar surtido muestra "No es posible finalizar surtido" (190:10418).',
+        id: 'p2-parcial',
+        titulo: 'Surtido de órdenes — surtido parcial',
+        descripcion: '0486600 surtido 1 de 2 (7053:27466). Se puede rechazar o finalizar sin importar lo surtido o negado.',
         ruta: '/surtido',
-        reglas: [
-          'Hay que negarlo desde el Detalle del producto: "Negar producto" › motivo › ✓.',
-          'Si la cantidad surtida es mayor a 0, no se puede negar (aviso amarillo).',
-          'La cantidad del Detalle solo se edita si el producto ya se escaneó.',
-        ],
+        reglas: ['Rechazar traspaso › ✓ › motivo › ✓ regresa a Asignación de tareas con el toast "Traspaso rechazado".'],
       },
       {
-        id: 'completo-con-negado',
-        titulo: 'Finalización automática',
-        descripcion: '1394000 completo y 2546000 negado: aparece "Finalizar surtido" sin pasar por el menú (197:22893).',
-        ruta: '/surtido',
-        reglas: ['Escanear un producto negado muestra el aviso "Producto negado".'],
+        id: 'p2-rechazado',
+        titulo: 'Asignación — Traspaso rechazado',
+        descripcion: 'Después de rechazar se muestra otra tarea de demo con el toast "Traspaso rechazado".',
+        ruta: '/tareas',
+        reglas: ['La nueva tarea no se puede tomar: "Aceptar" está deshabilitado.'],
       },
     ],
   },
@@ -132,7 +141,8 @@ export function EscenariosPanel() {
         <span className={styles.badge}>Flujo</span>
         <h2 className={styles.title}>Escenarios</h2>
         <p className={styles.subtitle}>
-          Tareas → Surtido. Selecciona un escenario para saltar a esa pantalla con el estado ya sembrado.
+          Rechazar traspaso: dos propuestas. Selecciona un escenario para saltar a esa pantalla con el estado y la
+          propuesta ya sembrados.
         </p>
       </header>
       <div className={styles.grupos}>

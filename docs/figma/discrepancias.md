@@ -35,3 +35,8 @@ Regla: se replica tal cual lo que está en Figma; aquí solo se registra. Fuente
 | D22 | Detalle de producto (R6–R10, R32–R42) | El primer botón inferior alterna entre "Regresar" y "Aceptar" | Replicar por estado; documentar la regla en F5 con la tabla `image 4` |
 | D23 | Teclado del sistema (R22, R23) | Mock del teclado de Android dibujado en el frame | No se renderiza (F4.6); lo muestra el teclado real |
 | D24 | 6653:8000, 6653:8624 | Frames sueltos fuera de secciones, duplicados de un overlay | Ignorados (P3) |
+| D40 | 7020:22451 (❌ Negar totalidad traspaso) | El contador "Pendientes" dice 11 con solo 4 productos en la lista | El contador se calcula del estado (4); se acepta la diferencia en la prueba visual |
+| D41 | 7053:27466 | 0486600 aparece "1 de 2" (parcial) pero el avance muestra Parcial 0 / Pendientes 2 | El contador se calcula del estado (Parcial 1 / Pendientes 1) |
+| D42 | 7020:21323, 7053:26774, 7114:10987 | En esta página las etiquetas "Actividad", "Fecha", "PedidoID" y "9029" son Regular y los bloques miden 1–2 px menos que en 86:37 | Se conserva `InfoBlock` / `LabeledField` de 86:37 (también lo usan otras pantallas); diferencia de 4.21 % en la prueba visual |
+| D43 | ❌ Negar totalidad traspaso (prototipo) | Casi todas las interacciones (`NAVIGATE`) apuntan a destinos vacíos; el flujo no se puede leer de `node.reactions` | Flujo tomado de la descripción del usuario (2026-10-12), ver `flujos-surtido.md` |
+| D44 | 7114:10987 | Tras rechazar, Figma repite la misma tarea SURTIR TRASPASO / 123456 | Por indicación del usuario se muestra otra tarea de demo (PedidoID 123461) con "Aceptar" deshabilitado |

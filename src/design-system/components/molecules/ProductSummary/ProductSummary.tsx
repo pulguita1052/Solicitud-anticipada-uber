@@ -22,7 +22,8 @@ export function ProductSummary({ foto, codigo, descripcion, photoStyle = 'border
     <div className={styles.summary}>
       <div className={`${styles.photo} ${styles[photoStyle]}`}>
         <div className={styles.photoInner}>
-          <img src={foto} alt="" />
+          {/* Sin foto (productos de demo sin imagen en Figma) el recuadro queda vacío. */}
+          {foto && <img src={foto} alt="" />}
         </div>
       </div>
       <div className={styles.info}>

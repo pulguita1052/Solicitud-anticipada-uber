@@ -1,58 +1,390 @@
 {
   "fileKey": "zZBoCtJor0tdJ91umiqb7l",
-  "lastSync": "2026-09-29",
+  "lastSync": "2026-10-12",
   "url": "https://www.figma.com/design/zZBoCtJor0tdJ91umiqb7l/RB_Handheld_Mejoras-de-procesos",
   "_notas": "Cada entrada mapea un nodeId de Figma → archivo del código que lo replica. status: verificado (F6 pasa), aproximado (F6 dentro de tolerancia de antialiasing), pendiente (no implementado).",
   "componentes": {
-    "3086:11540": { "name": "Card revisión aleatoria", "type": "COMPONENT_SET", "code": "src/design-system/components/molecules/OrderItemRow/OrderItemRow.tsx", "variantes": { "3086:11541": "surtido=no-iniciado", "3086:11559": "surtido=completado", "3086:11577": "surtido=parcial", "3086:11595": "surtido=negado", "3086:11992": "surtido=revisado" }, "status": "aproximado" },
-    "1324:7100": { "name": "Avance del pedido", "type": "COMPONENT", "code": "src/design-system/components/molecules/OrderProgress/OrderProgress.tsx", "status": "aproximado" },
-    "9:92": { "name": "Botones", "type": "COMPONENT_SET (remoto)", "code": "src/design-system/components/atoms/Button/Button.tsx", "status": "aproximado" },
-    "192:16685": { "name": "Notificaciones Toast Verde", "type": "COMPONENT_SET", "code": "src/design-system/components/organisms/Toast/Toast.tsx (variante success)", "status": "aproximado" },
-    "131:6148": { "name": "Notificaciones Toast Rojo", "type": "COMPONENT_SET", "code": "src/design-system/components/organisms/Toast/Toast.tsx (variante error)", "status": "aproximado" },
-    "6640:1866": { "name": "Header (Revisión)", "type": "COMPONENT", "code": "src/design-system/components/organisms/AppHeader/AppHeader.tsx", "status": "aproximado" },
-    "5170:21980": { "name": "Switch", "type": "COMPONENT_SET", "code": "src/design-system/components/atoms/Switch/Switch.tsx", "status": "verificado" },
-    "5234:23533": { "name": "Estado", "type": "COMPONENT_SET", "code": "src/design-system/components/atoms/StatusDot/StatusDot.tsx", "variantes": { "5234:23532": "estado=conectada", "5234:23534": "estado=sin-conexion", "5234:23536": "estado=conectando", "5234:23538": "estado=no-disponible" }, "status": "verificado" },
-    "5405:1085": { "name": "Card configuraciones handheld", "type": "COMPONENT_SET", "code": "src/screens/configuraciones/Configuraciones.tsx (Card)", "status": "verificado" },
-    "5411:2186": { "name": "Card mis impresoras", "type": "COMPONENT_SET", "code": "src/screens/configuraciones/Impresion.tsx (ListaImpresoras)", "status": "verificado" },
-    "5405:1277": { "name": "Card proceso impresión", "type": "COMPONENT_SET", "code": "src/screens/configuraciones/Impresion.tsx (ListaProcesos)", "status": "verificado" },
-    "3650:1374": { "name": "INPUT PRUEBA", "type": "COMPONENT_SET (Facturación)", "code": "src/design-system/components/molecules/FloatingLabelInput/FloatingLabelInput.tsx", "status": "aproximado" },
-    "3655:17354": { "name": "SELECT CEDIS", "type": "COMPONENT_SET (Facturación)", "code": "src/design-system/components/molecules/FloatingLabelInput/FloatingLabelInput.tsx (isSelect)", "status": "aproximado" }
+    "3086:11540": {
+      "name": "Card revisión aleatoria",
+      "type": "COMPONENT_SET",
+      "code": "src/design-system/components/molecules/OrderItemRow/OrderItemRow.tsx",
+      "variantes": {
+        "3086:11541": "surtido=no-iniciado",
+        "3086:11559": "surtido=completado",
+        "3086:11577": "surtido=parcial",
+        "3086:11595": "surtido=negado",
+        "3086:11992": "surtido=revisado"
+      },
+      "status": "aproximado"
+    },
+    "1324:7100": {
+      "name": "Avance del pedido",
+      "type": "COMPONENT",
+      "code": "src/design-system/components/molecules/OrderProgress/OrderProgress.tsx",
+      "status": "aproximado"
+    },
+    "9:92": {
+      "name": "Botones",
+      "type": "COMPONENT_SET (remoto)",
+      "code": "src/design-system/components/atoms/Button/Button.tsx",
+      "status": "aproximado"
+    },
+    "192:16685": {
+      "name": "Notificaciones Toast Verde",
+      "type": "COMPONENT_SET",
+      "code": "src/design-system/components/organisms/Toast/Toast.tsx (variante success)",
+      "status": "aproximado"
+    },
+    "131:6148": {
+      "name": "Notificaciones Toast Rojo",
+      "type": "COMPONENT_SET",
+      "code": "src/design-system/components/organisms/Toast/Toast.tsx (variante error)",
+      "status": "aproximado"
+    },
+    "6640:1866": {
+      "name": "Header (Revisión)",
+      "type": "COMPONENT",
+      "code": "src/design-system/components/organisms/AppHeader/AppHeader.tsx",
+      "status": "aproximado"
+    },
+    "5170:21980": {
+      "name": "Switch",
+      "type": "COMPONENT_SET",
+      "code": "src/design-system/components/atoms/Switch/Switch.tsx",
+      "status": "verificado"
+    },
+    "5234:23533": {
+      "name": "Estado",
+      "type": "COMPONENT_SET",
+      "code": "src/design-system/components/atoms/StatusDot/StatusDot.tsx",
+      "variantes": {
+        "5234:23532": "estado=conectada",
+        "5234:23534": "estado=sin-conexion",
+        "5234:23536": "estado=conectando",
+        "5234:23538": "estado=no-disponible"
+      },
+      "status": "verificado"
+    },
+    "5405:1085": {
+      "name": "Card configuraciones handheld",
+      "type": "COMPONENT_SET",
+      "code": "src/screens/configuraciones/Configuraciones.tsx (Card)",
+      "status": "verificado"
+    },
+    "5411:2186": {
+      "name": "Card mis impresoras",
+      "type": "COMPONENT_SET",
+      "code": "src/screens/configuraciones/Impresion.tsx (ListaImpresoras)",
+      "status": "verificado"
+    },
+    "5405:1277": {
+      "name": "Card proceso impresión",
+      "type": "COMPONENT_SET",
+      "code": "src/screens/configuraciones/Impresion.tsx (ListaProcesos)",
+      "status": "verificado"
+    },
+    "3650:1374": {
+      "name": "INPUT PRUEBA",
+      "type": "COMPONENT_SET (Facturación)",
+      "code": "src/design-system/components/molecules/FloatingLabelInput/FloatingLabelInput.tsx",
+      "status": "aproximado"
+    },
+    "3655:17354": {
+      "name": "SELECT CEDIS",
+      "type": "COMPONENT_SET (Facturación)",
+      "code": "src/design-system/components/molecules/FloatingLabelInput/FloatingLabelInput.tsx (isSelect)",
+      "status": "aproximado"
+    }
   },
   "pantallas": {
-    "3048:10103": { "name": "Menú", "code": "src/screens/menu/Menu.tsx", "route": "/menu", "status": "verificado", "diff": "0.56%" },
-    "3048:10014": { "name": "Asignación de tareas (surtido)", "code": "src/screens/tareas/AsignacionTareas.tsx", "route": "/tareas", "status": "aproximado", "diff": "4.47%" },
-    "3048:10138": { "name": "Surtido de órdenes (NO INICIADO)", "code": "src/screens/surtido/SurtidoOrdenes.tsx", "route": "/surtido", "status": "aproximado", "diff": "3.71%" },
-    "3086:11303": { "name": "Surtido con 1964000 revisado", "code": "src/screens/surtido/SurtidoOrdenes.tsx (?escenario=revisado-1964000)", "route": "/surtido", "status": "aproximado", "diff": "4.59%" },
-    "3089:13509": { "name": "Surtido con 2546000 parcial", "code": "src/screens/surtido/SurtidoOrdenes.tsx (?escenario=parcial-2546000)", "route": "/surtido", "status": "aproximado", "diff": "3.71%" },
-    "3199:6362": { "name": "Detalle del producto (1964000)", "code": "src/screens/surtido/DetalleProducto.tsx", "route": "/surtido/producto/1964000", "status": "aproximado", "diff": "1.85%" },
-    "3091:14568": { "name": "Detalle del producto (2546000 parcial)", "code": "src/screens/surtido/DetalleProducto.tsx", "route": "/surtido/producto/2546000", "status": "aproximado", "diff": "3.13%" },
-    "3060:12583": { "name": "Modal Revisión aleatoria (forzosa)", "code": "src/screens/surtido/overlays/RevisionModal.tsx", "status": "pendiente-diff" },
-    "3308:17290": { "name": "Modal Revisión aleatoria dos (simplificada)", "code": "src/screens/surtido/overlays/RevisionModal.tsx (tipo=simplificada)", "status": "pendiente-diff" },
-    "3236:16208": { "name": "Modal ingresar cantidad", "code": "src/screens/surtido/overlays/SurtidoModals.tsx (CantidadModal)", "status": "pendiente-diff" },
-    "3126:14186": { "name": "Modal Menú (⋮)", "code": "src/screens/surtido/overlays/SurtidoModals.tsx (MenuModal)", "status": "pendiente-diff" },
-    "3126:14406": { "name": "Modal Finalizar surtido (parciales)", "code": "src/screens/surtido/overlays/SurtidoModals.tsx (ParcialesModal)", "status": "pendiente-diff" },
-    "4582:25330": { "name": "Modal Finalizar surtido y revisión", "code": "src/screens/surtido/overlays/SurtidoModals.tsx (FinalizarModal)", "status": "pendiente-diff" },
-    "4582:23615": { "name": "Modal Finalizar surtido (promoción parcial)", "code": "src/screens/surtido/overlays/SurtidoModals.tsx (PromoParcialModal)", "status": "pendiente-diff" },
-    "4582:23837": { "name": "Modal Escanea promoción", "code": "src/screens/surtido/overlays/SurtidoModals.tsx (PromoEscaneoModal)", "status": "pendiente-diff" },
-    "4582:24109": { "name": "Modal Promoción negada", "code": "src/screens/surtido/overlays/SurtidoModals.tsx (PromoNegadaModal)", "status": "pendiente-diff" },
-    "3085:11302": { "name": "Toast Revisión completa (overlay)", "code": "src/navigation/ToastHost.tsx", "status": "aproximado" },
-    "3841:818": { "name": "Datos de la factura (formulario)", "code": "src/screens/facturacion/DatosFactura.tsx", "route": "/facturacion", "status": "aproximado", "diff": "4.89%" },
-    "6004:6726": { "name": "Datos de la factura (generando)", "code": "src/screens/facturacion/DatosFactura.tsx (estado=generando)", "route": "/facturacion", "status": "pendiente-diff" },
-    "6004:5275": { "name": "Datos de la factura (scroll)", "code": "src/screens/facturacion/DatosFactura.tsx", "status": "aproximado" },
-    "6004:4347": { "name": "Datos de la factura (selector dirección)", "code": "src/screens/facturacion/DatosFactura.tsx (overlay=direcciones)", "status": "pendiente-diff" },
-    "6004:6594": { "name": "Datos de la factura (error)", "code": "src/screens/facturacion/DatosFactura.tsx (estado=error)", "status": "pendiente-diff" },
-    "6004:7618": { "name": "Datos de la factura (facturada + folio)", "code": "src/screens/facturacion/DatosFactura.tsx (?escenario=factura-facturada)", "status": "pendiente-diff" },
-    "6157:11984": { "name": "Nuevo embarque", "code": "src/screens/facturacion/overlays/FacturacionModals.tsx (NuevoEmbarqueModal)", "status": "pendiente-diff" },
-    "6157:13886": { "name": "Embarque creado", "code": "src/screens/facturacion/overlays/FacturacionModals.tsx (EmbarqueCreadoModal)", "status": "pendiente-diff" },
-    "6166:14379": { "name": "Agregar embarque (elección)", "code": "src/screens/facturacion/overlays/FacturacionModals.tsx (AgregarEmbarqueEleccionModal)", "status": "pendiente-diff" },
-    "6166:14971": { "name": "Agregar embarque (selector)", "code": "src/screens/facturacion/overlays/FacturacionModals.tsx (AgregarEmbarqueSelectorModal)", "status": "pendiente-diff" },
-    "6178:15407": { "name": "Factura agregada", "code": "src/screens/facturacion/overlays/FacturacionModals.tsx (FacturaAgregadaModal)", "status": "pendiente-diff" },
-    "5917:1642": { "name": "Menú (Configuraciones)", "code": "src/screens/menu/Menu.tsx (compartido)", "status": "aproximado" },
-    "5917:1679": { "name": "Configuraciones", "code": "src/screens/configuraciones/Configuraciones.tsx", "route": "/configuraciones", "status": "verificado", "diff": "0.79%" },
-    "5170:12983": { "name": "Configuraciones › Sonido", "code": "src/screens/configuraciones/Sonido.tsx", "route": "/configuraciones/sonido", "status": "aproximado", "diff": "1.79%" },
-    "5487:3070": { "name": "Configuraciones › Impresión › Procesos (cargando)", "code": "src/screens/configuraciones/Impresion.tsx (tab=procesos)", "route": "/configuraciones/impresion", "status": "aproximado" },
-    "5918:1978": { "name": "Configuraciones › Impresión › Procesos (cargado)", "code": "src/screens/configuraciones/Impresion.tsx (tab=procesos)", "route": "/configuraciones/impresion", "status": "aproximado", "diff": "1.05%" },
-    "5487:3223": { "name": "Configuraciones › Impresión › Impresoras", "code": "src/screens/configuraciones/Impresion.tsx (tab=impresoras)", "route": "/configuraciones/impresion", "status": "aproximado" }
+    "3048:10103": {
+      "name": "Menú",
+      "code": "src/screens/menu/Menu.tsx",
+      "route": "/menu",
+      "status": "verificado",
+      "diff": "0.56%"
+    },
+    "3048:10014": {
+      "name": "Asignación de tareas (surtido)",
+      "code": "src/screens/tareas/AsignacionTareas.tsx",
+      "route": "/tareas",
+      "status": "aproximado",
+      "diff": "4.47%"
+    },
+    "3048:10138": {
+      "name": "Surtido de órdenes (NO INICIADO)",
+      "code": "src/screens/surtido/SurtidoOrdenes.tsx",
+      "route": "/surtido",
+      "status": "aproximado",
+      "diff": "3.71%"
+    },
+    "3086:11303": {
+      "name": "Surtido con 1964000 revisado",
+      "code": "src/screens/surtido/SurtidoOrdenes.tsx (?escenario=revisado-1964000)",
+      "route": "/surtido",
+      "status": "aproximado",
+      "diff": "4.59%"
+    },
+    "3089:13509": {
+      "name": "Surtido con 2546000 parcial",
+      "code": "src/screens/surtido/SurtidoOrdenes.tsx (?escenario=parcial-2546000)",
+      "route": "/surtido",
+      "status": "aproximado",
+      "diff": "3.71%"
+    },
+    "3199:6362": {
+      "name": "Detalle del producto (1964000)",
+      "code": "src/screens/surtido/DetalleProducto.tsx",
+      "route": "/surtido/producto/1964000",
+      "status": "aproximado",
+      "diff": "1.85%"
+    },
+    "3091:14568": {
+      "name": "Detalle del producto (2546000 parcial)",
+      "code": "src/screens/surtido/DetalleProducto.tsx",
+      "route": "/surtido/producto/2546000",
+      "status": "aproximado",
+      "diff": "3.13%"
+    },
+    "3060:12583": {
+      "name": "Modal Revisión aleatoria (forzosa)",
+      "code": "src/screens/surtido/overlays/RevisionModal.tsx",
+      "status": "pendiente-diff"
+    },
+    "3308:17290": {
+      "name": "Modal Revisión aleatoria dos (simplificada)",
+      "code": "src/screens/surtido/overlays/RevisionModal.tsx (tipo=simplificada)",
+      "status": "pendiente-diff"
+    },
+    "3236:16208": {
+      "name": "Modal ingresar cantidad",
+      "code": "src/screens/surtido/overlays/SurtidoModals.tsx (CantidadModal)",
+      "status": "pendiente-diff"
+    },
+    "3126:14186": {
+      "name": "Modal Menú (⋮)",
+      "code": "src/screens/surtido/overlays/SurtidoModals.tsx (MenuModal)",
+      "status": "pendiente-diff"
+    },
+    "3126:14406": {
+      "name": "Modal Finalizar surtido (parciales)",
+      "code": "src/screens/surtido/overlays/SurtidoModals.tsx (ParcialesModal)",
+      "status": "pendiente-diff"
+    },
+    "4582:25330": {
+      "name": "Modal Finalizar surtido y revisión",
+      "code": "src/screens/surtido/overlays/SurtidoModals.tsx (FinalizarModal)",
+      "status": "pendiente-diff"
+    },
+    "4582:23615": {
+      "name": "Modal Finalizar surtido (promoción parcial)",
+      "code": "src/screens/surtido/overlays/SurtidoModals.tsx (PromoParcialModal)",
+      "status": "pendiente-diff"
+    },
+    "4582:23837": {
+      "name": "Modal Escanea promoción",
+      "code": "src/screens/surtido/overlays/SurtidoModals.tsx (PromoEscaneoModal)",
+      "status": "pendiente-diff"
+    },
+    "4582:24109": {
+      "name": "Modal Promoción negada",
+      "code": "src/screens/surtido/overlays/SurtidoModals.tsx (PromoNegadaModal)",
+      "status": "pendiente-diff"
+    },
+    "3085:11302": {
+      "name": "Toast Revisión completa (overlay)",
+      "code": "src/navigation/ToastHost.tsx",
+      "status": "aproximado"
+    },
+    "3841:818": {
+      "name": "Datos de la factura (formulario)",
+      "code": "src/screens/facturacion/DatosFactura.tsx",
+      "route": "/facturacion",
+      "status": "aproximado",
+      "diff": "4.89%"
+    },
+    "6004:6726": {
+      "name": "Datos de la factura (generando)",
+      "code": "src/screens/facturacion/DatosFactura.tsx (estado=generando)",
+      "route": "/facturacion",
+      "status": "pendiente-diff"
+    },
+    "6004:5275": {
+      "name": "Datos de la factura (scroll)",
+      "code": "src/screens/facturacion/DatosFactura.tsx",
+      "status": "aproximado"
+    },
+    "6004:4347": {
+      "name": "Datos de la factura (selector dirección)",
+      "code": "src/screens/facturacion/DatosFactura.tsx (overlay=direcciones)",
+      "status": "pendiente-diff"
+    },
+    "6004:6594": {
+      "name": "Datos de la factura (error)",
+      "code": "src/screens/facturacion/DatosFactura.tsx (estado=error)",
+      "status": "pendiente-diff"
+    },
+    "6004:7618": {
+      "name": "Datos de la factura (facturada + folio)",
+      "code": "src/screens/facturacion/DatosFactura.tsx (?escenario=factura-facturada)",
+      "status": "pendiente-diff"
+    },
+    "6157:11984": {
+      "name": "Nuevo embarque",
+      "code": "src/screens/facturacion/overlays/FacturacionModals.tsx (NuevoEmbarqueModal)",
+      "status": "pendiente-diff"
+    },
+    "6157:13886": {
+      "name": "Embarque creado",
+      "code": "src/screens/facturacion/overlays/FacturacionModals.tsx (EmbarqueCreadoModal)",
+      "status": "pendiente-diff"
+    },
+    "6166:14379": {
+      "name": "Agregar embarque (elección)",
+      "code": "src/screens/facturacion/overlays/FacturacionModals.tsx (AgregarEmbarqueEleccionModal)",
+      "status": "pendiente-diff"
+    },
+    "6166:14971": {
+      "name": "Agregar embarque (selector)",
+      "code": "src/screens/facturacion/overlays/FacturacionModals.tsx (AgregarEmbarqueSelectorModal)",
+      "status": "pendiente-diff"
+    },
+    "6178:15407": {
+      "name": "Factura agregada",
+      "code": "src/screens/facturacion/overlays/FacturacionModals.tsx (FacturaAgregadaModal)",
+      "status": "pendiente-diff"
+    },
+    "5917:1642": {
+      "name": "Menú (Configuraciones)",
+      "code": "src/screens/menu/Menu.tsx (compartido)",
+      "status": "aproximado"
+    },
+    "5917:1679": {
+      "name": "Configuraciones",
+      "code": "src/screens/configuraciones/Configuraciones.tsx",
+      "route": "/configuraciones",
+      "status": "verificado",
+      "diff": "0.79%"
+    },
+    "5170:12983": {
+      "name": "Configuraciones › Sonido",
+      "code": "src/screens/configuraciones/Sonido.tsx",
+      "route": "/configuraciones/sonido",
+      "status": "aproximado",
+      "diff": "1.79%"
+    },
+    "5487:3070": {
+      "name": "Configuraciones › Impresión › Procesos (cargando)",
+      "code": "src/screens/configuraciones/Impresion.tsx (tab=procesos)",
+      "route": "/configuraciones/impresion",
+      "status": "aproximado"
+    },
+    "5918:1978": {
+      "name": "Configuraciones › Impresión › Procesos (cargado)",
+      "code": "src/screens/configuraciones/Impresion.tsx (tab=procesos)",
+      "route": "/configuraciones/impresion",
+      "status": "aproximado",
+      "diff": "1.05%"
+    },
+    "5487:3223": {
+      "name": "Configuraciones › Impresión › Impresoras",
+      "code": "src/screens/configuraciones/Impresion.tsx (tab=impresoras)",
+      "route": "/configuraciones/impresion",
+      "status": "aproximado"
+    },
+    "7020:21323": {
+      "name": "Asignación de tarea — Surtir traspaso (propuesta #1)",
+      "code": "src/screens/tareas/AsignacionTareas.tsx",
+      "route": "/tareas?escenario=p1-tareas",
+      "status": "verificado",
+      "diff": "4.21%"
+    },
+    "7020:22451": {
+      "name": "Surtido de órdenes — traspaso de 4 productos (propuesta #1)",
+      "code": "src/screens/surtido/SurtidoOrdenes.tsx",
+      "route": "/surtido?escenario=p1-inicio",
+      "status": "verificado",
+      "diff": "3.33%"
+    },
+    "7020:25284": {
+      "name": "Menú con Rechazar traspaso / Finalizar deshabilitado (propuesta #1)",
+      "code": "src/screens/surtido/overlays/SurtidoModals.tsx",
+      "route": "/surtido?escenario=p1-inicio",
+      "status": "verificado",
+      "diff": "0.74%"
+    },
+    "7020:25471": {
+      "name": "Rechazar traspaso — confirmación (propuesta #1)",
+      "code": "src/screens/surtido/overlays/SurtidoModals.tsx",
+      "route": "/surtido?escenario=p1-inicio",
+      "status": "verificado",
+      "diff": "1.42%"
+    },
+    "7040:25851": {
+      "name": "Rechazar traspaso — motivo vacío",
+      "code": "src/screens/surtido/overlays/SurtidoModals.tsx",
+      "route": "/surtido?escenario=p1-inicio",
+      "status": "verificado",
+      "diff": "1.26%"
+    },
+    "7040:26083": {
+      "name": "Rechazar traspaso — motivo seleccionado",
+      "code": "src/screens/surtido/overlays/SurtidoModals.tsx",
+      "route": "/surtido?escenario=p1-inicio",
+      "status": "implementado"
+    },
+    "7114:10987": {
+      "name": "Asignación de tarea tras rechazar (otra tarea de demo) + toast 7114:11110",
+      "code": "src/screens/tareas/AsignacionTareas.tsx",
+      "route": "/tareas?escenario=p1-rechazado",
+      "status": "implementado (datos de demo por indicación del usuario)"
+    },
+    "7053:26774": {
+      "name": "Asignación de tarea — Surtir traspaso (propuesta #2)",
+      "code": "src/screens/tareas/AsignacionTareas.tsx",
+      "route": "/tareas?escenario=p2-tareas",
+      "status": "implementado"
+    },
+    "7053:26345": {
+      "name": "Surtido de órdenes — traspaso de 2 productos (propuesta #2)",
+      "code": "src/screens/surtido/SurtidoOrdenes.tsx",
+      "route": "/surtido?escenario=p2-inicio",
+      "status": "verificado",
+      "diff": "1.76%"
+    },
+    "7053:27466": {
+      "name": "Surtido de órdenes — 0486600 parcial (propuesta #2)",
+      "code": "src/screens/surtido/SurtidoOrdenes.tsx",
+      "route": "/surtido?escenario=p2-parcial",
+      "status": "verificado",
+      "diff": "1.78%"
+    },
+    "7053:26392": {
+      "name": "Menú con Rechazar traspaso y Finalizar surtido activos (propuesta #2)",
+      "code": "src/screens/surtido/overlays/SurtidoModals.tsx",
+      "route": "/surtido?escenario=p2-inicio",
+      "status": "verificado",
+      "diff": "0.99%"
+    },
+    "7053:26457": {
+      "name": "Rechazar traspaso — confirmación con leyenda (propuesta #2)",
+      "code": "src/screens/surtido/overlays/SurtidoModals.tsx",
+      "route": "/surtido?escenario=p2-inicio",
+      "status": "verificado",
+      "diff": "1.92%"
+    },
+    "7053:26566": {
+      "name": "Rechazar traspaso — motivo vacío (propuesta #2)",
+      "code": "src/screens/surtido/overlays/SurtidoModals.tsx",
+      "route": "/surtido?escenario=p2-inicio",
+      "status": "implementado"
+    },
+    "7053:26670": {
+      "name": "Rechazar traspaso — motivo seleccionado (propuesta #2)",
+      "code": "src/screens/surtido/overlays/SurtidoModals.tsx",
+      "route": "/surtido?escenario=p2-inicio",
+      "status": "implementado"
+    }
   },
   "sin-implementar": {
     "5381:890": "Nueva conexión (buscando)",

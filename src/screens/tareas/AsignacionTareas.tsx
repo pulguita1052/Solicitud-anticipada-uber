@@ -1,8 +1,9 @@
 /**
  * Figma: Asignación de tareas
  * nodeId: 86:37 (surtir pedido cliente) · 197:20499 (siguiente tarea: revisar pedido cliente) — 📲 Surtido - Un pedido x ronda
- * URL: https://www.figma.com/design/zZBoCtJor0tdJ91umiqb7l/?node-id=86-37
- * Última sincronización: 2026-10-09
+ *         7020:21323 / 7053:26774 (surtir traspaso) · 7114:10987 (tras rechazar el traspaso) — ❌ Negar totalidad traspaso
+ * URL: https://www.figma.com/design/zZBoCtJor0tdJ91umiqb7l/?node-id=7020-21323
+ * Última sincronización: 2026-10-12
  */
 import { useNavigate } from 'react-router-dom';
 import userIcon from '@assets/icons/user.svg';
@@ -24,13 +25,13 @@ import styles from './AsignacionTareas.module.css';
 export function AsignacionTareas() {
   const navigate = useNavigate();
   const { etapa } = useStore();
-  // En esta rama solo existe el surtido: la tarea de revisión se muestra como siguiente paso, pero no se puede aceptar.
+  // En esta rama solo existe el surtido: la tarea siguiente (revisión, o la de demo tras rechazar) no se puede aceptar.
   const puedeAceptar = etapa === 'surtido';
-  const tarea = puedeAceptar ? TAREAS.surtido : TAREAS.revision;
+  const tarea = etapa === 'surtido' ? TAREAS.surtido : etapa === 'rechazado' ? TAREAS.siguiente : TAREAS.revision;
 
   return (
     <div className={styles.screen}>
-      <AppHeader backLabel="Menú" onBack={() => navigate('/menu')} onMenu={etapa === 'surtido' ? undefined : () => undefined} />
+      <AppHeader backLabel="Menú" onBack={() => navigate('/menu')} onMenu={etapa === 'revision' ? () => undefined : undefined} />
       <ContentPanel title="Asignación de tareas" paddingBottom={22} align="start">
         <div className={styles.section}>
           <div className={styles.sectionTitle}>
@@ -56,8 +57,8 @@ export function AsignacionTareas() {
           icon={calendarIcon}
           iconSize={{ w: 14.589, h: 16.21 }}
           rows={[
-            { label: 'Fecha inicio:', value: TAREAS.fecha },
-            { label: 'Hora inicio:', value: TAREAS.hora },
+            { label: 'Fecha inicio:', value: tarea.fecha },
+            { label: 'Hora inicio:', value: tarea.hora },
           ]}
         />
         <InfoBlock title={tarea.documentoLabel} icon={receiptIcon} iconSize={{ w: 13.482, h: 17.159 }} rows={[{ value: tarea.documento }]} />
