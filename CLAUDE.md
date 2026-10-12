@@ -18,9 +18,9 @@ Antes de cualquier tarea de UI, lee y sigue @FIGMA_REPLICA.md.
 | Tema(s) / modes | Solo claro (colecciones con un único modo) |
 | Idioma de la UI | Español (MX) |
 
-## Rama `feature-surtido-multipedido` (2026-10-09)
+## Rama `feature-rechazar-traspaso` (2026-10-12)
 
-Alcance: **solo el flujo de surtido, ya separado de la revisión**, replicando `📲 Surtido - Un pedido x ronda` (24:16). Menú → Asignación de tareas (SURTIR PEDIDO CLIENTE) → Surtido de órdenes / Detalle de producto. Al finalizar, Asignación de tareas muestra la siguiente tarea "REVISAR PEDIDO CLIENTE" con **Aceptar deshabilitado**. Flujo y PENDIENTES en `docs/figma/flujos-surtido.md`. Objetivo siguiente: surtir **múltiples pedidos por ronda** (`📲 Surtido - Multi. pedido x ronda`, 2888:9537). Facturación, embarque, Uber, configuraciones y la revisión durante el surtido siguen en `main`; lo de abajo describe `main`.
+Sale de `main` con el mismo recorte que `feature-surtido-multipedido`. Alcance: **solo el flujo de surtido, ya separado de la revisión**, replicando `📲 Surtido - Un pedido x ronda` (24:16). Menú → Asignación de tareas (SURTIR PEDIDO CLIENTE) → Surtido de órdenes / Detalle de producto. Al finalizar, Asignación de tareas muestra la siguiente tarea "REVISAR PEDIDO CLIENTE" con **Aceptar deshabilitado**. Flujo y PENDIENTES en `docs/figma/flujos-surtido.md`. Objetivo: permitir **rechazar (negar) completo el surtido de un traspaso entre sucursales** sin negar producto por producto. Detalle de la feature: pendiente. Facturación, embarque, Uber, configuraciones y la revisión durante el surtido siguen en `main`; lo de abajo describe `main`.
 
 ## Estado (2026-09-29)
 
