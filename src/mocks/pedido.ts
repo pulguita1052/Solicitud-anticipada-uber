@@ -3,8 +3,12 @@
  *   Propuesta #1 (7020:21322): 4 productos — Surtido de órdenes 7020:22451.
  *   Propuesta #2 (7053:26344): 2 productos — Surtido de órdenes 7053:26345.
  * Detalle de 1394001 (descripción, existencia y foto) de 📲 Surtido - Un pedido x ronda (131:6465).
+ * Detalle de 0486600, 1365800 y 0245134 (descripción, existencia, precio y foto) proporcionado por el usuario (2026-10-12).
  * Nombres de campos alineados al modelo legado (docs/tecnico/referencias.md §3).
  */
+import foto0245134 from '@assets/images/producto-0245134.jpg';
+import foto0486600 from '@assets/images/producto-0486600.jpg';
+import foto1365800 from '@assets/images/producto-1365800.jpg';
 import foto1394001 from '@assets/images/producto-1394001.jpg';
 
 export type Propuesta = 1 | 2;
@@ -36,23 +40,25 @@ function ubicado(torre: string, nivel: string) {
 }
 
 /**
- * Ubicaciones de las filas de 7020:22451. PENDIENTE: Figma solo tiene el detalle de 1394001; la descripción,
- * existencia y precio de 0486600, 1365800 y 2389475 son datos de demo (no tienen foto).
+ * Ubicaciones de las filas de 7020:22451. 0245134 reemplaza a 2389475 de Figma por indicación del usuario
+ * (conserva su ubicación). PENDIENTE: el precio de 1394001 es de demo.
  */
 export const CATALOGO: ProductoCatalogo[] = [
   {
     ...ubicado('4', '1'),
     codigo: '0486600',
-    descripcion: 'BALATA DELANTERA CERAMICA TSURU III 92-17 FRITEC 1 JGO',
-    existencia: 25,
-    precioUnitario: 420,
+    descripcion: 'CONECTOR BOMBA DE GASOLINA 4 HEMBRA PUNTAS CON ARNES CARAVAN VOYAGER MINI RAM T TECNOFUEL HK-000033',
+    foto: foto0486600,
+    existencia: 22,
+    precioUnitario: 117.86,
   },
   {
     ...ubicado('5', '1'),
     codigo: '1365800',
-    descripcion: 'FOCO HALOGENO H4 12V 60/55W TIPO ORIGINAL TUNGSRAM 1 PZ',
-    existencia: 12,
-    precioUnitario: 95,
+    descripcion: 'CILINDRO ENCENDIDO CADILLAC CHEVROLET GMC QBH DYNAMIC US-287L',
+    foto: foto1365800,
+    existencia: 10,
+    precioUnitario: 331.78,
   },
   {
     ...ubicado('5', '1'),
@@ -64,10 +70,11 @@ export const CATALOGO: ProductoCatalogo[] = [
   },
   {
     ...ubicado('4', '2'),
-    codigo: '2389475',
-    descripcion: 'FILTRO DE ACEITE PARA MOTOR NISSAN 1.6L INTERFIL 1 PZ',
-    existencia: 20,
-    precioUnitario: 110,
+    codigo: '0245134',
+    descripcion: 'ANTICONGELANTE CONCENTRADO 3.785L AL 70% VERZE 0245106',
+    foto: foto0245134,
+    existencia: 13,
+    precioUnitario: 171.55,
   },
 ];
 
@@ -79,7 +86,7 @@ export const PARTIDAS: Record<Propuesta, PartidaTraspaso[]> = {
     { codigo: '0486600', solicitado: 11 },
     { codigo: '1365800', solicitado: 7 },
     { codigo: '1394001', solicitado: 10 },
-    { codigo: '2389475', solicitado: 8 },
+    { codigo: '0245134', solicitado: 8 }, // 2389475 en Figma
   ],
   2: [
     { codigo: '0486600', solicitado: 2 },

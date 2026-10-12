@@ -81,7 +81,7 @@ Asignación de tareas — SURTIR TRASPASO · PedidoID 123456 (7020:21323 / 7053:
 
 | Punto | Decisión |
 |---|---|
-| Productos | Los de Figma: 0486600 / 1365800 / 1394001 / 2389475 (propuesta #1) y 0486600 / 1365800 (propuesta #2). |
+| Productos | Los de Figma: 0486600 / 1365800 / 1394001 / 2389475 (propuesta #1) y 0486600 / 1365800 (propuesta #2). 2389475 se cambia por **0245134** (misma ubicación y cantidad). Descripción, existencia, precio y foto de 0486600, 1365800 y 0245134 proporcionados por el usuario. |
 | Pantalla tras rechazar | Otra tarea de demo que no se puede tomar (SURTIR TRASPASO · PedidoID 123461 · 12:15 p.m.). |
 | Motivos de rechazo | Se ignora el texto de relleno de Figma; motivos de demo realistas en `MOTIVOS_RECHAZO` (`src/mocks/pedido.ts`). |
 | Leyenda de la propuesta #2 | Se muestra siempre, aunque no haya piezas surtidas. |
@@ -98,6 +98,6 @@ Asignación de tareas — SURTIR TRASPASO · PedidoID 123456 (7020:21323 / 7053:
 
 | Punto | Estado |
 |---|---|
-| Descripción, existencia, precio y foto de 0486600, 1365800 y 2389475 | Figma solo tiene el detalle de 1394001 (131:6465); el resto son datos de demo sin foto. |
+| Precio de 1394001 | Dato de demo ($38); el resto del detalle viene de 131:6465. |
 | Catálogo real de motivos de rechazo | Motivos de demo. |
 | Destino de "Finalizar surtido" en un traspaso | Se conserva el de pedido cliente: siguiente tarea REVISAR PEDIDO CLIENTE (bloqueada). |
