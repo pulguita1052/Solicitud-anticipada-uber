@@ -4,7 +4,7 @@
   "url": "https://www.figma.com/design/zZBoCtJor0tdJ91umiqb7l/RB_Handheld_Mejoras-de-procesos",
   "_notas": "Cada entrada mapea un nodeId de Figma → archivo del código que lo replica. status: verificado (F6 pasa), aproximado (F6 dentro de tolerancia de antialiasing), pendiente (no implementado).",
   "componentes": {
-    "3086:11540": { "name": "Card revisión aleatoria", "type": "COMPONENT_SET", "code": "src/design-system/components/molecules/OrderItemRow/OrderItemRow.tsx", "variantes": { "3086:11541": "surtido=no-iniciado", "3086:11559": "surtido=completado", "3086:11577": "surtido=parcial", "3086:11595": "surtido=negado", "3086:11992": "surtido=revisado" }, "status": "aproximado" },
+    "3086:11540": { "name": "Card revisión aleatoria", "type": "COMPONENT_SET", "code": "src/design-system/components/molecules/OrderItemRow/OrderItemRow.tsx", "variantes": { "3086:11541": "surtido=no-iniciado", "3086:11559": "surtido=completado", "3086:11577": "surtido=parcial", "3086:11595": "surtido=negado", "3086:11992": "surtido=revisado" }, "status": "aproximado", "nota": "Prop foto (miniatura 60 × 60, sin borde) sin respaldo en Figma, agregada por indicación del usuario (D47)." },
     "1324:7100": { "name": "Avance del pedido", "type": "COMPONENT", "code": "src/design-system/components/molecules/OrderProgress/OrderProgress.tsx", "status": "aproximado" },
     "9:92": { "name": "Botones", "type": "COMPONENT_SET (remoto)", "code": "src/design-system/components/atoms/Button/Button.tsx", "status": "aproximado" },
     "192:16685": { "name": "Notificaciones Toast Verde", "type": "COMPONENT_SET", "code": "src/design-system/components/organisms/Toast/Toast.tsx (variante success)", "status": "aproximado" },

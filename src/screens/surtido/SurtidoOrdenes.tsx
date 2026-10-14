@@ -142,6 +142,7 @@ export function SurtidoOrdenes() {
                   surtido={it.surtido}
                   solicitado={p.solicitado}
                   ubicacion={p.ubicacion}
+                  foto={p.foto}
                   onClick={() => navigate(`/surtido/producto/${it.codigo}`)}
                 />
               </div>
