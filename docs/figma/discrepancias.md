@@ -35,3 +35,4 @@ Regla: se replica tal cual lo que está en Figma; aquí solo se registra. Fuente
 | D22 | Detalle de producto (R6–R10, R32–R42) | El primer botón inferior alterna entre "Regresar" y "Aceptar" | Replicar por estado; documentar la regla en F5 con la tabla `image 4` |
 | D23 | Teclado del sistema (R22, R23) | Mock del teclado de Android dibujado en el frame | No se renderiza (F4.6); lo muestra el teclado real |
 | D24 | 6653:8000, 6653:8624 | Frames sueltos fuera de secciones, duplicados de un overlay | Ignorados (P3) |
+| D46 | Vista foto 162:7002 | La foto de Figma tiene proporción 1200/984 con `object-cover`; las fotos del mock (≈430 px, casi cuadradas) se recortarían | Caja de 1200/984 a ancho completo con `object-fit: contain` sobre blanco |

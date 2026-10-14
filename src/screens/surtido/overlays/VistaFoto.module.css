@@ -1,0 +1,35 @@
+/* Vista foto — 162:6994 */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: rgba(240, 240, 240, 0.85); /* figma: 162:6994 (sin estilo) */
+  touch-action: none; /* sin zoom: la foto es fija */
+}
+
+/* 162:6995 — ocupa el alto disponible y centra la foto */
+.contenido {
+  display: flex;
+  flex: 1 0 0;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 1px;
+}
+
+/* 162:7002 — ancho completo, proporción 1200/984. Las fotos del mock tienen otra proporción:
+   se usa contain sobre blanco para no recortar el producto (docs/figma/discrepancias.md D46). */
+.foto {
+  width: 100%;
+  aspect-ratio: 1200 / 984;
+  object-fit: contain;
+  background: var(--color-blanco);
+  user-select: none;
+}
+
+.cerrar {
+  flex: 1 0 0;
+}

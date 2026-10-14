@@ -15,16 +15,22 @@ type Props = {
   photoStyle?: 'bordered' | 'framed';
   /** Alto fijo de la caja de descripción (86 px en 3308:17312). */
   descriptionHeight?: number;
+  /** Tocar la foto (Frame 208 → overlay "Vista foto" 162:6994 en el Detalle). */
+  onPhotoClick?: () => void;
 };
 
-export function ProductSummary({ foto, codigo, descripcion, photoStyle = 'bordered', descriptionHeight }: Props) {
+export function ProductSummary({ foto, codigo, descripcion, photoStyle = 'bordered', descriptionHeight, onPhotoClick }: Props) {
+  const Photo = onPhotoClick ? 'button' : 'div';
   return (
     <div className={styles.summary}>
-      <div className={`${styles.photo} ${styles[photoStyle]}`}>
+      <Photo
+        className={`${styles.photo} ${styles[photoStyle]}`}
+        {...(onPhotoClick ? { type: 'button' as const, onClick: onPhotoClick, 'aria-label': 'Ver foto' } : {})}
+      >
         <div className={styles.photoInner}>
           <img src={foto} alt="" />
         </div>
-      </div>
+      </Photo>
       <div className={styles.info}>
         <LabeledField label="Código" value={codigo} valueBold valueAlign="center" />
         <div className={styles.description} style={descriptionHeight ? { height: descriptionHeight } : undefined}>

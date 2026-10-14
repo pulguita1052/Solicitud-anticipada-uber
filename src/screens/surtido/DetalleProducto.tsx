@@ -1,6 +1,6 @@
 /**
  * Figma: Detalle de producto — 📲 Surtido - Un pedido x ronda, sección "Detalle del producto" (131:4807)
- * nodeId: 131:6465 — motivo negado 1232:6734 (inact.) / 1246:7165 (act.) · toast 1308:6293
+ * nodeId: 131:6465 — motivo negado 1232:6734 (inact.) / 1246:7165 (act.) · toast 1308:6293 · vista foto 162:6994
  * URL: https://www.figma.com/design/zZBoCtJor0tdJ91umiqb7l/?node-id=131-6465
  * Última sincronización: 2026-10-09
  *
@@ -22,6 +22,7 @@ import { producto } from '../../domain/pedido';
 import { MOTIVOS_NEGADO } from '../../mocks/pedido';
 import { useStore } from '../../store/AppStore';
 import { MotivoNegadoModal } from './overlays/SurtidoModals';
+import { VistaFoto } from './overlays/VistaFoto';
 import styles from './DetalleProducto.module.css';
 
 const TOAST_NO_NEGAR = {
@@ -39,6 +40,7 @@ export function DetalleProducto() {
   const navigate = useNavigate();
   const { pedido, dispatch, mostrarToast } = useStore();
   const [negando, setNegando] = useState(false);
+  const [viendoFoto, setViendoFoto] = useState(false);
   const item = pedido.items.find((i) => i.codigo === codigo);
   const p = producto(codigo);
   if (!item || !p) return null;
@@ -56,7 +58,7 @@ export function DetalleProducto() {
       <ContentPanel title="Detalle del producto" bottom={0}>
         <div className={styles.body}>
           <div className={styles.datos}>
-            <ProductSummary foto={p.foto ?? ''} codigo={p.codigo} descripcion={p.descripcion} photoStyle="framed" />
+            <ProductSummary foto={p.foto ?? ''} codigo={p.codigo} descripcion={p.descripcion} photoStyle="framed" onPhotoClick={p.foto ? () => setViendoFoto(true) : undefined} />
             <div className={styles.grid}>
               <div className={styles.pair}>
                 <LabeledField label="Ubicación" value={p.planta} />
@@ -89,6 +91,7 @@ export function DetalleProducto() {
         <Button variant="default" label="Negar producto" disabled={item.negado} className={styles.flex1} onClick={negar} />
       </BottomBar>
 
+      {viendoFoto && p.foto && <VistaFoto foto={p.foto} onClose={() => setViendoFoto(false)} />}
       {negando && (
         <MotivoNegadoModal
           codigo={p.codigo}
