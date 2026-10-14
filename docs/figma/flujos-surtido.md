@@ -14,6 +14,7 @@ Menú
           │     cantidad 0 / mayor a la solicitada / mayor a la existencia → toast "Cantidad inválida" (986:3915 · 131:6181 · 188:10280)
           ├─ código inválido → toast "Código inválido" (325:3026)
           ├─ código de un producto negado → toast "Producto negado" (1509:9441)
+          ├─ código que no pertenece al pedido → toast "Producto incorrecto" (captura del usuario, sin frame en Figma)
           ├─ tap card → Detalle del producto (131:6465)
           │     cantidad editable solo si el producto ya se escaneó (sticky note 325:3051, spinner gris 325:3041)
           │     "Regresar" / ← → Surtido de órdenes (131:4492)
@@ -45,11 +46,11 @@ fin → Asignación de tareas con "REVISAR PEDIDO CLIENTE" (197:20499) + toast "
 | Destino del ✓ de "Selección de motivo negado" (1246:7612 navega a un nodo vacío) | Niega el producto y regresa a Surtido de órdenes. |
 | Opciones del select de motivo | Solo "Sin existencia" (la única visible en Figma). |
 | Existencia de 1394000 (no aparece en Figma) | 100, la de la cinta 1394001 (131:6465). |
+| Aviso para un código que no pertenece al pedido (2026-10-14) | Toast rojo "Producto incorrecto" / "El producto escaneado no pertenece a este pedido.", tomado de una captura del usuario. |
 
 ## PENDIENTE
 
 | Punto | Estado |
 |---|---|
-| Aviso para un código que no pertenece al pedido | Por ahora solo sonido de error. El usuario compartirá el aviso. |
 | Overlay "Vista foto" (162:6994) al tocar la foto del Detalle | Se implementa más adelante. |
 | Mock de 2 productos vs. 11 de Figma | Se conserva el de 2; por eso las pantallas no entran en la prueba píxel a píxel. |

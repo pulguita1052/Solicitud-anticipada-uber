@@ -27,6 +27,8 @@ type Overlay = { k: 'cantidad'; codigo: string } | { k: 'menu' } | { k: 'sinSurt
 export const TOAST_FINALIZADO = { kind: 'success' as const, title: 'Surtido finalizado', message: '¡Se completó la ronda de surtido exitosamente!' };
 /** 325:3026 — "Estructura del CB no válida" */
 const TOAST_CODIGO_INVALIDO = { kind: 'error' as const, title: 'Código inválido', message: 'El código de barras capturado no es válido.' };
+/** Código que no pertenece al pedido — captura del usuario (2026-10-14), sin frame en Figma */
+const TOAST_PRODUCTO_INCORRECTO = { kind: 'error' as const, title: 'Producto incorrecto', message: 'El producto escaneado no pertenece a este pedido.' };
 /** 1509:9441 — el código escaneado pertenece a un producto ya negado */
 const TOAST_PRODUCTO_NEGADO = { kind: 'error' as const, title: 'Producto negado', message: 'El código escaneado fue negado y no es posible agregar unidades.' };
 /** "¿Se ingresó una cantidad válida?" (623:3472) → 131:6181 · 188:10280 · 986:3915 */
@@ -57,7 +59,11 @@ export function SurtidoOrdenes() {
       return;
     }
     const item = pedido.items.find((i) => i.codigo === l.codigo);
-    if (!item) return sonar('error'); // PENDIENTE: Figma no define el aviso para un código ajeno al pedido
+    if (!item) {
+      sonar('error');
+      mostrarToast(TOAST_PRODUCTO_INCORRECTO);
+      return;
+    }
     if (item.negado) {
       sonar('error');
       mostrarToast(TOAST_PRODUCTO_NEGADO);
