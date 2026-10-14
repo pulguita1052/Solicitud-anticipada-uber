@@ -3,15 +3,16 @@ import { Menu } from './screens/menu/Menu';
 import { AsignacionTareas } from './screens/tareas/AsignacionTareas';
 import { SurtidoOrdenes } from './screens/surtido/SurtidoOrdenes';
 import { DetalleProducto } from './screens/surtido/DetalleProducto';
+import { SurtidoRonda } from './screens/ronda/SurtidoRonda';
 import { ToastHost } from './navigation/ToastHost';
 import { EscenariosPanel } from './navigation/EscenariosPanel';
 import { ProductosCheatsheet } from './navigation/ProductosCheatsheet';
 
 export function App() {
   const { pathname } = useLocation();
-  const rutasConPanel = ['/tareas', '/surtido'];
+  const rutasConPanel = ['/tareas', '/surtido', '/ronda'];
   const mostrarPanel = rutasConPanel.some((r) => pathname.startsWith(r));
-  const mostrarProductos = pathname.startsWith('/surtido');
+  const mostrarProductos = pathname.startsWith('/surtido') || pathname.startsWith('/ronda');
   return (
     <>
       <div className="app-frame">
@@ -21,11 +22,12 @@ export function App() {
           <Route path="/tareas" element={<AsignacionTareas />} />
           <Route path="/surtido" element={<SurtidoOrdenes />} />
           <Route path="/surtido/producto/:codigo" element={<DetalleProducto />} />
+          <Route path="/ronda" element={<SurtidoRonda />} />
           <Route path="*" element={<Navigate to="/menu" replace />} />
         </Routes>
         <ToastHost />
       </div>
-      {mostrarProductos && <ProductosCheatsheet />}
+      {mostrarProductos && <ProductosCheatsheet ronda={pathname.startsWith('/ronda')} />}
       {mostrarPanel && <EscenariosPanel />}
     </>
   );

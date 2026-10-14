@@ -57,14 +57,25 @@ export function CantidadModal({ codigo, onCancel, onConfirm }: { codigo: string;
 }
 
 /* ---------- Menú (⋮) — 182:9267 ---------- */
-export function MenuModal({ onRepetirAudio, onFinalizar, onCancel }: { onRepetirAudio: () => void; onFinalizar: () => void; onCancel: () => void }) {
+export function MenuModal({
+  onRepetirAudio,
+  onFinalizar,
+  onCancel,
+  finalizarLabel = 'Finalizar surtido',
+}: {
+  onRepetirAudio: () => void;
+  onFinalizar: () => void;
+  onCancel: () => void;
+  /** Ronda multipedido: "Finalizar ronda" (sin respaldo en Figma). */
+  finalizarLabel?: string;
+}) {
   return (
     <ModalSheet icon={<ModalIcon src={iconoMenu} inset="-2.75% -1.7% -0.66% -1.7%" />} gap={10}>
       <div className={styles.col} style={{ gap: 15 }}>
         <ModalHeader title="Menú" gap={17} dividerWidth={415.902} />
         <div className={styles.col} style={{ gap: 15, alignItems: 'center' }}>
           <Button variant="default" label="Repetir audio" className={styles.full} onClick={onRepetirAudio} />
-          <Button variant="error" label="Finalizar surtido" className={styles.full} onClick={onFinalizar} />
+          <Button variant="error" label={finalizarLabel} className={styles.full} onClick={onFinalizar} />
         </div>
       </div>
       <Button variant="error" icon="cross" label="Cancelar" className={styles.full} onClick={onCancel} />

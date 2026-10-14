@@ -1,14 +1,15 @@
 /**
  * Panel lateral (izquierdo) con la tabla de productos del pedido — ayuda de demo para copiar SKU
  * durante el surtido. Vive fuera del `.app-frame` (mismo tratamiento que EscenariosPanel a la derecha),
- * se oculta bajo 900 px de viewport, y no altera la lógica de negocio. Se muestra solo en `/surtido`.
+ * se oculta bajo 900 px de viewport, y no altera la lógica de negocio. Se muestra en `/surtido` (un pedido)
+ * y en `/ronda` (multipedido, piezas totales de los 3 pedidos).
  *
- * Los datos vienen del mismo mock que alimenta la app (PRODUCTOS, mocks/pedido.ts) para que la tabla
- * siempre refleje el estado real del pedido; los precios se suman al total del pedido.
+ * Los datos vienen de los mismos mocks que alimentan la app (mocks/pedido.ts y mocks/ronda.ts).
  */
 import { useState } from 'react';
 import { etiqueta } from '../domain/codigos';
-import { PRODUCTOS } from '../mocks/pedido';
+import { PRODUCTOS as PRODUCTOS_PEDIDO } from '../mocks/pedido';
+import { CATALOGO_RONDA, PEDIDOS_RONDA } from '../mocks/ronda';
 import styles from './ProductosCheatsheet.module.css';
 
 const currency = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
@@ -22,8 +23,17 @@ function etiquetaPz1(codigo: string) {
   return etiqueta(codigo, 1, 0);
 }
 
-export function ProductosCheatsheet() {
+type Fila = { codigo: string; solicitado: number; precioUnitario: number };
+
+const FILAS_RONDA: Fila[] = CATALOGO_RONDA.map((p) => ({
+  codigo: p.codigo,
+  precioUnitario: p.precioUnitario,
+  solicitado: PEDIDOS_RONDA.reduce((n, x) => n + (x.partidas.find((y) => y.codigo === p.codigo)?.solicitado ?? 0), 0),
+}));
+
+export function ProductosCheatsheet({ ronda = false }: { ronda?: boolean }) {
   const [copiado, setCopiado] = useState<string | null>(null);
+  const PRODUCTOS: Fila[] = ronda ? FILAS_RONDA : PRODUCTOS_PEDIDO;
   const total = PRODUCTOS.reduce((n, p) => n + p.precioUnitario * p.solicitado, 0);
   const piezas = PRODUCTOS.reduce((n, p) => n + p.solicitado, 0);
 
@@ -40,7 +50,7 @@ export function ProductosCheatsheet() {
   return (
     <aside className={styles.panel} aria-label="Productos del pedido">
       <header className={styles.header}>
-        <span className={styles.badge}>Pedido</span>
+        <span className={styles.badge}>{ronda ? 'Ronda' : 'Pedido'}</span>
         <h2 className={styles.title}>Productos</h2>
         <p className={styles.subtitle}>
           Click en el código para copiar la etiqueta APYMSA de 18 dígitos (formato del lector:
@@ -90,8 +100,14 @@ export function ProductosCheatsheet() {
         </table>
       </div>
       <p className={styles.hint}>
-        Pedido reducido a 2 artículos para simplificar la demo. Para pedir la cantidad en un modal, escribe solo el
-        código de 7 dígitos (p. ej. <b>1394000</b>).
+        {ronda ? (
+          <>
+            Piezas totales de los 3 pedidos de la ronda. En la propuesta B solo se acepta el código de la parada actual.
+          </>
+        ) : (
+          <>Pedido reducido a 2 artículos para simplificar la demo.</>
+        )}{' '}
+        Para pedir la cantidad en un modal, escribe solo el código de 7 dígitos (p. ej. <b>1394000</b>).
       </p>
     </aside>
   );

@@ -3,6 +3,8 @@
  * nodeId: 86:37 (surtir pedido cliente) · 197:20499 (siguiente tarea: revisar pedido cliente) — 📲 Surtido - Un pedido x ronda
  * URL: https://www.figma.com/design/zZBoCtJor0tdJ91umiqb7l/?node-id=86-37
  * Última sincronización: 2026-10-09
+ * Tareas de la ronda multipedido (SURTIR RONDA DE PEDIDOS, …): sin respaldo en Figma; el bloque de documento lista
+ * los pedidos con su contenedor (docs/figma/discrepancias.md D48).
  */
 import { useNavigate } from 'react-router-dom';
 import userIcon from '@assets/icons/user.svg';
@@ -18,19 +20,33 @@ import { Button } from '@ds/components/atoms/Button/Button';
 import { LabeledField } from '@ds/components/molecules/LabeledField/LabeledField';
 import { InfoBlock } from '@ds/components/molecules/InfoBlock/InfoBlock';
 import { EMPLEADO, TAREAS } from '../../mocks/pedido';
+import { PEDIDOS_RONDA, TAREAS_RONDA } from '../../mocks/ronda';
 import { useStore } from '../../store/AppStore';
 import styles from './AsignacionTareas.module.css';
 
 export function AsignacionTareas() {
   const navigate = useNavigate();
-  const { etapa } = useStore();
-  // En esta rama solo existe el surtido: la tarea de revisión se muestra como siguiente paso, pero no se puede aceptar.
-  const puedeAceptar = etapa === 'surtido';
-  const tarea = puedeAceptar ? TAREAS.surtido : TAREAS.revision;
+  const { etapa, ronda } = useStore();
+  // En esta rama solo existe el surtido (y en la propuesta C la revisión que separa la ronda); las demás tareas se
+  // muestran como siguiente paso, pero no se pueden aceptar.
+  const esRonda = etapa.startsWith('ronda');
+  const puedeAceptar = etapa === 'surtido' || etapa === 'ronda-surtido' || etapa === 'ronda-revision';
+  const tareaRonda =
+    etapa === 'ronda-surtido'
+      ? TAREAS_RONDA.surtir
+      : etapa === 'ronda-revision'
+        ? TAREAS_RONDA.revisarSeparar
+        : ronda.propuesta === 'C'
+          ? TAREAS_RONDA.facturar
+          : TAREAS_RONDA.revisar;
+  const unPedido = etapa === 'surtido' ? TAREAS.surtido : TAREAS.revision;
+  const tarea = esRonda
+    ? { ...tareaRonda, filas: PEDIDOS_RONDA.map((p) => ({ label: `Contenedor ${p.contenedor}`, value: p.id })) }
+    : { ...unPedido, filas: [{ value: unPedido.documento }] };
 
   return (
     <div className={styles.screen}>
-      <AppHeader backLabel="Menú" onBack={() => navigate('/menu')} onMenu={etapa === 'surtido' ? undefined : () => undefined} />
+      <AppHeader backLabel="Menú" onBack={() => navigate('/menu')} onMenu={puedeAceptar ? undefined : () => undefined} />
       <ContentPanel title="Asignación de tareas" paddingBottom={22} align="start">
         <div className={styles.section}>
           <div className={styles.sectionTitle}>
@@ -60,7 +76,7 @@ export function AsignacionTareas() {
             { label: 'Hora inicio:', value: TAREAS.hora },
           ]}
         />
-        <InfoBlock title={tarea.documentoLabel} icon={receiptIcon} iconSize={{ w: 13.482, h: 17.159 }} rows={[{ value: tarea.documento }]} />
+        <InfoBlock title={tarea.documentoLabel} icon={receiptIcon} iconSize={{ w: 13.482, h: 17.159 }} rows={tarea.filas} />
       </ContentPanel>
       <BottomBar>
         <div className="row">
@@ -71,7 +87,7 @@ export function AsignacionTareas() {
             label="Aceptar"
             className={styles.half}
             disabled={!puedeAceptar}
-            onClick={() => navigate('/surtido')}
+            onClick={() => navigate(esRonda ? '/ronda' : '/surtido')}
           />
         </div>
       </BottomBar>

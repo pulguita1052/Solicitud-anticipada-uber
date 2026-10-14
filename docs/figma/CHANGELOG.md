@@ -8,6 +8,7 @@
 - Modal de cantidad: inicia vacío con ✓ deshabilitado y valida cero / mayor a lo solicitado / mayor a la existencia.
 - Componentes: `Toast` con variante `warning`; `Stepper` con prop `disabled` y botones grises al llegar al límite.
 - Detalle del flujo y PENDIENTES en `docs/figma/flujos-surtido.md`.
+- 2026-10-14: prototipo de **surtido multipedido** (ronda de hasta 3 pedidos) con tres propuestas — A lista consolidada + separación en mesa (principal), B batch pick a contenedores, C separación en la revisión — sin respaldo en Figma (D48). Detalle en `docs/figma/flujos-surtido.md`, sección "Multipedido".
 - 2026-10-14: aviso "Producto incorrecto" (código ajeno al pedido), overlay "Vista foto" (162:6994, D46) y miniatura de 60 × 60 en las cards de la lista (`OrderItemRow` prop `foto`, sin respaldo en Figma, D47; copiada de `feature-rechazar-traspaso`).
 
 ## 2026-09-29 — Flujo completo: Surtido unificado + cableado Facturación → Embarque → Uber → Factura

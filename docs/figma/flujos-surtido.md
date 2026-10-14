@@ -55,3 +55,46 @@ fin → Asignación de tareas con "REVISAR PEDIDO CLIENTE" (197:20499) + toast "
 | Punto | Estado |
 |---|---|
 | Mock de 2 productos vs. 11 de Figma | Se conserva el de 2; por eso las pantallas no entran en la prueba píxel a píxel. |
+
+---
+
+# Multipedido — ronda de hasta 3 pedidos (sin Figma)
+
+Rama `feature-surtido-multipedido`. La página `📲 Surtido - Multi. pedido x ronda` (2888:9537) está vacía: el flujo se diseña primero en código y después se pasa a Figma (D48). Requisito confirmado por stakeholders: **máximo 3 pedidos por ronda**. Contexto de sucursal (usuario, 2026-10-14): los operarios recogen todo en los anaqueles y escanean en la mesa de preparación; los pedidos suelen ser chicos (2–5 códigos) o grandes (~14); límite de ~25 min desde la captura en Entrega Local; la espera antes de iniciar (mediana 6 min, promedio 15.3 min) pesa más que el surtido (mediana 1.1 min).
+
+Las tres propuestas se eligen desde el panel de escenarios. Menú › Tareas abre la **A**; el flujo de un pedido se conserva en el panel ("Un pedido por ronda").
+
+```
+Asignación de tareas — SURTIR RONDA DE PEDIDOS · Contenedor A 123456 / B 123457 / C 123458
+ ✓ → Surtido de ronda
+     A · lista consolidada por ubicación (total por código + desglose A/B/C) + resumen de contenedores
+         escaneo → "Coloca <código> en: A n pz · B n pz" (reparto del pedido más antiguo al más reciente)
+     B · parada por parada (una ubicación a la vez): solo acepta el código de la parada,
+         indica cuántas piezas van a cada contenedor y pasa sola a la siguiente parada incompleta
+     C · lista consolidada sin separar: solo cuenta piezas recolectadas
+     comunes: "Piezas de más" si sobran, "Pedido N completo" al llenar un contenedor,
+              código de 7 dígitos → modal de cantidad, "Producto incorrecto" si no es de la ronda
+     todo completo → 600 ms → "Finalizar ronda" · Menú ⋮ › Finalizar ronda con faltantes → modal informativo
+ A, B: fin → REVISAR PEDIDO CLIENTE (bloqueada) + toast "Ronda finalizada"
+ C:    fin del surtido → REVISAR Y SEPARAR RONDA (se puede aceptar) → "Revisión y separación"
+         escaneo reparte en contenedores, sin pasar de lo recolectado → fin → FACTURAR Y EMBARCAR PEDIDO (bloqueada)
+```
+
+## Reglas de la propuesta (sin respaldo; por validar con operación)
+
+| Punto | Regla del prototipo |
+|---|---|
+| Reparto de piezas de un código compartido | Del pedido capturado antes al más reciente; el faltante cae en el más reciente. |
+| Pedido completo | Aviso al llenar su contenedor; en A y B pasa a revisión, en C a facturación. |
+| Faltantes al finalizar | Modal informativo por pedido (o por código en la recolección de C); se puede finalizar. |
+| Negar producto | No se implementa en la ronda; lo que no se surte queda como faltante. |
+| Contenedores | Identificados por letra; no se escanea el contenedor. |
+
+## Preguntas abiertas
+
+1. ¿La revisión la hace la misma persona que surte, en la misma mesa? (Define si C es viable.)
+2. ¿Cómo se forma la ronda: el sistema agrupa por hora de captura o el operario elige? ¿Cuánto se espera para juntar 3?
+3. ¿Los pedidos grandes (~14 códigos) entran en ronda o van solos?
+4. Faltantes compartidos: ¿prioridad por antigüedad del pedido u otra regla?
+5. ¿El límite de 25 min se mide por pedido o por ronda?
+6. ¿Los contenedores tienen etiqueta escaneable?

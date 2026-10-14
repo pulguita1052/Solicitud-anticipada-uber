@@ -1,7 +1,7 @@
 /**
  * Panel lateral (derecho) con los escenarios de verificación del flujo de surtido:
- * Tareas → Surtido. Cada tarjeta salta directamente a la pantalla
- * correspondiente con un seed de estado (query `?escenario=<id>`). Se muestra en `/tareas` y `/surtido`.
+ * Multipedido (propuestas A, B y C) y Un pedido por ronda. Cada tarjeta salta directamente a la pantalla
+ * correspondiente con un seed de estado (query `?escenario=<id>`). Se muestra en `/tareas`, `/surtido` y `/ronda`.
  * Fuera del handheld (queda a la derecha del app-frame de 430 px) y oculto bajo 900 px de viewport.
  */
 import { useEffect, useRef } from 'react';
@@ -15,7 +15,7 @@ type Escenario = {
   id: string;
   titulo: string;
   descripcion: string;
-  ruta: '/tareas' | '/surtido';
+  ruta: '/tareas' | '/surtido' | '/ronda';
   /** Reglas o notas clave que aplican a esta pantalla. Se muestran como bullets debajo de la descripción. */
   reglas: string[];
 };
@@ -24,7 +24,76 @@ type Grupo = { titulo: string; escenarios: Escenario[] };
 
 const GRUPOS: Grupo[] = [
   {
-    titulo: 'Tareas',
+    titulo: 'Multipedido · A — Lista consolidada + separación en mesa (principal)',
+    escenarios: [
+      {
+        id: 'ronda-a',
+        titulo: 'Asignación — Surtir ronda',
+        descripcion: 'Tarea "SURTIR RONDA DE PEDIDOS" con 3 pedidos, cada uno con su contenedor A, B y C. Es el flujo de Menú › Tareas.',
+        ruta: '/tareas',
+        reglas: [
+          'Lista consolidada en orden de recorrido: total de piezas por código y desglose por contenedor.',
+          'Cada escaneo dice en qué contenedor va la pieza ("Coloca 1394000 en: A 4 pz · B 2 pz").',
+          'Las piezas llenan primero el pedido capturado antes; si sobran, aviso "Piezas de más".',
+          'Cada contenedor avisa cuando su pedido queda completo.',
+        ],
+      },
+      {
+        id: 'ronda-a-en-curso',
+        titulo: 'Ronda en curso',
+        descripcion: 'Pedido A completo, B a la mitad y C sin empezar.',
+        ruta: '/ronda',
+        reglas: ['Menú ⋮ › Finalizar ronda muestra los faltantes por pedido; es informativo y se puede finalizar.'],
+      },
+    ],
+  },
+  {
+    titulo: 'Multipedido · B — Batch pick a contenedores',
+    escenarios: [
+      {
+        id: 'ronda-b',
+        titulo: 'Asignación — Surtir ronda',
+        descripcion: 'Mismo inicio que A, pero el surtido va parada por parada (una ubicación a la vez).',
+        ruta: '/tareas',
+        reglas: [
+          'Se escanea en el anaquel y se deposita en el contenedor que indica la parada.',
+          'Solo se acepta el código de la parada actual.',
+          'Al completar la parada pasa sola a la siguiente incompleta.',
+        ],
+      },
+      {
+        id: 'ronda-b-en-curso',
+        titulo: 'Ronda en curso',
+        descripcion: 'Pedido A completo, B a la mitad: abre en la primera parada incompleta.',
+        ruta: '/ronda',
+        reglas: [],
+      },
+    ],
+  },
+  {
+    titulo: 'Multipedido · C — Separación en la revisión',
+    escenarios: [
+      {
+        id: 'ronda-c',
+        titulo: 'Asignación — Surtir ronda',
+        descripcion: 'El surtido solo recolecta las piezas totales; no separa por contenedor.',
+        ruta: '/tareas',
+        reglas: [
+          'Al finalizar, la siguiente tarea es "REVISAR Y SEPARAR RONDA" y sí se puede aceptar.',
+          'En la revisión cada escaneo reparte la pieza en su contenedor; no se separa más de lo recolectado.',
+        ],
+      },
+      {
+        id: 'ronda-c-revision',
+        titulo: 'Asignación — Revisar y separar',
+        descripcion: 'Recolección terminada con faltante: 0245134 4 de 6. El faltante cae en el pedido C (el más reciente).',
+        ruta: '/tareas',
+        reglas: ['Al terminar, la siguiente tarea es "FACTURAR Y EMBARCAR PEDIDO" (bloqueada).'],
+      },
+    ],
+  },
+  {
+    titulo: 'Un pedido por ronda — Tareas',
     escenarios: [
       {
         id: 'tareas-surtido',
@@ -43,7 +112,7 @@ const GRUPOS: Grupo[] = [
     ],
   },
   {
-    titulo: 'Surtido',
+    titulo: 'Un pedido por ronda — Surtido',
     escenarios: [
       {
         id: 'inicial',
@@ -132,7 +201,7 @@ export function EscenariosPanel() {
         <span className={styles.badge}>Flujo</span>
         <h2 className={styles.title}>Escenarios</h2>
         <p className={styles.subtitle}>
-          Tareas → Surtido. Selecciona un escenario para saltar a esa pantalla con el estado ya sembrado.
+          Multipedido (A, B, C) y un pedido por ronda. Selecciona un escenario para saltar a esa pantalla con el estado ya sembrado.
         </p>
       </header>
       <div className={styles.grupos}>

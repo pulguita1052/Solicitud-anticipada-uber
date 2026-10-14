@@ -20,7 +20,7 @@ Antes de cualquier tarea de UI, lee y sigue @FIGMA_REPLICA.md.
 
 ## Rama `feature-surtido-multipedido` (2026-10-09)
 
-Alcance: **solo el flujo de surtido, ya separado de la revisión**, replicando `📲 Surtido - Un pedido x ronda` (24:16). Menú → Asignación de tareas (SURTIR PEDIDO CLIENTE) → Surtido de órdenes / Detalle de producto. Al finalizar, Asignación de tareas muestra la siguiente tarea "REVISAR PEDIDO CLIENTE" con **Aceptar deshabilitado**. Flujo y PENDIENTES en `docs/figma/flujos-surtido.md`. Objetivo siguiente: surtir **múltiples pedidos por ronda** (`📲 Surtido - Multi. pedido x ronda`, 2888:9537). Facturación, embarque, Uber, configuraciones y la revisión durante el surtido siguen en `main`; lo de abajo describe `main`.
+Alcance: **solo el flujo de surtido, ya separado de la revisión**, replicando `📲 Surtido - Un pedido x ronda` (24:16). Menú → Asignación de tareas (SURTIR PEDIDO CLIENTE) → Surtido de órdenes / Detalle de producto. Al finalizar, Asignación de tareas muestra la siguiente tarea "REVISAR PEDIDO CLIENTE" con **Aceptar deshabilitado**. Flujo y PENDIENTES en `docs/figma/flujos-surtido.md`. Objetivo: surtir **hasta 3 pedidos por ronda**. La página `📲 Surtido - Multi. pedido x ronda` (2888:9537) está vacía: se diseña primero en código (`src/screens/ronda/`, `src/domain/ronda.ts`) con tres propuestas — A (principal, Menú › Tareas), B y C desde el panel de escenarios; el flujo de un pedido sigue disponible en el panel. Ver `docs/figma/flujos-surtido.md`, sección "Multipedido". Facturación, embarque, Uber, configuraciones y la revisión durante el surtido siguen en `main`; lo de abajo describe `main`.
 
 ## Estado (2026-09-29)
 
