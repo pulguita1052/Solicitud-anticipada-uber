@@ -61,7 +61,10 @@ export function SurtidoRonda() {
   // Se guarda en la URL (?pedido=) para que al regresar del Detalle de producto la lista siga filtrada
   const [params, setParams] = useSearchParams();
   const filtro = params.get('pedido') ?? undefined;
-  const setFiltro = (pedido: string | undefined) =>
+  /** Solo se animan las cards cuando el usuario cambia el filtro (no al abrir la pantalla ni al escanear). */
+  const [filtroCambiado, setFiltroCambiado] = useState(false);
+  const setFiltro = (pedido: string | undefined) => {
+    setFiltroCambiado(true);
     setParams(
       (prev) => {
         const q = new URLSearchParams(prev);
@@ -71,6 +74,7 @@ export function SurtidoRonda() {
       },
       { replace: true },
     );
+  };
   /** "Avance de la ronda" oculto desde el menú ⋮ (?avance=oculto, también se conserva al volver del Detalle). */
   const avanceOculto = params.get('avance') === 'oculto';
   const alternarAvance = () =>
@@ -256,9 +260,10 @@ export function SurtidoRonda() {
             onSiguiente={() => setParada((i) => Math.min(lineas.length - 1, i + 1))}
           />
         ) : (
-          <div className={styles.list}>
+          // key = filtro: al cambiarlo la lista se vuelve a montar y las cards entran con la animación
+          <div key={filtro ?? 'todos'} className={`${styles.list} ${filtroCambiado ? styles.listAnimada : ''}`}>
             {visibles.map((l, i) => (
-              <div key={l.codigo} className={styles.itemContainer}>
+              <div key={l.codigo} className={styles.itemContainer} style={{ animationDelay: `${Math.min(i, 6) * 40}ms` }}>
                 {i > 0 && <Divider variant="list" />}
                 <LineaRonda linea={l} pedido={filtro} separando={separando} onClick={esB ? undefined : () => navigate(`/ronda/producto/${l.codigo}`)} />
               </div>

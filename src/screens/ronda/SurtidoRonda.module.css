@@ -177,6 +177,29 @@
   width: 100%;
 }
 
+/* Cards al cambiar el filtro por contenedor: entran deslizándose hacia arriba y apareciendo, con ease-out y un
+   escalonado de 40 ms (máx. 240 ms) entre cards (indicación del usuario, 2026-10-15) */
+.listAnimada .itemContainer {
+  animation: entrarCard var(--duration-300) var(--easing-ease-out) both;
+}
+
+@keyframes entrarCard {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .listAnimada .itemContainer {
+    animation: none;
+  }
+}
+
 /* Desglose por contenedor — "Stock" 15:1545 */
 .desglose {
   display: flex;
