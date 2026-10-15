@@ -16,11 +16,12 @@
   line-height: normal;
 }
 
-/* ---- Contenedores — "Container" 15:1500 */
+/* ---- Contenedores — "Container" 15:1500. Espaciado de la versión anterior (relleno 8, separación 8, contenido a la
+   izquierda) en lugar del de Figma (relleno 12/0, contenido centrado), por indicación del usuario (2026-10-15, D49) */
 .contenedores {
   display: flex;
   flex-shrink: 0;
-  gap: 6px;
+  gap: 8px;
   width: 100%;
 }
 
@@ -28,11 +29,11 @@
 .contenedor {
   display: flex;
   flex: 1 0 0;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-width: 1px;
-  padding: 12px 0;
+  padding: 8px;
   border-radius: 5px;
   box-shadow: inset 0 0 0 1px var(--color-primary-azul-300);
   background: var(--color-blanco);
@@ -57,7 +58,7 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
-  align-items: flex-end;
+  align-items: flex-start;
   color: var(--color-negro);
   font: 400 12px/normal var(--font-family-roboto); /* figma: 15:1507 (sin estilo, 12 px) */
   white-space: nowrap;
