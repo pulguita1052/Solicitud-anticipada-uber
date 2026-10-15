@@ -34,7 +34,7 @@ import {
 import { useStore } from '../../store/AppStore';
 import { CantidadModal, MenuModal } from '../surtido/overlays/SurtidoModals';
 import { FaltantesModal, FinalizarRondaModal, type GrupoFaltante } from './RondaModals';
-import { BarraFiltro, ContenedoresResumen, LineaRonda, Parada } from './RondaPartes';
+import { ContenedoresResumen, LineaRonda, Parada } from './RondaPartes';
 import styles from './SurtidoRonda.module.css';
 
 type Overlay = { k: 'cantidad'; codigo: string } | { k: 'menu' } | { k: 'finalizar' } | { k: 'faltantes' };
@@ -208,13 +208,6 @@ export function SurtidoRonda() {
           <ContenedoresResumen avances={avances} seleccionado={esB ? undefined : filtro} onSeleccionar={esB ? undefined : setFiltro} />
         ) : (
           <p className={styles.nota}>Recolecta las piezas de los 3 pedidos. La separación por contenedor se hace en la revisión.</p>
-        )}
-        {filtro && !esB && (
-          <BarraFiltro
-            contenedor={avances.find((x) => x.pedido.id === filtro)!.pedido.contenedor}
-            codigos={visibles.length}
-            onQuitar={() => setFiltro(undefined)}
-          />
         )}
         {esB && lineaParada ? (
           <Parada

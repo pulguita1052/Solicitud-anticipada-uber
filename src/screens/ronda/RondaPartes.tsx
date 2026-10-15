@@ -26,8 +26,8 @@ const ICONO_SELECCIONADO: Record<Contenedor, string> = { A: iconoAInv, B: iconoB
 
 /**
  * Tres contenedores con su pedido y avance en piezas — "Container" 15:1500 (Handheld for Claude).
- * Tocar uno filtra la lista a ese pedido; tocarlo otra vez quita el filtro. En lugar de atenuar los demás (15:1661), el
- * seleccionado se rellena de azul con sombra y los otros quedan normales (propuesta aprobada por el usuario, D49).
+ * Tocar uno filtra la lista a ese pedido; tocarlo otra vez quita el filtro. Los demás se atenúan al 50 % (15:1661) y,
+ * además, el seleccionado se rellena de azul con sombra (indicación del usuario, D49).
  */
 export function ContenedoresResumen({
   avances,
@@ -42,11 +42,12 @@ export function ContenedoresResumen({
     <div className={styles.contenedores}>
       {avances.map((a) => {
         const activo = seleccionado === a.pedido.id;
+        const atenuado = seleccionado !== undefined && !activo;
         return (
           <button
             key={a.pedido.id}
             type="button"
-            className={[styles.contenedor, a.completo ? styles.contenedorListo : '', activo ? styles.seleccionado : ''].join(' ')}
+            className={[styles.contenedor, a.completo ? styles.contenedorListo : '', activo ? styles.seleccionado : '', atenuado ? styles.atenuado : ''].join(' ')}
             aria-pressed={activo}
             disabled={!onSeleccionar}
             onClick={() => onSeleccionar?.(seleccionado === a.pedido.id ? undefined : a.pedido.id)}
@@ -68,20 +69,6 @@ export function ContenedoresResumen({
 
 /** Chip de pedido: en 0 se queda blanco; parcial y completo toman los colores del chip de avance (D49). */
 const ESTADO_TAG: Partial<Record<OrderItemStatus, string>> = { parcial: styles.tagParcial, completado: styles.tagListo };
-
-/** Barra entre los contenedores y la lista mientras hay filtro: qué se está viendo y cómo volver a toda la ronda. */
-export function BarraFiltro({ contenedor, codigos, onQuitar }: { contenedor: Contenedor; codigos: number; onQuitar: () => void }) {
-  return (
-    <div className={styles.barraFiltro} role="status">
-      <span>
-        Pedido {contenedor} · {codigos} {codigos === 1 ? 'código' : 'códigos'}
-      </span>
-      <button type="button" className={styles.verTodos} onClick={onQuitar}>
-        Ver todos ✕
-      </button>
-    </div>
-  );
-}
 
 /**
  * Card de la lista — 15:1528 (consolidada, con desglose "Stock" 15:1545) o 15:1752 (vista filtrada por pedido, sin desglose).
