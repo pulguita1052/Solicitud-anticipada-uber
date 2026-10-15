@@ -75,12 +75,15 @@ export function MenuModal({
   onFinalizar,
   onCancel,
   finalizarLabel = 'Finalizar surtido',
+  extra,
 }: {
   onRepetirAudio: () => void;
   onFinalizar: () => void;
   onCancel: () => void;
   /** Ronda multipedido: "Finalizar ronda" (sin respaldo en Figma). */
   finalizarLabel?: string;
+  /** Opción adicional entre "Repetir audio" y "Finalizar" (ronda: ocultar / mostrar avance; sin respaldo en Figma). */
+  extra?: { label: string; onClick: () => void };
 }) {
   return (
     <ModalSheet icon={<ModalIcon src={iconoMenu} inset="-2.75% -1.7% -0.66% -1.7%" />} gap={10}>
@@ -88,6 +91,7 @@ export function MenuModal({
         <ModalHeader title="Menú" gap={17} dividerWidth={415.902} />
         <div className={styles.col} style={{ gap: 15, alignItems: 'center' }}>
           <Button variant="default" label="Repetir audio" className={styles.full} onClick={onRepetirAudio} />
+          {extra && <Button variant="default" label={extra.label} className={styles.full} onClick={extra.onClick} />}
           <Button variant="error" label={finalizarLabel} className={styles.full} onClick={onFinalizar} />
         </div>
       </div>

@@ -71,6 +71,18 @@ export function SurtidoRonda() {
       },
       { replace: true },
     );
+  /** "Avance de la ronda" oculto desde el menú ⋮ (?avance=oculto, también se conserva al volver del Detalle). */
+  const avanceOculto = params.get('avance') === 'oculto';
+  const alternarAvance = () =>
+    setParams(
+      (prev) => {
+        const q = new URLSearchParams(prev);
+        if (avanceOculto) q.delete('avance');
+        else q.set('avance', 'oculto');
+        return q;
+      },
+      { replace: true },
+    );
   const scanRef = useRef<ScanInputHandle>(null);
 
   const separando = separaAlEscanear(ronda);
@@ -224,7 +236,9 @@ export function SurtidoRonda() {
     <div className={styles.screen}>
       <AppHeader backLabel="Menú" onBack={() => navigate('/menu')} onMenu={() => setOverlay({ k: 'menu' })} />
       <ContentPanel title={titulo}>
-        <OrderProgress variante="ronda" completado={c.completado} negado={c.negado} parcial={c.parcial} pendientes={c.pendientes} />
+        {!avanceOculto && (
+          <OrderProgress variante="ronda" completado={c.completado} negado={c.negado} parcial={c.parcial} pendientes={c.pendientes} />
+        )}
         {separando ? (
           <ContenedoresResumen avances={avances} seleccionado={esB ? undefined : filtro} onSeleccionar={esB ? undefined : setFiltro} />
         ) : (
@@ -282,6 +296,13 @@ export function SurtidoRonda() {
       {ov?.k === 'menu' && (
         <MenuModal
           finalizarLabel={recolectandoC ? 'Finalizar surtido' : 'Finalizar ronda'}
+          extra={{
+            label: avanceOculto ? 'Mostrar avance de la ronda' : 'Ocultar avance de la ronda',
+            onClick: () => {
+              alternarAvance();
+              cerrar();
+            },
+          }}
           onRepetirAudio={() => {
             const sig = esB ? lineaParada : lineas.find((l) => l.avance < l.total);
             if (sig) decir(`Código ${sig.codigo.split('').join(' ')}. ${productoRonda(sig.codigo)!.ubicacion.join(', ')}`);
