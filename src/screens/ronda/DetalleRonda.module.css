@@ -1,0 +1,161 @@
+/* Detalle de la ronda — panel gris de "Panel info" 27:2320 (Handheld for Claude). Aviso y resaltado sin Figma (D50). */
+.screen {
+  position: absolute;
+  inset: 0;
+  background: var(--color-blanco);
+}
+
+.contenido {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  min-height: 1px;
+  padding-bottom: 8px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.contenido::-webkit-scrollbar {
+  display: none;
+}
+
+.intro {
+  color: var(--color-negro);
+  font: var(--font-b1-body);
+  line-height: normal;
+  text-align: center;
+}
+
+.intro b {
+  font-weight: 700;
+}
+
+/* Aviso de pedidos del mismo cliente: mismo amarillo que el chip "sin iniciar" de la lista */
+.aviso {
+  display: flex;
+  flex-shrink: 0;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: var(--color-var-revision-en-surtido-amarillo);
+  color: var(--color-negro);
+  font: var(--font-b1-body);
+  line-height: normal;
+}
+
+.aviso img {
+  flex-shrink: 0;
+}
+
+.aviso b {
+  font-weight: 700;
+}
+
+/* "Panel info" 27:2320: fondo gris, radio 8, relleno 14/16, 9.5 px entre filas */
+.panel {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: 9.5px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: var(--color-inactive);
+  color: var(--color-negro);
+}
+
+/* Pedido del mismo cliente: borde amarillo de 2 px sin cambiar el tamaño del panel */
+.panelMismoCliente {
+  box-shadow: inset 0 0 0 2px var(--color-botones-amarillo);
+}
+
+.encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.totales {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font: 400 16px/20.8px var(--font-family-roboto); /* figma: 27:2327 (sin estilo, 16 px) */
+}
+
+.totales b {
+  color: var(--color-primary-azul-300);
+  font: 700 22px/24.2px var(--font-family-roboto); /* figma: 27:2323 (sin estilo, 22 px) */
+  letter-spacing: 0.5px;
+}
+
+/* "Divider" 27:2324 */
+.divider {
+  height: 1px;
+  background: #e4e4e4; /* figma: 27:2324 (sin estilo) */
+}
+
+/* Filas con ícono — 27:2334 / 27:2339 */
+.dato {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font: 400 16px/normal var(--font-family-roboto); /* figma: 27:2338 (sin estilo, 16 px) */
+  white-space: nowrap;
+}
+
+.cliente {
+  min-width: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.captura {
+  margin-left: auto;
+  color: var(--color-inactive-text);
+  font: var(--font-label);
+}
+
+.badge {
+  flex-shrink: 0;
+  margin-left: auto;
+  padding: 2px 8px;
+  border-radius: 5px;
+  background: var(--color-botones-amarillo);
+  color: var(--color-negro);
+  font: var(--font-label);
+  font-weight: 700;
+}
+
+.codigos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Mismo estilo que los chips de pedido de la lista, sobre el gris del panel */
+.codigo {
+  padding: 2px 8px;
+  border-radius: 5px;
+  box-shadow: inset 0 0 0 1px var(--color-primary-azul-300);
+  background: var(--color-blanco);
+  color: var(--color-primary-azul-300);
+  font: var(--font-label);
+  white-space: nowrap;
+}
+
+.codigo b {
+  font-weight: 700;
+}
+
+/* Código que se repite entre pedidos del mismo cliente */
+.codigoEnComun {
+  box-shadow: inset 0 0 0 1px var(--color-negro);
+  background: var(--color-botones-amarillo);
+  color: var(--color-negro);
+}
+
+.flex1 {
+  flex: 1 0 0;
+}

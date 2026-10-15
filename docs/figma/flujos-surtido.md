@@ -66,7 +66,10 @@ Rama `feature-surtido-multipedido`. La página `📲 Surtido - Multi. pedido x r
 
 ```
 Asignación de tareas — SURTIR RONDA DE PEDIDOS · Contenedor A 123456 / B 123457 / C 123458
- ✓ → Surtido de ronda
+ ✓ → Detalle de la ronda (antes de surtir, D50): contenedor ↔ pedido, cliente, hora de captura, piezas y códigos
+     pedidos del mismo cliente (venta dividida, p. ej. cable 20 m + 1 m) → aviso amarillo + tarjetas marcadas + código en común resaltado
+     Regresar → Asignación de tareas · Iniciar surtido →
+ Surtido de ronda
      A · Avance de la ronda + tarjetas de contenedor + lista consolidada por ubicación (total por código + desglose A/B/C)
          tocar contenedor → vista filtrada: solo sus códigos con su avance, sin desglose (15:1661)
          escaneo → toast "Coloca <código> · Contenedor A: n pz · B: n pz" (reparto del pedido más antiguo al más reciente)

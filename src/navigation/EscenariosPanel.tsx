@@ -15,7 +15,7 @@ type Escenario = {
   id: string;
   titulo: string;
   descripcion: string;
-  ruta: '/tareas' | '/surtido' | '/ronda';
+  ruta: '/tareas' | '/surtido' | '/ronda' | '/ronda/detalle';
   /** Reglas o notas clave que aplican a esta pantalla. Se muestran como bullets debajo de la descripción. */
   reglas: string[];
 };
@@ -30,7 +30,7 @@ const GRUPOS: Grupo[] = [
       {
         id: 'ronda-a',
         titulo: 'Asignación — Surtir ronda',
-        descripcion: 'Tarea "SURTIR RONDA DE PEDIDOS" con 3 pedidos, cada uno con su contenedor A, B y C. Es el flujo de Menú › Tareas.',
+        descripcion: 'Tarea "SURTIR RONDA DE PEDIDOS" con 3 pedidos, cada uno con su contenedor A, B y C. Es el flujo de Menú › Tareas. Aceptar abre el Detalle de la ronda.',
         ruta: '/tareas',
         reglas: [
           'Lista consolidada en orden de recorrido: total de piezas por código y desglose por contenedor.',
@@ -38,6 +38,17 @@ const GRUPOS: Grupo[] = [
           'Cada escaneo avisa en qué contenedor va la pieza ("Coloca 1394000 · Contenedor A: 4 pz · B: 2 pz").',
           'Las piezas llenan primero el pedido capturado antes; si sobran, aviso "Piezas de más".',
           'Cada contenedor avisa cuando su pedido queda completo.',
+        ],
+      },
+      {
+        id: 'ronda-a-detalle',
+        titulo: 'Detalle de la ronda',
+        descripcion: 'Antes de surtir: qué pedido va en cada contenedor, de qué cliente, piezas y códigos.',
+        ruta: '/ronda/detalle',
+        reglas: [
+          'Los pedidos A y B son del mismo cliente: aviso amarillo, tarjetas con borde amarillo y el código que comparten resaltado.',
+          'Caso que lo motiva: una venta por medida (cable, manguera) dividida en dos pedidos, p. ej. 20 m + 1 m.',
+          '"Iniciar surtido" abre la lista de la ronda; "Regresar" vuelve a Asignación de tareas.',
         ],
       },
       {

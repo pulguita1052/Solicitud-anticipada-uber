@@ -91,15 +91,22 @@ export type PedidoRonda = {
   contenedor: Contenedor;
   /** Hora de captura: define la prioridad cuando faltan piezas (el más antiguo se llena primero). */
   capturado: string;
+  /** Cliente del pedido. El sistema a veces divide una venta en varios pedidos del mismo cliente (D50). */
+  cliente: { id: string; nombre: string };
   partidas: { codigo: string; solicitado: number }[];
 };
 
-/** Tres pedidos chicos (2–3 códigos) con códigos compartidos: 1394000 (A y B) y 2546000 (A y C). */
+/**
+ * Tres pedidos chicos (2–3 códigos) con códigos compartidos: 1394000 (A y B) y 2546000 (A y C).
+ * A y B son del mismo cliente (venta dividida en dos pedidos): el Detalle de la ronda lo resalta.
+ * Nombre de RAUL LIMA GUTIERREZ tomado de "Panel info" 27:2320; los demás datos de cliente son de demo.
+ */
 export const PEDIDOS_RONDA: PedidoRonda[] = [
   {
     id: '123456',
     contenedor: 'A',
     capturado: '11:02 a.m.',
+    cliente: { id: '536983', nombre: 'RAUL LIMA GUTIERREZ' },
     partidas: [
       { codigo: '1394000', solicitado: 4 },
       { codigo: '2546000', solicitado: 2 },
@@ -110,6 +117,7 @@ export const PEDIDOS_RONDA: PedidoRonda[] = [
     id: '123457',
     contenedor: 'B',
     capturado: '11:05 a.m.',
+    cliente: { id: '536983', nombre: 'RAUL LIMA GUTIERREZ' },
     partidas: [
       { codigo: '1365800', solicitado: 3 },
       { codigo: '1394000', solicitado: 2 },
@@ -119,6 +127,7 @@ export const PEDIDOS_RONDA: PedidoRonda[] = [
     id: '123458',
     contenedor: 'C',
     capturado: '11:09 a.m.',
+    cliente: { id: '481207', nombre: 'MARIA FERNANDA LOPEZ RUIZ' },
     partidas: [
       { codigo: '2546000', solicitado: 1 },
       { codigo: '0245134', solicitado: 6 },

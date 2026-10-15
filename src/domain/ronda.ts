@@ -108,6 +108,24 @@ export function conteosRonda(s: RondaState) {
   return c;
 }
 
+export type GrupoMismoCliente = { cliente: PedidoRonda['cliente']; pedidos: PedidoRonda[]; codigosEnComun: string[] };
+
+/**
+ * Pedidos de la ronda que son del mismo cliente (venta dividida en varios pedidos) y los códigos que se repiten
+ * entre ellos: p. ej. un cable por metro pedido como 20 m en un pedido y 1 m en otro (D50).
+ */
+export function mismosClientes(): GrupoMismoCliente[] {
+  const porCliente = new Map<string, PedidoRonda[]>();
+  for (const p of PEDIDOS_RONDA) porCliente.set(p.cliente.id, [...(porCliente.get(p.cliente.id) ?? []), p]);
+  return [...porCliente.values()]
+    .filter((ps) => ps.length > 1)
+    .map((ps) => ({
+      cliente: ps[0].cliente,
+      pedidos: ps,
+      codigosEnComun: CATALOGO_RONDA.map((c) => c.codigo).filter((cod) => ps.filter((p) => solicitadoDe(p, cod) > 0).length > 1),
+    }));
+}
+
 /** Faltantes por pedido (lo que quedaría sin surtir si se finaliza ahora). */
 export function faltantes(s: RondaState) {
   return PEDIDOS_RONDA.map((p) => ({

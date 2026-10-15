@@ -87,7 +87,7 @@ export function AsignacionTareas() {
             label="Aceptar"
             className={styles.half}
             disabled={!puedeAceptar}
-            onClick={() => navigate(esRonda ? '/ronda' : '/surtido')}
+            onClick={() => navigate(etapa === 'ronda-surtido' ? '/ronda/detalle' : esRonda ? '/ronda' : '/surtido')}
           />
         </div>
       </BottomBar>
