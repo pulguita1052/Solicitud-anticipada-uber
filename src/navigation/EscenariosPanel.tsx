@@ -46,9 +46,9 @@ const GRUPOS: Grupo[] = [
         descripcion: 'Antes de surtir: qué pedido va en cada contenedor, de qué cliente, piezas y códigos.',
         ruta: '/ronda/detalle',
         reglas: [
-          'Los pedidos A y B son del mismo cliente: aviso amarillo, tarjetas con borde amarillo y el código que comparten resaltado.',
+          'Los pedidos A y B son del mismo cliente: llevan la etiqueta "Mismo cliente".',
           'Caso que lo motiva: una venta por medida (cable, manguera) dividida en dos pedidos, p. ej. 20 m + 1 m.',
-          '"Iniciar surtido" abre la lista de la ronda; "Regresar" vuelve a Asignación de tareas.',
+          '"Iniciar surtido" abre la lista de la ronda.',
         ],
       },
       {

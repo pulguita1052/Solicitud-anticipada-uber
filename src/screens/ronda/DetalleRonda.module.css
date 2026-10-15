@@ -1,18 +1,18 @@
-/* Detalle de la ronda — panel gris de "Panel info" 27:2320 (Handheld for Claude). Aviso y resaltado sin Figma (D50). */
+/* Detalle de la ronda — 34:2 (Handheld for Claude) */
 .screen {
   position: absolute;
   inset: 0;
   background: var(--color-blanco);
 }
 
+/* "Contenido detalle" 34:131 — 24 px entre paneles; scroll sin barra si no caben */
 .contenido {
   display: flex;
   flex: 1 0 0;
   flex-direction: column;
-  gap: 12px;
+  gap: 24px;
   width: 100%;
   min-height: 1px;
-  padding-bottom: 8px;
   overflow-y: auto;
   scrollbar-width: none;
 }
@@ -21,40 +21,7 @@
   display: none;
 }
 
-.intro {
-  color: var(--color-negro);
-  font: var(--font-b1-body);
-  line-height: normal;
-  text-align: center;
-}
-
-.intro b {
-  font-weight: 700;
-}
-
-/* Aviso de pedidos del mismo cliente: mismo amarillo que el chip "sin iniciar" de la lista */
-.aviso {
-  display: flex;
-  flex-shrink: 0;
-  gap: 12px;
-  align-items: flex-start;
-  padding: 12px 14px;
-  border-radius: 8px;
-  background: var(--color-var-revision-en-surtido-amarillo);
-  color: var(--color-negro);
-  font: var(--font-b1-body);
-  line-height: normal;
-}
-
-.aviso img {
-  flex-shrink: 0;
-}
-
-.aviso b {
-  font-weight: 700;
-}
-
-/* "Panel info" 27:2320: fondo gris, radio 8, relleno 14/16, 9.5 px entre filas */
+/* "Panel contenedor" 34:139 — base "Panel info" 27:2320: gris, radio 8, relleno 14/16, 9.5 px entre filas */
 .panel {
   display: flex;
   flex-shrink: 0;
@@ -66,94 +33,73 @@
   color: var(--color-negro);
 }
 
-/* Pedido del mismo cliente: borde amarillo de 2 px sin cambiar el tamaño del panel */
-.panelMismoCliente {
-  box-shadow: inset 0 0 0 2px var(--color-botones-amarillo);
-}
-
+/* "Encabezado" 34:140 */
 .encabezado {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
+/* "Totales" 34:144 */
 .totales {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  font: 400 16px/20.8px var(--font-family-roboto); /* figma: 27:2327 (sin estilo, 16 px) */
+  font: 400 16px/20.8px var(--font-family-roboto); /* figma: 34:146 (sin estilo, 16 px) */
+  white-space: nowrap;
 }
 
 .totales b {
   color: var(--color-primary-azul-300);
-  font: 700 22px/24.2px var(--font-family-roboto); /* figma: 27:2323 (sin estilo, 22 px) */
+  font: 700 22px/24.2px var(--font-family-roboto); /* figma: 34:145 (sin estilo, 22 px) */
   letter-spacing: 0.5px;
 }
 
-/* "Divider" 27:2324 */
+/* "Divider" 34:147 */
 .divider {
   height: 1px;
-  background: #e4e4e4; /* figma: 27:2324 (sin estilo) */
+  background: #dedede; /* figma: 34:147 (sin estilo) */
 }
 
-/* Filas con ícono — 27:2334 / 27:2339 */
+/* Filas con ícono — 34:149 / 34:156 */
 .dato {
   display: flex;
   gap: 10px;
   align-items: center;
-  font: 400 16px/normal var(--font-family-roboto); /* figma: 27:2338 (sin estilo, 16 px) */
-  white-space: nowrap;
 }
 
-.cliente {
+.dato img {
+  flex-shrink: 0;
+}
+
+/* 34:153 / 32:2345 — una línea con "…" */
+.texto {
+  flex: 1 0 0;
   min-width: 1px;
   overflow: hidden;
+  font: var(--font-b1-body);
+  line-height: normal;
   text-overflow: ellipsis;
-}
-
-.captura {
-  margin-left: auto;
-  color: var(--color-inactive-text);
-  font: var(--font-label);
-}
-
-.badge {
-  flex-shrink: 0;
-  margin-left: auto;
-  padding: 2px 8px;
-  border-radius: 5px;
-  background: var(--color-botones-amarillo);
-  color: var(--color-negro);
-  font: var(--font-label);
-  font-weight: 700;
-}
-
-.codigos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-/* Mismo estilo que los chips de pedido de la lista, sobre el gris del panel */
-.codigo {
-  padding: 2px 8px;
-  border-radius: 5px;
-  box-shadow: inset 0 0 0 1px var(--color-primary-azul-300);
-  background: var(--color-blanco);
-  color: var(--color-primary-azul-300);
-  font: var(--font-label);
   white-space: nowrap;
 }
 
-.codigo b {
-  font-weight: 700;
+/* 34:148 */
+.captura {
+  flex-shrink: 0;
+  color: var(--color-inactive-text);
+  font: 400 12px/normal var(--font-family-roboto); /* figma: 34:148 (sin estilo, 12 px) */
+  white-space: nowrap;
 }
 
-/* Código que se repite entre pedidos del mismo cliente */
-.codigoEnComun {
-  box-shadow: inset 0 0 0 1px var(--color-negro);
-  background: var(--color-botones-amarillo);
-  color: var(--color-negro);
+/* "Etiqueta mismo cliente" 34:154 */
+.badge {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border-radius: 5px;
+  background: var(--color-primary-azul-300);
+  color: var(--color-blanco);
+  font: 700 12px/normal var(--font-family-roboto); /* figma: 34:155 (sin estilo, 12 px) */
+  white-space: nowrap;
 }
 
 .flex1 {
