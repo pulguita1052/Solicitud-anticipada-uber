@@ -10,6 +10,9 @@ import { Button } from '@ds/components/atoms/Button/Button';
 import iconoA from '@assets/icons/contenedor-a.svg';
 import iconoB from '@assets/icons/contenedor-b.svg';
 import iconoC from '@assets/icons/contenedor-c.svg';
+import iconoAInv from '@assets/icons/contenedor-a-invertido.svg';
+import iconoBInv from '@assets/icons/contenedor-b-invertido.svg';
+import iconoCInv from '@assets/icons/contenedor-c-invertido.svg';
 import { productoRonda, type AvancePedido, type LineaConsolidada } from '../../domain/ronda';
 import type { Contenedor } from '../../mocks/ronda';
 import styles from './SurtidoRonda.module.css';
@@ -18,10 +21,13 @@ export const statusLinea = (avance: number, total: number): OrderItemStatus =>
   avance <= 0 ? 'no-iniciado' : avance < total ? 'parcial' : 'completado';
 
 const ICONO_CONTENEDOR: Record<Contenedor, string> = { A: iconoA, B: iconoB, C: iconoC };
+/** Círculo blanco con la letra recortada: sobre el fondo azul del contenedor seleccionado la letra se ve azul. */
+const ICONO_SELECCIONADO: Record<Contenedor, string> = { A: iconoAInv, B: iconoBInv, C: iconoCInv };
 
 /**
  * Tres contenedores con su pedido y avance en piezas — "Container" 15:1500 (Handheld for Claude).
- * Tocar uno filtra la lista a ese pedido (vista filtrada 15:1661: los demás al 50 % de opacidad); tocarlo otra vez quita el filtro.
+ * Tocar uno filtra la lista a ese pedido; tocarlo otra vez quita el filtro. En lugar de atenuar los demás (15:1661), el
+ * seleccionado se rellena de azul con sombra y los otros quedan normales (propuesta aprobada por el usuario, D49).
  */
 export function ContenedoresResumen({
   avances,
@@ -35,21 +41,22 @@ export function ContenedoresResumen({
   return (
     <div className={styles.contenedores}>
       {avances.map((a) => {
-        const atenuado = seleccionado !== undefined && seleccionado !== a.pedido.id;
+        const activo = seleccionado === a.pedido.id;
         return (
           <button
             key={a.pedido.id}
             type="button"
-            className={[styles.contenedor, a.completo ? styles.contenedorListo : '', atenuado ? styles.atenuado : ''].join(' ')}
-            aria-pressed={seleccionado === a.pedido.id}
+            className={[styles.contenedor, a.completo ? styles.contenedorListo : '', activo ? styles.seleccionado : ''].join(' ')}
+            aria-pressed={activo}
             disabled={!onSeleccionar}
             onClick={() => onSeleccionar?.(seleccionado === a.pedido.id ? undefined : a.pedido.id)}
           >
-            <img src={ICONO_CONTENEDOR[a.pedido.contenedor]} alt={`Contenedor ${a.pedido.contenedor}`} width={30} height={30} />
+            <img src={(activo ? ICONO_SELECCIONADO : ICONO_CONTENEDOR)[a.pedido.contenedor]} alt={`Contenedor ${a.pedido.contenedor}`} width={30} height={30} />
             <span className={styles.contenedorDatos}>
               <span>#{a.pedido.id}</span>
               <b>
                 {a.separado} de {a.solicitado}
+                {activo && a.completo && ' ✓'}
               </b>
             </span>
           </button>
@@ -61,6 +68,20 @@ export function ContenedoresResumen({
 
 /** Chip de pedido: en 0 se queda blanco; parcial y completo toman los colores del chip de avance (D49). */
 const ESTADO_TAG: Partial<Record<OrderItemStatus, string>> = { parcial: styles.tagParcial, completado: styles.tagListo };
+
+/** Barra entre los contenedores y la lista mientras hay filtro: qué se está viendo y cómo volver a toda la ronda. */
+export function BarraFiltro({ contenedor, codigos, onQuitar }: { contenedor: Contenedor; codigos: number; onQuitar: () => void }) {
+  return (
+    <div className={styles.barraFiltro} role="status">
+      <span>
+        Pedido {contenedor} · {codigos} {codigos === 1 ? 'código' : 'códigos'}
+      </span>
+      <button type="button" className={styles.verTodos} onClick={onQuitar}>
+        Ver todos ✕
+      </button>
+    </div>
+  );
+}
 
 /**
  * Card de la lista — 15:1528 (consolidada, con desglose "Stock" 15:1545) o 15:1752 (vista filtrada por pedido, sin desglose).

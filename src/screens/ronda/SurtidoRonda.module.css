@@ -43,9 +43,38 @@
   cursor: default;
 }
 
-/* Vista filtrada 15:1661: los contenedores no seleccionados al 50 % */
-.atenuado {
-  opacity: 0.5;
+/* Contenedor seleccionado (filtro): relleno azul, texto blanco y sombra "Card shadow" — en lugar de atenuar los demás
+   como en 15:1661, por indicación del usuario (2026-10-15, D49) */
+.seleccionado,
+.seleccionado.contenedorListo {
+  background: var(--color-primary-azul-300);
+  box-shadow: var(--shadow-card-shadow);
+}
+
+.seleccionado .contenedorDatos {
+  color: var(--color-blanco);
+}
+
+/* Barra de filtro entre los contenedores y la lista (D49) */
+.barraFiltro {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 6px 12px;
+  border-radius: 5px;
+  background: var(--color-primary-azul-0);
+  color: var(--color-primary-azul-300);
+  font: var(--font-b1-body);
+  line-height: normal;
+}
+
+.verTodos {
+  padding: 4px 0 4px 12px;
+  color: var(--color-primary-azul-300);
+  font: var(--font-b2-body);
+  line-height: normal;
 }
 
 /* Contenedor completo — sin respaldo en los mockups (D49) */
