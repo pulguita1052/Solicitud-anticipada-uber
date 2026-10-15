@@ -358,3 +358,38 @@
 .casillaOn {
   background: var(--color-primary-azul-300);
 }
+
+/* ---- Modal "Coloca la mercancía en los contenedores" (D52) */
+.colocarLista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.colocarFila {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.colocarContenedor {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  color: var(--color-negro);
+  font: var(--font-b3-body);
+  line-height: normal;
+}
+
+.colocarContenedor small {
+  color: var(--color-inactive-text);
+  font: var(--font-label);
+}
+
+/* Cantidad grande para leerla de lejos en la mesa */
+.colocarCantidad {
+  color: var(--color-primary-azul-300);
+  font: var(--font-h1-headline);
+  line-height: normal;
+}

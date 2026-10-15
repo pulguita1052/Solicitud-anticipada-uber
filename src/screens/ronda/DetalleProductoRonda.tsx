@@ -6,6 +6,7 @@
  * Reglas (usuario, 2026-10-15):
  *   - "Solicitado ronda" = lo que piden todos los pedidos de la ronda (A + B + C).
  *   - La cantidad surtida se edita por pedido: una fila por pedido (contenedor, "Solicitado n", spinner) con divisor.
+ *     Los spinners están deshabilitados hasta que el producto se escanea al menos una vez.
  *   - "Negar producto" en dos pasos: (1) pedidos a negar, solo los que tienen el producto en 0, con regla de prioridad
  *     (marcar A marca B y C; marcar B marca C); (2) un mismo motivo para todos.
  */
@@ -23,7 +24,7 @@ import { Divider } from '@ds/components/atoms/Divider/Divider';
 import { Stepper } from '@ds/components/atoms/Stepper/Stepper';
 import { LabeledField } from '@ds/components/molecules/LabeledField/LabeledField';
 import { ProductSummary } from '@ds/components/molecules/ProductSummary/ProductSummary';
-import { consolidado, productoRonda } from '../../domain/ronda';
+import { consolidado, fueEscaneado, productoRonda } from '../../domain/ronda';
 import { MOTIVOS_NEGADO } from '../../mocks/pedido';
 import type { Contenedor } from '../../mocks/ronda';
 import { useStore } from '../../store/AppStore';
@@ -61,6 +62,8 @@ export function DetalleProductoRonda() {
 
   const [planta, pasillo, torre, nivel] = p.ubicacion;
   const solicitadoRonda = linea.porPedido.reduce((n, x) => n + x.solicitado, 0);
+  // Los spinners se habilitan hasta que el producto se escanea al menos una vez (etiqueta larga o corta)
+  const escaneado = fueEscaneado(ronda, codigo);
   const negables = linea.porPedido.filter((x) => !x.motivoNegado && x.separado === 0);
   // Vuelve a la lista con el filtro que tenía (?pedido=); si se abrió directo (sin historial en la app), a la lista
   const regresar = () => ((window.history.state?.idx ?? 0) > 0 ? navigate(-1) : navigate('/ronda'));
@@ -118,6 +121,7 @@ export function DetalleProductoRonda() {
                         value={x.separado}
                         min={0}
                         max={x.solicitado}
+                        disabled={!escaneado}
                         onChange={(cantidad) => rondaDispatch({ type: 'fijarSeparado', pedido: x.pedido, codigo, cantidad })}
                       />
                     </div>

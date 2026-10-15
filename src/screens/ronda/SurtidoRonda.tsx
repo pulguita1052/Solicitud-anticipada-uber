@@ -23,6 +23,7 @@ import { decir, sonar } from '../../domain/sonidos';
 import {
   avancePedidos,
   conteosRonda,
+  type Asignacion,
   consolidado,
   faltantes,
   faltantesRecoleccion,
@@ -33,11 +34,17 @@ import {
 } from '../../domain/ronda';
 import { useStore } from '../../store/AppStore';
 import { CantidadModal, MenuModal } from '../surtido/overlays/SurtidoModals';
-import { FaltantesModal, FinalizarRondaModal, type GrupoFaltante } from './RondaModals';
+import { ColocarModal, FaltantesModal, FinalizarRondaModal, type GrupoFaltante } from './RondaModals';
 import { ContenedoresResumen, LineaRonda, Parada } from './RondaPartes';
 import styles from './SurtidoRonda.module.css';
 
-type Overlay = { k: 'cantidad'; codigo: string } | { k: 'menu' } | { k: 'finalizar' } | { k: 'faltantes' };
+type Overlay =
+  | { k: 'cantidad'; codigo: string; inicial?: string }
+  /** Código de 7 dígitos: dónde colocar la cantidad capturada, repartida por prioridad (D52). */
+  | { k: 'colocar'; codigo: string; cantidad: number; asignaciones: Asignacion[]; sobrante: number }
+  | { k: 'menu' }
+  | { k: 'finalizar' }
+  | { k: 'faltantes' };
 
 const TOAST = {
   codigoInvalido: { kind: 'error' as const, title: 'Código inválido', message: 'El código de barras capturado no es válido.' },
@@ -88,7 +95,11 @@ export function SurtidoRonda() {
   };
 
   // ---- Escaneo
-  const registrar = (codigo: string, cantidad: number) => {
+  /**
+   * Registra piezas de un código. Etiqueta de 18 dígitos: se separan de inmediato y un toast dice dónde van.
+   * Código de 7 dígitos (`confirmar`): primero el modal "Coloca la mercancía en los contenedores".
+   */
+  const registrar = (codigo: string, cantidad: number, confirmar = false) => {
     const linea = lineas.find((l) => l.codigo === codigo)!;
     if (esB && codigo !== lineaParada.codigo) {
       sonar('error');
@@ -118,9 +129,16 @@ export function SurtidoRonda() {
       return;
     }
     sonar('ok');
+    if (confirmar && !esB) return setOverlay({ k: 'colocar', codigo, cantidad, asignaciones, sobrante });
+    aplicar(codigo, asignaciones, sobrante, !confirmar);
+  };
+
+  /** Separa las piezas y avisa: sobrante, pedido completo o (con `avisarDestino`) dónde va cada pieza. */
+  const aplicar = (codigo: string, asignaciones: Asignacion[], sobrante: number, avisarDestino: boolean) => {
     const antes = avancePedidos(ronda);
     rondaDispatch({ type: 'separar', codigo, asignaciones });
-    if (sobrante > 0) return avisarSobrante(codigo, sobrante);
+    // En el flujo del código de 7 dígitos el sobrante ya se avisó en el modal
+    if (sobrante > 0 && avisarDestino) return avisarSobrante(codigo, sobrante);
     // Dónde va cada pieza (los mockups no tienen aviso fijo: se usa el toast, D49)
     const destino = asignaciones.map((x) => `${x.contenedor}: ${x.cantidad} pz`).join(' · ');
     // ¿Algún pedido quedó completo con este escaneo?
@@ -129,15 +147,17 @@ export function SurtidoRonda() {
       const extra = asignaciones.find((x) => x.pedido === a.pedido.id)?.cantidad ?? 0;
       return a.separado + extra >= a.solicitado;
     });
-    mostrarToast(
-      listo
-        ? {
-            kind: 'success',
-            title: `Pedido ${listo.pedido.id} completo`,
-            message: `Coloca ${codigo} en ${destino}. El contenedor ${listo.pedido.contenedor} está listo.`,
-          }
-        : { kind: 'success', title: `Coloca ${codigo}`, message: `Contenedor ${destino}` },
-    );
+    if (listo) {
+      mostrarToast({
+        kind: 'success',
+        title: `Pedido ${listo.pedido.id} completo`,
+        message: avisarDestino
+          ? `Coloca ${codigo} en ${destino}. El contenedor ${listo.pedido.contenedor} está listo.`
+          : `El contenedor ${listo.pedido.contenedor} está listo.`,
+      });
+    } else if (avisarDestino) {
+      mostrarToast({ kind: 'success', title: `Coloca ${codigo}`, message: `Contenedor ${destino}` });
+    }
   };
 
   const avisarSobrante = (codigo: string, n: number) =>
@@ -246,15 +266,31 @@ export function SurtidoRonda() {
 
       {ov?.k === 'cantidad' && (
         <CantidadModal
+          key={`${ov.codigo}-${ov.inicial ?? ''}`}
           codigo={ov.codigo}
+          titulo={separando && !esB ? 'Ingresa la cantidad surtida' : undefined}
+          inicial={ov.inicial}
           onCancel={cerrar}
           onConfirm={(n) => {
             if (n <= 0) {
               sonar('error');
               return mostrarToast(TOAST.cero);
             }
+            setOverlay(null);
+            registrar(ov.codigo, n, true);
+          }}
+        />
+      )}
+      {ov?.k === 'colocar' && (
+        <ColocarModal
+          codigo={ov.codigo}
+          asignaciones={ov.asignaciones}
+          sobrante={ov.sobrante}
+          // ✕ vuelve a capturar la cantidad (por si se tecleó mal)
+          onCancel={() => setOverlay({ k: 'cantidad', codigo: ov.codigo, inicial: String(ov.cantidad) })}
+          onConfirm={() => {
+            aplicar(ov.codigo, ov.asignaciones, ov.sobrante, false);
             cerrar();
-            registrar(ov.codigo, n);
           }}
         />
       )}

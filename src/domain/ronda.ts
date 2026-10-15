@@ -23,6 +23,8 @@ export type RondaState = {
   separado: Record<string, Record<string, number>>;
   /** Partidas negadas por pedido con su motivo: negado[pedido][codigo] = motivo. */
   negado: Record<string, Record<string, string>>;
+  /** Códigos escaneados al menos una vez (etiqueta de 18 dígitos o código de 7): habilita editar cantidades en el Detalle. */
+  escaneado: Record<string, true>;
 };
 
 export type RondaAction =
@@ -36,13 +38,17 @@ export type RondaAction =
 
 export function rondaInicial(propuesta: PropuestaRonda = 'A'): RondaState {
   const porPedido = () => Object.fromEntries(PEDIDOS_RONDA.map((p) => [p.id, {}]));
-  return { propuesta, fase: 'surtido', recolectado: {}, separado: porPedido(), negado: porPedido() };
+  return { propuesta, fase: 'surtido', recolectado: {}, separado: porPedido(), negado: porPedido(), escaneado: {} };
 }
 
 export const productoRonda = (codigo: string) => CATALOGO_RONDA.find((p) => p.codigo === codigo);
 
 const solicitadoDe = (p: PedidoRonda, codigo: string) => p.partidas.find((x) => x.codigo === codigo)?.solicitado ?? 0;
 const separadoDe = (s: RondaState, pedido: string, codigo: string) => s.separado[pedido]?.[codigo] ?? 0;
+/** ¿Ya se escaneó el código? (También cuenta si ya tiene piezas, p. ej. en los escenarios sembrados.) */
+export const fueEscaneado = (s: RondaState, codigo: string) =>
+  !!s.escaneado?.[codigo] || (s.recolectado[codigo] ?? 0) > 0 || PEDIDOS_RONDA.some((p) => separadoDe(s, p.id, codigo) > 0);
+
 export const motivoNegado = (s: RondaState, pedido: string, codigo: string): string | undefined => s.negado?.[pedido]?.[codigo];
 /** Lo que el pedido todavía pide de ese código: 0 si la partida está negada. */
 const solicitadoEfectivo = (s: RondaState, p: PedidoRonda, codigo: string) => (motivoNegado(s, p.id, codigo) ? 0 : solicitadoDe(p, codigo));
@@ -159,14 +165,18 @@ export function rondaReducer(s: RondaState, a: RondaAction): RondaState {
     case 'recolectar': {
       const total = consolidado(s).find((l) => l.codigo === a.codigo)?.total ?? 0;
       const actual = s.recolectado[a.codigo] ?? 0;
-      return { ...s, recolectado: { ...s.recolectado, [a.codigo]: Math.min(total, actual + a.cantidad) } };
+      return {
+        ...s,
+        recolectado: { ...s.recolectado, [a.codigo]: Math.min(total, actual + a.cantidad) },
+        escaneado: { ...s.escaneado, [a.codigo]: true },
+      };
     }
     case 'separar': {
       const separado = { ...s.separado };
       for (const x of a.asignaciones) {
         separado[x.pedido] = { ...separado[x.pedido], [a.codigo]: separadoDe(s, x.pedido, a.codigo) + x.cantidad };
       }
-      return { ...s, separado };
+      return { ...s, separado, escaneado: { ...s.escaneado, [a.codigo]: true } };
     }
     case 'fijarSeparado': {
       const p = PEDIDOS_RONDA.find((x) => x.id === a.pedido)!;

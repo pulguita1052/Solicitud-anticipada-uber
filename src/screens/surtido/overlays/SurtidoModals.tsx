@@ -26,13 +26,26 @@ const iconPregunta = <ModalIcon src={iconoPregunta} inset="-2.84% -2.27% -0.56% 
 
 /* ---------- Ingresa la cantidad surtida en contenedor — 131:6184 ----------
    Sticky note 321:3020: inicialmente no hay cantidad y el botón de continuar está deshabilitado (#BDBDBD, 321:3021). */
-export function CantidadModal({ codigo, onCancel, onConfirm }: { codigo: string; onCancel: () => void; onConfirm: (n: number) => void }) {
-  const [valor, setValor] = useState('');
+export function CantidadModal({
+  codigo,
+  onCancel,
+  onConfirm,
+  titulo = 'Ingresa la cantidad surtida en contenedor',
+  inicial = '',
+}: {
+  codigo: string;
+  onCancel: () => void;
+  onConfirm: (n: number) => void;
+  /** Ronda multipedido: "Ingresa la cantidad surtida" (el contenedor lo indica el modal siguiente). */
+  titulo?: string;
+  inicial?: string;
+}) {
+  const [valor, setValor] = useState(inicial);
   const vacio = valor === '';
   return (
     <ModalSheet icon={<ModalIcon src={iconoCantidad} inset="-2.84% -3.98% -0.56% -2.84%" offsetX={-1} />} gap={10}>
       <div className={styles.col} style={{ gap: 16 }}>
-        <ModalHeader title="Ingresa la cantidad surtida en contenedor">
+        <ModalHeader title={titulo}>
           <div className={styles.codeRow}>
             <b>Código</b>
             <span>{codigo}</span>

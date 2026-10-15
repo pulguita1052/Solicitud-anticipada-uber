@@ -72,9 +72,12 @@ Asignación de tareas — SURTIR RONDA DE PEDIDOS · Contenedor A 123456 / B 123
  Surtido de ronda
      A · Avance de la ronda + tarjetas de contenedor + lista consolidada por ubicación (total por código + desglose A/B/C)
          tocar contenedor → vista filtrada: solo sus códigos con su avance, sin desglose (15:1661)
-         tocar card → Detalle de producto de la ronda (41:2429, D51): "Solicitado ronda" (A+B+C), fila por pedido con spinner;
+         tocar card → Detalle de producto de la ronda (41:2429, D51): "Solicitado ronda" (A+B+C), fila por pedido con spinner
+             (deshabilitado hasta escanear el producto una vez);
              Negar producto → (1) pedidos en 0, con prioridad A → B, C · B → C → (2) un solo motivo; Regresar conserva el filtro
          escaneo → toast "Coloca <código> · Contenedor A: n pz · B: n pz" (reparto del pedido más antiguo al más reciente)
+         código de 7 dígitos → "Ingresa la cantidad surtida" → "Coloca la mercancía en los contenedores" (solo los que
+             reciben piezas, por prioridad; ✕ vuelve a la cantidad, ✓ registra) (D52)
      B · parada por parada (una ubicación a la vez): solo acepta el código de la parada,
          indica cuántas piezas van a cada contenedor y pasa sola a la siguiente parada incompleta
      C · lista consolidada sin separar: solo cuenta piezas recolectadas
