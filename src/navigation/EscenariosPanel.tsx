@@ -33,10 +33,10 @@ const GRUPOS: Grupo[] = [
         descripcion: 'Tarea "SURTIR RONDA DE PEDIDOS" con 3 pedidos, cada uno con su contenedor A, B y C. Es el flujo de Menú › Tareas. Aceptar abre el Detalle de la ronda.',
         ruta: '/tareas',
         reglas: [
-          'Lista consolidada en orden de recorrido: total de piezas por código y desglose por contenedor.',
+          'Lista consolidada ordenada por código: total de piezas por código y desglose por contenedor.',
           'Tocar un contenedor filtra la lista a su pedido; tocarlo otra vez muestra toda la ronda.',
-          'Cada escaneo avisa en qué contenedor va la pieza ("Coloca 1394000 · Contenedor A: 4 pz · B: 2 pz").',
-          'Las piezas llenan primero el pedido capturado antes; si sobran, aviso "Piezas de más".',
+          'Código de 7 dígitos: "Ingresa la cantidad surtida" y después el modal con el contenedor de cada pieza.',
+          'Las piezas llenan primero el pedido capturado antes; piezas de más, cantidad cero o mayor a la existencia → "Cantidad inválida".',
           'Cada contenedor avisa cuando su pedido queda completo.',
         ],
       },
