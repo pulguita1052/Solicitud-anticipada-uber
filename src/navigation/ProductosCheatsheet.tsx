@@ -25,7 +25,7 @@ function etiquetaPz1(codigo: string) {
 
 type Fila = { codigo: string; solicitado: number; precioUnitario: number };
 
-const FILAS_RONDA: Fila[] = CATALOGO_RONDA.map((p) => ({
+const FILAS_RONDA: Fila[] = [...CATALOGO_RONDA].sort((a, b) => a.codigo.localeCompare(b.codigo)).map((p) => ({
   codigo: p.codigo,
   precioUnitario: p.precioUnitario,
   solicitado: PEDIDOS_RONDA.reduce((n, x) => n + (x.partidas.find((y) => y.codigo === p.codigo)?.solicitado ?? 0), 0),
@@ -37,11 +37,13 @@ export function ProductosCheatsheet({ ronda = false }: { ronda?: boolean }) {
   const total = PRODUCTOS.reduce((n, p) => n + p.precioUnitario * p.solicitado, 0);
   const piezas = PRODUCTOS.reduce((n, p) => n + p.solicitado, 0);
 
-  const copiar = async (codigo: string) => {
+  /** Copia la etiqueta de 18 dígitos (1 pz) o, con `corto`, solo el código de 7 dígitos. */
+  const copiar = async (codigo: string, corto = false) => {
+    const clave = corto ? `${codigo}-corto` : codigo;
     try {
-      await navigator.clipboard.writeText(etiquetaPz1(codigo));
-      setCopiado(codigo);
-      window.setTimeout(() => setCopiado((c) => (c === codigo ? null : c)), 1400);
+      await navigator.clipboard.writeText(corto ? codigo : etiquetaPz1(codigo));
+      setCopiado(clave);
+      window.setTimeout(() => setCopiado((c) => (c === clave ? null : c)), 1400);
     } catch {
       /* clipboard bloqueado — la fila queda igual */
     }
@@ -54,7 +56,7 @@ export function ProductosCheatsheet({ ronda = false }: { ronda?: boolean }) {
         <h2 className={styles.title}>Productos</h2>
         <p className={styles.subtitle}>
           Click en el código para copiar la etiqueta APYMSA de 18 dígitos (formato del lector:
-          <b> 7 código + 6 cantidad + 5 peso</b>) y pegarla en el input del surtido.
+          <b> 7 código + 6 cantidad + 5 peso</b>) o, abajo, solo el código de 7 dígitos, y pegarlo en el input del surtido.
         </p>
       </header>
       <div className={styles.tableWrap}>
@@ -62,7 +64,7 @@ export function ProductosCheatsheet({ ronda = false }: { ronda?: boolean }) {
           <thead>
             <tr>
               <th className={styles.thNum}>#</th>
-              <th>Etiqueta (18 dígitos)</th>
+              <th>Etiqueta (18) · código (7)</th>
               <th className={styles.thPz}>Pzs</th>
               <th className={styles.thPr}>Precio</th>
             </tr>
@@ -79,6 +81,14 @@ export function ProductosCheatsheet({ ronda = false }: { ronda?: boolean }) {
                     title={`Copiar etiqueta para SKU ${p.codigo} (1 pza)`}
                   >
                     {copiado === p.codigo ? '¡Copiado!' : etiquetaPz1(p.codigo)}
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.sku} ${styles.skuCorto} ${copiado === `${p.codigo}-corto` ? styles.skuCopiado : ''}`}
+                    onClick={() => copiar(p.codigo, true)}
+                    title={`Copiar el código ${p.codigo} (7 dígitos)`}
+                  >
+                    {copiado === `${p.codigo}-corto` ? '¡Copiado!' : p.codigo}
                   </button>
                 </td>
                 <td className={styles.tdPz}>{p.solicitado}</td>

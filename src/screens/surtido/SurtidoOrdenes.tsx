@@ -19,6 +19,7 @@ import { conteos, listoParaFinalizar, parciales, producto, sinSurtir, statusDe }
 import { decir, sonar } from '../../domain/sonidos';
 import { useStore } from '../../store/AppStore';
 import { CantidadModal, FinalizarModal, MenuModal, ParcialesModal, SinSurtirModal } from './overlays/SurtidoModals';
+import { TOAST_CANTIDAD } from './avisosCantidad';
 import styles from './SurtidoOrdenes.module.css';
 
 type Overlay = { k: 'cantidad'; codigo: string } | { k: 'menu' } | { k: 'sinSurtir' } | { k: 'parciales' } | { k: 'finalizar' };
@@ -31,12 +32,6 @@ const TOAST_CODIGO_INVALIDO = { kind: 'error' as const, title: 'Código inválid
 const TOAST_PRODUCTO_INCORRECTO = { kind: 'error' as const, title: 'Producto incorrecto', message: 'El producto escaneado no pertenece a este pedido.' };
 /** 1509:9441 — el código escaneado pertenece a un producto ya negado */
 const TOAST_PRODUCTO_NEGADO = { kind: 'error' as const, title: 'Producto negado', message: 'El código escaneado fue negado y no es posible agregar unidades.' };
-/** "¿Se ingresó una cantidad válida?" (623:3472) → 131:6181 · 188:10280 · 986:3915 */
-const TOAST_CANTIDAD = {
-  mayorPendiente: 'La cantidad que intentas ingresar es mayor a la solicitada. Por favor, ingresa una cantidad igual o menor.',
-  mayorExistencia: 'La cantidad que intentas ingresar es mayor a la existencia actual. Por favor, ingresa una cantidad igual o menor.',
-  cero: 'No es posible surtir un producto con cantidad cero. Por favor, ingresa una cantidad mayor.',
-};
 
 export function SurtidoOrdenes() {
   const navigate = useNavigate();
@@ -80,17 +75,18 @@ export function SurtidoOrdenes() {
   const confirmarCantidad = (codigo: string, n: number) => {
     const p = producto(codigo)!;
     const item = pedido.items.find((i) => i.codigo === codigo)!;
+    // "¿Se ingresó una cantidad válida?" (623:3472)
     const error =
       n <= 0
         ? TOAST_CANTIDAD.cero
         : item.surtido + n > p.solicitado
-          ? TOAST_CANTIDAD.mayorPendiente
+          ? TOAST_CANTIDAD.mayorSolicitada
           : item.surtido + n > p.existencia
             ? TOAST_CANTIDAD.mayorExistencia
             : null;
     if (error) {
       sonar('error');
-      mostrarToast({ kind: 'error', title: 'Cantidad inválida', message: error });
+      mostrarToast(error);
       return;
     }
     sonar('ok');

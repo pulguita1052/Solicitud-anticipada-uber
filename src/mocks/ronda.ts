@@ -34,7 +34,7 @@ const en = (pasillo: number, torre: number, nivel: number): ProductoRonda['ubica
   `Nivel ${nivel}`,
 ];
 
-/** Ordenado por ubicación: es el orden de recorrido de la lista consolidada y de las paradas de la propuesta B. */
+/** Ubicaciones de demo en varios pasillos. La lista consolidada se ordena por código (domain/ronda.ts). */
 export const CATALOGO_RONDA: ProductoRonda[] = [
   {
     codigo: '0486600',

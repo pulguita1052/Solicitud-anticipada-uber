@@ -70,18 +70,20 @@ Asignación de tareas — SURTIR RONDA DE PEDIDOS · Contenedor A 123456 / B 123
      pedidos del mismo cliente (venta dividida, p. ej. cable 20 m + 1 m) → etiqueta "Mismo cliente"
      Iniciar surtido →
  Surtido de ronda
-     A · Avance de la ronda + tarjetas de contenedor + lista consolidada por ubicación (total por código + desglose A/B/C)
+     A · Avance de la ronda + tarjetas de contenedor + lista consolidada ordenada por código, de menor a mayor
+         (total por código + desglose A/B/C)
          tocar contenedor → vista filtrada: solo sus códigos con su avance, sin desglose (15:1661)
          tocar card → Detalle de producto de la ronda (41:2429, D51): "Solicitado ronda" (A+B+C), fila por pedido con spinner
              (deshabilitado hasta escanear el producto una vez);
              Negar producto → (1) pedidos en 0, con prioridad A → B, C · B → C → (2) un solo motivo; Regresar conserva el filtro
-         escaneo → toast "Coloca <código> · Contenedor A: n pz · B: n pz" (reparto del pedido más antiguo al más reciente)
+         escaneo → se reparte del pedido más antiguo al más reciente, sin toast de "Coloca…" (solo "Pedido N completo")
+         cantidad cero / mayor a lo que falta / mayor a la existencia → toast "Cantidad inválida" y no se registra
          código de 7 dígitos → "Ingresa la cantidad surtida" → "Coloca la mercancía en los contenedores" (solo los que
              reciben piezas, por prioridad; ✕ vuelve a la cantidad, ✓ registra) (D52)
      B · parada por parada (una ubicación a la vez): solo acepta el código de la parada,
          indica cuántas piezas van a cada contenedor y pasa sola a la siguiente parada incompleta
      C · lista consolidada sin separar: solo cuenta piezas recolectadas
-     comunes: "Piezas de más" si sobran, "Pedido N completo" al llenar un contenedor,
+     comunes: "Pedido N completo" al llenar un contenedor,
               código de 7 dígitos → modal de cantidad, "Producto incorrecto" si no es de la ronda
      todo completo → 600 ms → "Finalizar ronda" · Menú ⋮ › Finalizar ronda con faltantes → modal informativo
  A, B: fin → REVISAR PEDIDO CLIENTE (bloqueada) + toast "Ronda finalizada"

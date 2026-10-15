@@ -68,9 +68,12 @@ export type LineaConsolidada = {
   porPedido: { pedido: string; contenedor: Contenedor; solicitado: number; separado: number; motivoNegado?: string }[];
 };
 
-/** Lista consolidada en orden de recorrido (orden del catálogo = orden por ubicación). */
+/** Catálogo ordenado por código de menor a mayor: así se muestra la lista consolidada (indicación del usuario, 2026-10-15). */
+const POR_CODIGO = [...CATALOGO_RONDA].sort((a, b) => a.codigo.localeCompare(b.codigo));
+
+/** Lista consolidada, ordenada por código de menor a mayor. */
 export function consolidado(s: RondaState): LineaConsolidada[] {
-  return CATALOGO_RONDA.flatMap((prod) => {
+  return POR_CODIGO.flatMap((prod) => {
     const porPedido = PEDIDOS_RONDA.filter((p) => solicitadoDe(p, prod.codigo) > 0).map((p) => ({
       pedido: p.id,
       contenedor: p.contenedor,

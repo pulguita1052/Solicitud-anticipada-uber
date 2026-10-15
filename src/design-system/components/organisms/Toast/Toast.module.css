@@ -37,6 +37,11 @@
   font: 100 14px/normal var(--font-family-roboto);
 }
 
+/* Negritas del mensaje en Roboto Medium (1308:6293 y capturas de "Cantidad inválida") */
+.message b {
+  font-weight: 500;
+}
+
 .bar {
   position: absolute;
   bottom: 0;
@@ -129,9 +134,6 @@
 /* ---- Amarillo: 1305:6294 */
 .warning .text {
   right: 17.07%;
-}
-.warning .message b {
-  font-weight: 500; /* Roboto Medium */
 }
 .warning .bar {
   left: 0.24%;

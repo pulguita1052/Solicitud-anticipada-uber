@@ -206,18 +206,17 @@ export function SeleccionNegadoModal({
 /**
  * Coloca la mercancía en los contenedores — después de capturar la cantidad de un código de 7 dígitos. Reparte por
  * prioridad (pedido capturado antes primero) y muestra solo los contenedores que reciben piezas; si la cantidad no
- * alcanza para todos, el resto se surtirá al volver a escanear el producto. Sin respaldo en Figma (D52).
+ * alcanza para todos, el resto se surtirá al volver a escanear el producto. Una cantidad mayor a la solicitada no llega
+ * aquí: se rechaza con el toast "Cantidad inválida". Sin respaldo en Figma (D52).
  */
 export function ColocarModal({
   codigo,
   asignaciones,
-  sobrante,
   onCancel,
   onConfirm,
 }: {
   codigo: string;
   asignaciones: { contenedor: Contenedor; pedido: string; cantidad: number }[];
-  sobrante: number;
   onCancel: () => void;
   onConfirm: () => void;
 }) {
@@ -247,14 +246,6 @@ export function ColocarModal({
             </Fragment>
           ))}
         </div>
-        {sobrante > 0 && (
-          <div className={ronda.negarNota} role="note">
-            <img src={iconoInfo} alt="" width={20} height={20} />
-            <p>
-              Sobran {sobrante} pz: ningún pedido las necesita. Regrésalas al anaquel.
-            </p>
-          </div>
-        )}
         <Botones onCancel={onCancel} onConfirm={onConfirm} />
       </div>
     </ModalSheet>
