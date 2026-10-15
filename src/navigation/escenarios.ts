@@ -35,6 +35,7 @@ export const ESCENARIOS: Record<string, Semilla> = {
   /* ───────── Multipedido (sin Figma) ───────── */
   'ronda-a': { etapa: 'ronda-surtido', ronda: rondaCon('A') },
   'ronda-a-detalle': { etapa: 'ronda-surtido', ronda: rondaCon('A') },
+  'ronda-a-producto': { etapa: 'ronda-surtido', ronda: rondaCon('A', { separado: SEPARADO_EN_CURSO }) },
   'ronda-a-en-curso': { etapa: 'ronda-surtido', ronda: rondaCon('A', { separado: SEPARADO_EN_CURSO }) },
   'ronda-b': { etapa: 'ronda-surtido', ronda: rondaCon('B') },
   'ronda-b-en-curso': { etapa: 'ronda-surtido', ronda: rondaCon('B', { separado: SEPARADO_EN_CURSO }) },

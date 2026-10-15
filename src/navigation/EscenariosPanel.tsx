@@ -15,7 +15,7 @@ type Escenario = {
   id: string;
   titulo: string;
   descripcion: string;
-  ruta: '/tareas' | '/surtido' | '/ronda' | '/ronda/detalle';
+  ruta: '/tareas' | '/surtido' | '/ronda' | '/ronda/detalle' | `/ronda/producto/${string}`;
   /** Reglas o notas clave que aplican a esta pantalla. Se muestran como bullets debajo de la descripción. */
   reglas: string[];
 };
@@ -49,6 +49,17 @@ const GRUPOS: Grupo[] = [
           'Los pedidos A y B son del mismo cliente: llevan la etiqueta "Mismo cliente".',
           'Caso que lo motiva: una venta por medida (cable, manguera) dividida en dos pedidos, p. ej. 20 m + 1 m.',
           '"Iniciar surtido" abre la lista de la ronda.',
+        ],
+      },
+      {
+        id: 'ronda-a-producto',
+        titulo: 'Detalle de producto en la ronda',
+        descripcion: '2546000: el pedido A ya tiene sus 2 piezas y el C sigue en 0. Se abre al tocar una card de la lista.',
+        ruta: '/ronda/producto/2546000',
+        reglas: [
+          '"Solicitado ronda" suma lo que piden todos los pedidos (A + C = 3).',
+          'En "Surtido por pedido" se edita la cantidad de cada pedido.',
+          '"Negar producto" solo ofrece pedidos con el producto en 0 (aquí, C) y pide un solo motivo para todos.',
         ],
       },
       {

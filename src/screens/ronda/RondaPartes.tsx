@@ -79,16 +79,29 @@ const ESTADO_TAG: Partial<Record<OrderItemStatus, string>> = { parcial: styles.t
  * Card de la lista — 15:1528 (consolidada, con desglose "Stock" 15:1545) o 15:1752 (vista filtrada por pedido, sin desglose).
  * En la vista filtrada el chip muestra el avance de ese pedido; en la consolidada, el total de la ronda.
  */
-export function LineaRonda({ linea, pedido, separando }: { linea: LineaConsolidada; pedido?: string; separando: boolean }) {
+export function LineaRonda({
+  linea,
+  pedido,
+  separando,
+  onClick,
+}: {
+  linea: LineaConsolidada;
+  pedido?: string;
+  separando: boolean;
+  /** Abre el Detalle de producto de la ronda. */
+  onClick?: () => void;
+}) {
   const p = productoRonda(linea.codigo)!;
   const propio = pedido ? linea.porPedido.find((x) => x.pedido === pedido) : undefined;
   const avance = propio ? propio.separado : linea.avance;
   const total = propio ? propio.solicitado : linea.total;
+  const negado = propio ? !!propio.motivoNegado : linea.negado;
   return (
     <OrderItemRow
       ronda
+      onClick={onClick}
       codigo={linea.codigo}
-      status={statusLinea(avance, total)}
+      status={negado ? 'negado' : statusLinea(avance, total)}
       surtido={avance}
       solicitado={total}
       ubicacion={p.ubicacion}
@@ -96,11 +109,17 @@ export function LineaRonda({ linea, pedido, separando }: { linea: LineaConsolida
       detalle={
         propio ? undefined : (
           <span className={styles.desglose}>
-            {linea.porPedido.map((x) => (
-              <span key={x.pedido} className={`${styles.tag} ${separando ? (ESTADO_TAG[statusLinea(x.separado, x.solicitado)] ?? '') : ''}`}>
-                <b>{x.contenedor}</b> {separando ? `${x.separado}/${x.solicitado}` : `${x.solicitado} pz`}
-              </span>
-            ))}
+            {linea.porPedido.map((x) =>
+              x.motivoNegado ? (
+                <span key={x.pedido} className={`${styles.tag} ${styles.tagNegado}`}>
+                  <b>{x.contenedor}</b> Negado
+                </span>
+              ) : (
+                <span key={x.pedido} className={`${styles.tag} ${separando ? (ESTADO_TAG[statusLinea(x.separado, x.solicitado)] ?? '') : ''}`}>
+                  <b>{x.contenedor}</b> {separando ? `${x.separado}/${x.solicitado}` : `${x.solicitado} pz`}
+                </span>
+              ),
+            )}
           </span>
         )
       }

@@ -8,6 +8,7 @@
 - Modal de cantidad: inicia vacío con ✓ deshabilitado y valida cero / mayor a lo solicitado / mayor a la existencia.
 - Componentes: `Toast` con variante `warning`; `Stepper` con prop `disabled` y botones grises al llegar al límite.
 - Detalle del flujo y PENDIENTES en `docs/figma/flujos-surtido.md`.
+- 2026-10-15: **Detalle de producto de la ronda** (idea 41:2429 + desplegable 46:3957/46:3961): "Solicitado ronda", cantidad editable por pedido y negado por pedido con un solo motivo (D51).
 - 2026-10-15: pantalla **Detalle de la ronda** antes de iniciar el surtido (base 24:2029 + "Panel info" 27:2320; resaltado de pedidos del mismo cliente sin Figma, D50).
 - 2026-10-15: se elige la propuesta **A**. Interfaz principal y vista filtrada por pedido según los mockups de `Handheld for Claude` (Zf1wV1oULSD14o7TPW4da9, 15:1437 / 15:1661): `OrderProgress` variante `ronda`, `OrderItemRow` prop `detalle`/`ronda` (card 15:1528), tarjetas de contenedor con íconos A/B/C y filtro. B, C y el flujo de un pedido quedan ocultos en el panel. Huecos del mockup en D49.
 - 2026-10-14: prototipo de **surtido multipedido** (ronda de hasta 3 pedidos) con tres propuestas — A lista consolidada + separación en mesa (principal), B batch pick a contenedores, C separación en la revisión — sin respaldo en Figma (D48). Detalle en `docs/figma/flujos-surtido.md`, sección "Multipedido".

@@ -5,6 +5,7 @@ import { SurtidoOrdenes } from './screens/surtido/SurtidoOrdenes';
 import { DetalleProducto } from './screens/surtido/DetalleProducto';
 import { SurtidoRonda } from './screens/ronda/SurtidoRonda';
 import { DetalleRonda } from './screens/ronda/DetalleRonda';
+import { DetalleProductoRonda } from './screens/ronda/DetalleProductoRonda';
 import { ToastHost } from './navigation/ToastHost';
 import { EscenariosPanel } from './navigation/EscenariosPanel';
 import { ProductosCheatsheet } from './navigation/ProductosCheatsheet';
@@ -25,6 +26,7 @@ export function App() {
           <Route path="/surtido/producto/:codigo" element={<DetalleProducto />} />
           <Route path="/ronda" element={<SurtidoRonda />} />
           <Route path="/ronda/detalle" element={<DetalleRonda />} />
+          <Route path="/ronda/producto/:codigo" element={<DetalleProductoRonda />} />
           <Route path="*" element={<Navigate to="/menu" replace />} />
         </Routes>
         <ToastHost />

@@ -72,6 +72,8 @@ Asignación de tareas — SURTIR RONDA DE PEDIDOS · Contenedor A 123456 / B 123
  Surtido de ronda
      A · Avance de la ronda + tarjetas de contenedor + lista consolidada por ubicación (total por código + desglose A/B/C)
          tocar contenedor → vista filtrada: solo sus códigos con su avance, sin desglose (15:1661)
+         tocar card → Detalle de producto de la ronda (41:2429, D51): "Solicitado ronda" (A+B+C), spinner por pedido
+             en "Surtido por pedido"; Negar producto → modal con los pedidos en 0 + un solo motivo; Regresar conserva el filtro
          escaneo → toast "Coloca <código> · Contenedor A: n pz · B: n pz" (reparto del pedido más antiguo al más reciente)
      B · parada por parada (una ubicación a la vez): solo acepta el código de la parada,
          indica cuántas piezas van a cada contenedor y pasa sola a la siguiente parada incompleta
@@ -91,7 +93,7 @@ Asignación de tareas — SURTIR RONDA DE PEDIDOS · Contenedor A 123456 / B 123
 | Reparto de piezas de un código compartido | Del pedido capturado antes al más reciente; el faltante cae en el más reciente. |
 | Pedido completo | Aviso al llenar su contenedor; en A y B pasa a revisión, en C a facturación. |
 | Faltantes al finalizar | Modal informativo por pedido (o por código en la recolección de C); se puede finalizar. |
-| Negar producto | No se implementa en la ronda; lo que no se surte queda como faltante. |
+| Negar producto | Desde el Detalle de producto, por pedido: solo pedidos con el producto en 0, un motivo para todos. La partida negada deja de contar como solicitada (no recibe piezas ni queda como faltante). |
 | Contenedores | Identificados por letra; no se escanea el contenedor. |
 
 ## Preguntas abiertas

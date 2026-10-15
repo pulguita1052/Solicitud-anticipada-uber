@@ -1,0 +1,108 @@
+/* Detalle de producto de la ronda — 41:2429 (Handheld for Claude); panel "Surtido por pedido" con el desplegable
+   "Pedidos del embarque" 46:3957 / 46:3961 (D51). La parte superior reutiliza DetalleProducto.module.css. */
+
+/* Contenido con scroll (sin barra) por encima de los botones */
+.scroll {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  gap: 26px;
+  width: 100%;
+  min-height: 1px;
+  padding-bottom: 140px; /* alto de la barra de botones (124) + aire */
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* "Pedidos del embarque" 46:3840: borde azul claro, radio 8, relleno 15/20, 15 px entre bloques */
+.desplegable {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 1px #a7b9ef; /* figma: 46:3840 (sin estilo) */
+}
+
+/* 46:3841 */
+.desplegableHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  color: var(--color-negro);
+  font: var(--font-s2-subtitle);
+  line-height: normal;
+  text-align: left;
+}
+
+.desplegableTotal {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  color: var(--color-primary-azul-300);
+  font: var(--font-b2-body);
+  line-height: normal;
+}
+
+/* Cerrado (46:3858): la flecha apunta hacia abajo */
+.flechaCerrada {
+  transform: scaleY(-1);
+}
+
+/* "Trazado 38" 46:3844 */
+.divider {
+  height: 1px;
+  background: #a7b9ef; /* figma: 46:3844 (sin estilo) */
+}
+
+/* 46:3845: filas con 15 px entre ellas */
+.pedidos {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.pedido {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.pedido > img {
+  flex-shrink: 0;
+}
+
+.pedidoDatos {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 72px;
+  flex-shrink: 0;
+  color: var(--color-negro);
+  font: var(--font-label);
+  white-space: nowrap;
+}
+
+.pedidoDatos b {
+  font: var(--font-b2-body);
+  line-height: normal;
+}
+
+.stepper {
+  display: flex;
+  flex: 1 0 0;
+  min-width: 1px;
+}
+
+.negado {
+  display: flex;
+  flex: 1 0 0;
+  justify-content: flex-end;
+}

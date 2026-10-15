@@ -4,6 +4,8 @@
  *
  * Regla de reparto: al escanear piezas de un código se llenan primero los pedidos capturados antes. Así, si al final
  * faltan piezas, el faltante cae en el pedido más reciente.
+ * Negado por pedido (Detalle de producto de la ronda): solo pedidos con el producto en 0; un mismo motivo para todos. Una
+ * partida negada deja de contar como solicitada (no recibe piezas ni queda como faltante).
  */
 import { CATALOGO_RONDA, PEDIDOS_RONDA, type Contenedor, type PedidoRonda, type PropuestaRonda } from '../mocks/ronda';
 
@@ -19,33 +21,45 @@ export type RondaState = {
   recolectado: Record<string, number>;
   /** Piezas colocadas en el contenedor de cada pedido: separado[pedido][codigo]. */
   separado: Record<string, Record<string, number>>;
+  /** Partidas negadas por pedido con su motivo: negado[pedido][codigo] = motivo. */
+  negado: Record<string, Record<string, string>>;
 };
 
 export type RondaAction =
   | { type: 'recolectar'; codigo: string; cantidad: number }
   | { type: 'separar'; codigo: string; asignaciones: Asignacion[] }
+  /** Detalle de producto: cantidad surtida de un pedido editada con el spinner. */
+  | { type: 'fijarSeparado'; pedido: string; codigo: string; cantidad: number }
+  | { type: 'negar'; codigo: string; pedidos: string[]; motivo: string }
   | { type: 'terminarRecoleccion' }
   | { type: 'finalizar' };
 
 export function rondaInicial(propuesta: PropuestaRonda = 'A'): RondaState {
-  return { propuesta, fase: 'surtido', recolectado: {}, separado: Object.fromEntries(PEDIDOS_RONDA.map((p) => [p.id, {}])) };
+  const porPedido = () => Object.fromEntries(PEDIDOS_RONDA.map((p) => [p.id, {}]));
+  return { propuesta, fase: 'surtido', recolectado: {}, separado: porPedido(), negado: porPedido() };
 }
 
 export const productoRonda = (codigo: string) => CATALOGO_RONDA.find((p) => p.codigo === codigo);
 
 const solicitadoDe = (p: PedidoRonda, codigo: string) => p.partidas.find((x) => x.codigo === codigo)?.solicitado ?? 0;
 const separadoDe = (s: RondaState, pedido: string, codigo: string) => s.separado[pedido]?.[codigo] ?? 0;
-const pendienteDe = (s: RondaState, p: PedidoRonda, codigo: string) => solicitadoDe(p, codigo) - separadoDe(s, p.id, codigo);
+export const motivoNegado = (s: RondaState, pedido: string, codigo: string): string | undefined => s.negado?.[pedido]?.[codigo];
+/** Lo que el pedido todavía pide de ese código: 0 si la partida está negada. */
+const solicitadoEfectivo = (s: RondaState, p: PedidoRonda, codigo: string) => (motivoNegado(s, p.id, codigo) ? 0 : solicitadoDe(p, codigo));
+const pendienteDe = (s: RondaState, p: PedidoRonda, codigo: string) => solicitadoEfectivo(s, p, codigo) - separadoDe(s, p.id, codigo);
 
 /** ¿La propuesta separa al escanear en esta fase? (A y B siempre; C solo en la revisión.) */
 export const separaAlEscanear = (s: RondaState) => s.propuesta !== 'C' || s.fase === 'separacion';
 
 export type LineaConsolidada = {
   codigo: string;
+  /** Piezas que pide la ronda sin contar partidas negadas. */
   total: number;
   /** Piezas ya contadas: separadas (A, B, C en revisión) o recolectadas (C en surtido). */
   avance: number;
-  porPedido: { pedido: string; contenedor: Contenedor; solicitado: number; separado: number }[];
+  /** Todas las partidas del código están negadas. */
+  negado: boolean;
+  porPedido: { pedido: string; contenedor: Contenedor; solicitado: number; separado: number; motivoNegado?: string }[];
 };
 
 /** Lista consolidada en orden de recorrido (orden del catálogo = orden por ubicación). */
@@ -56,12 +70,13 @@ export function consolidado(s: RondaState): LineaConsolidada[] {
       contenedor: p.contenedor,
       solicitado: solicitadoDe(p, prod.codigo),
       separado: separadoDe(s, p.id, prod.codigo),
+      motivoNegado: motivoNegado(s, p.id, prod.codigo),
     }));
     if (!porPedido.length) return [];
-    const total = porPedido.reduce((n, x) => n + x.solicitado, 0);
+    const total = porPedido.reduce((n, x) => n + (x.motivoNegado ? 0 : x.solicitado), 0);
     const separado = porPedido.reduce((n, x) => n + x.separado, 0);
     const avance = separaAlEscanear(s) ? separado : (s.recolectado[prod.codigo] ?? 0);
-    return [{ codigo: prod.codigo, total, avance, porPedido }];
+    return [{ codigo: prod.codigo, total, avance, negado: porPedido.every((x) => x.motivoNegado), porPedido }];
   });
 }
 
@@ -91,17 +106,18 @@ export type AvancePedido = { pedido: PedidoRonda; separado: number; solicitado: 
 
 export function avancePedidos(s: RondaState): AvancePedido[] {
   return PEDIDOS_RONDA.map((p) => {
-    const solicitado = p.partidas.reduce((n, x) => n + x.solicitado, 0);
+    const solicitado = p.partidas.reduce((n, x) => n + solicitadoEfectivo(s, p, x.codigo), 0);
     const separado = p.partidas.reduce((n, x) => n + separadoDe(s, p.id, x.codigo), 0);
     return { pedido: p, separado, solicitado, completo: separado >= solicitado };
   });
 }
 
-/** Avance de la ronda (15:1455) por código consolidado: completo, parcial o pendiente. En la ronda no se niega. */
+/** Avance de la ronda (15:1455) por código consolidado: negado (en todos sus pedidos), completo, parcial o pendiente. */
 export function conteosRonda(s: RondaState) {
   const c = { completado: 0, negado: 0, parcial: 0, pendientes: 0 };
   for (const l of consolidado(s)) {
-    if (l.avance >= l.total) c.completado++;
+    if (l.negado) c.negado++;
+    else if (l.avance >= l.total) c.completado++;
     else if (l.avance > 0) c.parcial++;
     else c.pendientes++;
   }
@@ -127,7 +143,7 @@ export function faltantes(s: RondaState) {
   return PEDIDOS_RONDA.map((p) => ({
     pedido: p,
     partidas: p.partidas
-      .map((x) => ({ codigo: x.codigo, faltan: pendienteDe(s, p, x.codigo), solicitado: x.solicitado }))
+      .map((x) => ({ codigo: x.codigo, faltan: pendienteDe(s, p, x.codigo), solicitado: solicitadoEfectivo(s, p, x.codigo) }))
       .filter((x) => x.faltan > 0),
   })).filter((x) => x.partidas.length > 0);
 }
@@ -151,6 +167,19 @@ export function rondaReducer(s: RondaState, a: RondaAction): RondaState {
         separado[x.pedido] = { ...separado[x.pedido], [a.codigo]: separadoDe(s, x.pedido, a.codigo) + x.cantidad };
       }
       return { ...s, separado };
+    }
+    case 'fijarSeparado': {
+      const p = PEDIDOS_RONDA.find((x) => x.id === a.pedido)!;
+      const cantidad = Math.max(0, Math.min(solicitadoEfectivo(s, p, a.codigo), a.cantidad));
+      return { ...s, separado: { ...s.separado, [a.pedido]: { ...s.separado[a.pedido], [a.codigo]: cantidad } } };
+    }
+    case 'negar': {
+      const negado = { ...s.negado };
+      // Solo se niega un pedido con el producto en 0 (regla del Detalle de producto de la ronda)
+      for (const pedido of a.pedidos.filter((x) => separadoDe(s, x, a.codigo) === 0)) {
+        negado[pedido] = { ...negado[pedido], [a.codigo]: a.motivo };
+      }
+      return { ...s, negado };
     }
     case 'terminarRecoleccion':
       return { ...s, fase: 'separacion' };

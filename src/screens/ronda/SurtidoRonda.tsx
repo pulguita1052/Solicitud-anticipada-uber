@@ -11,7 +11,7 @@
  * Reglas comunes: reparto del pedido más antiguo al más reciente, aviso por pedido completo, cierre con faltantes informativo.
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppHeader } from '@ds/components/organisms/AppHeader/AppHeader';
 import { ContentPanel } from '@ds/components/organisms/ContentPanel/ContentPanel';
 import { BottomBar } from '@ds/components/organisms/BottomBar/BottomBar';
@@ -55,7 +55,19 @@ export function SurtidoRonda() {
   const [overlay, setOverlay] = useState<Overlay | null>(null);
   const [autoDescartado, setAutoDescartado] = useState(false);
   /** Vista filtrada por pedido (15:1661): undefined = lista consolidada de la ronda. */
-  const [filtro, setFiltro] = useState<string | undefined>();
+  // Se guarda en la URL (?pedido=) para que al regresar del Detalle de producto la lista siga filtrada
+  const [params, setParams] = useSearchParams();
+  const filtro = params.get('pedido') ?? undefined;
+  const setFiltro = (pedido: string | undefined) =>
+    setParams(
+      (prev) => {
+        const q = new URLSearchParams(prev);
+        if (pedido) q.set('pedido', pedido);
+        else q.delete('pedido');
+        return q;
+      },
+      { replace: true },
+    );
   const scanRef = useRef<ScanInputHandle>(null);
 
   const separando = separaAlEscanear(ronda);
@@ -222,7 +234,7 @@ export function SurtidoRonda() {
             {visibles.map((l, i) => (
               <div key={l.codigo} className={styles.itemContainer}>
                 {i > 0 && <Divider variant="list" />}
-                <LineaRonda linea={l} pedido={filtro} separando={separando} />
+                <LineaRonda linea={l} pedido={filtro} separando={separando} onClick={esB ? undefined : () => navigate(`/ronda/producto/${l.codigo}`)} />
               </div>
             ))}
           </div>

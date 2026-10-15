@@ -169,6 +169,13 @@
   color: var(--color-negro);
 }
 
+/* Pedido con la partida negada: mismo rosa que el chip "Negado" (--color-estatus-negado) */
+.tagNegado {
+  background: var(--color-estatus-negado);
+  box-shadow: none;
+  color: var(--color-negro);
+}
+
 /* Partida separada por completo — sin respaldo en los mockups (D49) */
 .tagListo {
   background: var(--color-estatus-completado);
@@ -267,4 +274,60 @@
   color: var(--color-negro);
   font: var(--font-b3-body);
   line-height: normal;
+}
+
+/* ---- Modal "Negar producto" de la ronda (D51) */
+.negarEtiqueta {
+  color: var(--color-negro);
+  font: var(--font-b2-body);
+  line-height: normal;
+}
+
+/* Pedido que se puede negar: misma caja que el select de motivo (1246:7601) */
+.negarPedido {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 5px;
+  box-shadow: inset 0 0 0 1px var(--color-primary-azul-300);
+  background: var(--color-blanco);
+  text-align: left;
+}
+
+.negarPedidoOn {
+  background: var(--color-primary-azul-0);
+  box-shadow: inset 0 0 0 2px var(--color-primary-azul-300);
+}
+
+.negarPedidoDatos {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--color-negro);
+  font: var(--font-label);
+}
+
+.negarPedidoDatos b {
+  font: var(--font-b2-body);
+  line-height: normal;
+}
+
+.casilla {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 2px var(--color-primary-azul-300);
+  color: var(--color-blanco);
+  font: var(--font-b2-body);
+}
+
+.negarPedidoOn .casilla {
+  background: var(--color-primary-azul-300);
 }
