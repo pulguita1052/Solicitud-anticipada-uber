@@ -18,19 +18,27 @@
   display: none;
 }
 
-/* Surtido por pedido: filas con divisor, 10 px entre fila y divisor (mismo ritmo que la lista de surtido) */
+/* Surtido por pedido: título y filas con divisor, 16 px entre fila y divisor */
 .pedidos {
   display: flex;
   flex-shrink: 0;
   flex-direction: column;
-  gap: 10px;
+  gap: 16px;
   width: 100%;
+}
+
+/* Mismo estilo que el título del desplegable "Pedidos del embarque" (46:3842, S2) */
+.titulo {
+  margin: 0;
+  color: var(--color-negro);
+  font: var(--font-s2-subtitle);
+  line-height: normal;
 }
 
 .pedidoItem {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 16px;
 }
 
 .pedido {

@@ -152,7 +152,7 @@ export function SeleccionNegadoModal({
           </div>
           <p className={styles.descripcion}>{descripcion}</p>
         </div>
-        <div className={styles.col} style={{ gap: 8 }}>
+        <div className={styles.col} style={{ gap: 14 }}>
           <p className={ronda.negarEtiqueta}>Pedidos a negar</p>
           <div className={ronda.negarLista}>
             {pedidos.map((p, i) => {
@@ -181,6 +181,9 @@ export function SeleccionNegadoModal({
               );
             })}
           </div>
+          <p className={ronda.negarNota}>
+            Los pedidos se listan en prioridad de surtido, no se podrá negar la pieza a un pedido con mayor prioridad que otro.
+          </p>
         </div>
         <div className={styles.buttons}>
           <Button asset={grupo45} label="Cancelar" className={styles.flex1} onClick={onCancel} />

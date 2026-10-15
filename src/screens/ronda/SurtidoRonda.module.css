@@ -283,12 +283,18 @@
   line-height: normal;
 }
 
-/* Lista de pedidos a negar: filas separadas por líneas divisoras */
+/* Lista de pedidos a negar: filas separadas por líneas divisoras, 14 px entre fila y divisor */
 .negarLista {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 14px;
   width: 100%;
+}
+
+/* Nota de prioridad bajo la lista (Text font/Label) */
+.negarNota {
+  color: var(--color-inactive-text);
+  font: var(--font-label);
 }
 
 /* Casilla a la izquierda; ícono y datos a la derecha, alineados a la derecha */

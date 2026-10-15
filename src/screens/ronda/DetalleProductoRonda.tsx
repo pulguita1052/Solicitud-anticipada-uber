@@ -98,7 +98,10 @@ export function DetalleProductoRonda() {
           </div>
 
           {/* Surtido por pedido: una fila por pedido con divisor */}
-          <section className={styles.pedidos} aria-label="Surtido por pedido">
+          <section className={styles.pedidos} aria-labelledby="surtido-por-pedido">
+            <h3 id="surtido-por-pedido" className={styles.titulo}>
+              Surtido por pedido
+            </h3>
             {linea.porPedido.map((x, i) => (
               <div key={x.pedido} className={styles.pedidoItem}>
                 {i > 0 && <Divider variant="list" />}
