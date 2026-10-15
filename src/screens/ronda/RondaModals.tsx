@@ -5,6 +5,7 @@
 import { Fragment, useState } from 'react';
 import iconoPregunta from '@assets/icons/modal-icono-pregunta.svg';
 import iconoMotivo from '@assets/icons/modal-icono-motivo-negado.svg';
+import iconoInfo from '@assets/icons/info.svg';
 import iconoA from '@assets/icons/contenedor-a.svg';
 import iconoB from '@assets/icons/contenedor-b.svg';
 import iconoC from '@assets/icons/contenedor-c.svg';
@@ -181,9 +182,10 @@ export function SeleccionNegadoModal({
               );
             })}
           </div>
-          <p className={ronda.negarNota}>
-            Los pedidos se listan en prioridad de surtido, no se podrá negar la pieza a un pedido con mayor prioridad que otro.
-          </p>
+          <div className={ronda.negarNota} role="note">
+            <img src={iconoInfo} alt="" width={20} height={20} />
+            <p>Los pedidos se listan en prioridad de surtido, no se podrá negar la pieza a un pedido con mayor prioridad que otro.</p>
+          </div>
         </div>
         <div className={styles.buttons}>
           <Button asset={grupo45} label="Cancelar" className={styles.flex1} onClick={onCancel} />

@@ -291,10 +291,25 @@
   width: 100%;
 }
 
-/* Nota de prioridad bajo la lista (Text font/Label) */
+/* Nota de prioridad bajo la lista — mismo formato que la leyenda 7060:28002 de "Rechazar traspaso"
+   (fondo azul claro, ícono de info y texto azul); aquí en varias líneas por ser más larga */
 .negarNota {
-  color: var(--color-inactive-text);
-  font: var(--font-label);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 5px;
+  background: var(--color-primary-azul-0);
+}
+
+.negarNota img {
+  flex-shrink: 0;
+}
+
+.negarNota p {
+  color: var(--color-primary-azul-300);
+  font: 400 14px/1.35 var(--font-family-roboto); /* figma: 7060:28009 (sin estilo) */
 }
 
 /* Casilla a la izquierda; ícono y datos a la derecha, alineados a la derecha */
