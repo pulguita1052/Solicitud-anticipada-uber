@@ -13,10 +13,10 @@ body,
   height: 100%;
 }
 
-/* Fondo negro alrededor de la handheld para que la pantalla (blanca) no se pierda en escritorio; en el equipo real
-   el .app-frame ocupa todo el ancho y no se ve (indicación del usuario, 2026-10-15) */
+/* Fondo gris oscuro alrededor de la handheld para que la pantalla (blanca) no se pierda en escritorio; en el equipo
+   real el .app-frame ocupa todo el ancho y no se ve (indicación del usuario, 2026-10-15) */
 body {
-  background: var(--color-negro);
+  background: #444444; /* sin token: color indicado por el usuario */
   font-family: var(--font-family-roboto);
   color: var(--color-negro);
   -webkit-font-smoothing: antialiased;
