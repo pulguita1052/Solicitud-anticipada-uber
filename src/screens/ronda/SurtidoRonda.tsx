@@ -4,6 +4,8 @@
  *
  * Propuestas (se eligen desde el panel de escenarios; docs/figma/flujos-surtido.md, sección "Multipedido"):
  *   A · Lista consolidada por ubicación + separación en la mesa: cada escaneo dice en qué contenedor va la pieza.
+ *       Interfaz principal y vista filtrada por pedido: mockups 15:1437 / 15:1661 (Handheld for Claude).
+ *       Es la propuesta elegida (2026-10-15); B y C quedan ocultas en el panel de escenarios.
  *   B · Batch pick a contenedores: una parada (ubicación) a la vez; se escanea en el anaquel y se deposita en el contenedor.
  *   C · Separación en la revisión: el surtido solo recolecta; la tarea REVISAR Y SEPARAR RONDA reparte en contenedores.
  * Reglas comunes: reparto del pedido más antiguo al más reciente, aviso por pedido completo, cierre con faltantes informativo.
@@ -14,11 +16,13 @@ import { AppHeader } from '@ds/components/organisms/AppHeader/AppHeader';
 import { ContentPanel } from '@ds/components/organisms/ContentPanel/ContentPanel';
 import { BottomBar } from '@ds/components/organisms/BottomBar/BottomBar';
 import { ScanInput, type ScanInputHandle } from '@ds/components/molecules/ScanInput/ScanInput';
+import { OrderProgress } from '@ds/components/molecules/OrderProgress/OrderProgress';
 import { Divider } from '@ds/components/atoms/Divider/Divider';
 import { leerCodigo } from '../../domain/codigos';
 import { decir, sonar } from '../../domain/sonidos';
 import {
   avancePedidos,
+  conteosRonda,
   consolidado,
   faltantes,
   faltantesRecoleccion,
@@ -30,7 +34,7 @@ import {
 import { useStore } from '../../store/AppStore';
 import { CantidadModal, MenuModal } from '../surtido/overlays/SurtidoModals';
 import { FaltantesModal, FinalizarRondaModal, type GrupoFaltante } from './RondaModals';
-import { ContenedoresResumen, LineaRonda, Parada, UltimoEscaneo } from './RondaPartes';
+import { ContenedoresResumen, LineaRonda, Parada } from './RondaPartes';
 import styles from './SurtidoRonda.module.css';
 
 type Overlay = { k: 'cantidad'; codigo: string } | { k: 'menu' } | { k: 'finalizar' } | { k: 'faltantes' };
@@ -50,10 +54,14 @@ export function SurtidoRonda() {
   const { ronda, rondaDispatch, setEtapa, mostrarToast } = useStore();
   const [overlay, setOverlay] = useState<Overlay | null>(null);
   const [autoDescartado, setAutoDescartado] = useState(false);
+  /** Vista filtrada por pedido (15:1661): undefined = lista consolidada de la ronda. */
+  const [filtro, setFiltro] = useState<string | undefined>();
   const scanRef = useRef<ScanInputHandle>(null);
 
   const separando = separaAlEscanear(ronda);
   const lineas = useMemo(() => consolidado(ronda), [ronda]);
+  const visibles = filtro ? lineas.filter((l) => l.porPedido.some((x) => x.pedido === filtro)) : lineas;
+  const c = conteosRonda(ronda);
   const avances = useMemo(() => avancePedidos(ronda), [ronda]);
   const esB = ronda.propuesta === 'B';
   const recolectandoC = ronda.propuesta === 'C' && ronda.fase === 'surtido';
@@ -101,19 +109,23 @@ export function SurtidoRonda() {
     const antes = avancePedidos(ronda);
     rondaDispatch({ type: 'separar', codigo, asignaciones });
     if (sobrante > 0) return avisarSobrante(codigo, sobrante);
+    // Dónde va cada pieza (los mockups no tienen aviso fijo: se usa el toast, D49)
+    const destino = asignaciones.map((x) => `${x.contenedor}: ${x.cantidad} pz`).join(' · ');
     // ¿Algún pedido quedó completo con este escaneo?
     const listo = antes.find((a) => {
       if (a.completo) return false;
       const extra = asignaciones.find((x) => x.pedido === a.pedido.id)?.cantidad ?? 0;
       return a.separado + extra >= a.solicitado;
     });
-    if (listo) {
-      mostrarToast({
-        kind: 'success',
-        title: `Pedido ${listo.pedido.id} completo`,
-        message: `El contenedor ${listo.pedido.contenedor} está listo para ${ronda.propuesta === 'C' ? 'facturar' : 'revisión'}.`,
-      });
-    }
+    mostrarToast(
+      listo
+        ? {
+            kind: 'success',
+            title: `Pedido ${listo.pedido.id} completo`,
+            message: `Coloca ${codigo} en ${destino}. El contenedor ${listo.pedido.contenedor} está listo.`,
+          }
+        : { kind: 'success', title: `Coloca ${codigo}`, message: `Contenedor ${destino}` },
+    );
   };
 
   const avisarSobrante = (codigo: string, n: number) =>
@@ -185,20 +197,18 @@ export function SurtidoRonda() {
           filas: f.partidas.map((x) => ({ codigo: x.codigo, avance: x.solicitado - x.faltan, total: x.solicitado })),
         }));
 
-  const titulo = ronda.propuesta === 'C' && ronda.fase === 'separacion' ? 'Revisión y separación' : 'Surtido de ronda';
+  const titulo = ronda.propuesta === 'C' && ronda.fase === 'separacion' ? 'Revisión y separación' : 'Surtido de órdenes';
   const ov = overlay;
   return (
     <div className={styles.screen}>
       <AppHeader backLabel="Menú" onBack={() => navigate('/menu')} onMenu={() => setOverlay({ k: 'menu' })} />
       <ContentPanel title={titulo}>
-        <div className={styles.cabecera}>
-          {separando ? (
-            <ContenedoresResumen avances={avances} />
-          ) : (
-            <p className={styles.nota}>Recolecta las piezas de los 3 pedidos. La separación por contenedor se hace en la revisión.</p>
-          )}
-          {separando && !esB && <UltimoEscaneo ultimo={ronda.ultimo} />}
-        </div>
+        <OrderProgress variante="ronda" completado={c.completado} negado={c.negado} parcial={c.parcial} pendientes={c.pendientes} />
+        {separando ? (
+          <ContenedoresResumen avances={avances} seleccionado={esB ? undefined : filtro} onSeleccionar={esB ? undefined : setFiltro} />
+        ) : (
+          <p className={styles.nota}>Recolecta las piezas de los 3 pedidos. La separación por contenedor se hace en la revisión.</p>
+        )}
         {esB && lineaParada ? (
           <Parada
             linea={lineaParada}
@@ -209,10 +219,10 @@ export function SurtidoRonda() {
           />
         ) : (
           <div className={styles.list}>
-            {lineas.map((l, i) => (
+            {visibles.map((l, i) => (
               <div key={l.codigo} className={styles.itemContainer}>
                 {i > 0 && <Divider variant="list" />}
-                <LineaRonda linea={l} separando={separando} />
+                <LineaRonda linea={l} pedido={filtro} separando={separando} />
               </div>
             ))}
           </div>

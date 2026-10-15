@@ -102,7 +102,7 @@ export function ProductosCheatsheet({ ronda = false }: { ronda?: boolean }) {
       <p className={styles.hint}>
         {ronda ? (
           <>
-            Piezas totales de los 3 pedidos de la ronda. En la propuesta B solo se acepta el código de la parada actual.
+            Piezas totales de los 3 pedidos de la ronda.
           </>
         ) : (
           <>Pedido reducido a 2 artículos para simplificar la demo.</>

@@ -3,6 +3,8 @@
  * nodeId: 1324:7100
  * URL: https://www.figma.com/design/zZBoCtJor0tdJ91umiqb7l/?node-id=1324-7100
  * Última sincronización: 2026-09-29
+ * Variante "ronda": "Avance de la ronda" (Handheld for Claude, Surtido multipedido 15:1455) — título centrado,
+ * sin número de pedido ni etiquetas de columna (ocultas en Figma).
  */
 import type { ReactNode } from 'react';
 import avance from '@assets/icons/avance-pedido.svg';
@@ -14,23 +16,26 @@ import pendiente from '@assets/icons/estado-pendiente.svg';
 import styles from './OrderProgress.module.css';
 
 type Props = {
-  pedido: string;
+  /** Requerido en la variante "pedido" (encabezado "Pedido 123456"). */
+  pedido?: string;
+  variante?: 'pedido' | 'ronda';
   completado: number;
   negado: number;
   parcial: number;
   pendientes: number;
 };
 
-export function OrderProgress(p: Props) {
+export function OrderProgress({ variante = 'pedido', ...p }: Props) {
+  const ronda = variante === 'ronda';
   return (
-    <div className={styles.progress}>
+    <div className={`${styles.progress} ${ronda ? styles.ronda : ''}`}>
       <div className={styles.header}>
         <div className={styles.headerInner}>
           <div className={styles.headerLeft}>
             <img src={avance} alt="" width={11.161} height={13.708} />
-            <span>Avance del pedido</span>
+            <span>{ronda ? 'Avance de la ronda' : 'Avance del pedido'}</span>
           </div>
-          <b>Pedido {p.pedido}</b>
+          {!ronda && <b>Pedido {p.pedido}</b>}
         </div>
       </div>
       <div className={styles.body}>

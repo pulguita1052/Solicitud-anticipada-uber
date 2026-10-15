@@ -1,77 +1,94 @@
 /**
- * Piezas de la pantalla de ronda multipedido. Sin respaldo en Figma (2888:9537 vacía, D48): se construyen con
- * OrderItemRow, ProductSummary, Chip y Button del sistema de diseño y con tokens existentes.
+ * Piezas de la pantalla de ronda multipedido. Interfaz principal y vista filtrada según los mockups de
+ * "Handheld for Claude" › Surtido multipedido (15:1437 / 15:1661, archivo Zf1wV1oULSD14o7TPW4da9); la parada de la
+ * propuesta B (oculta) sigue sin respaldo en Figma (D48).
  */
 import { OrderItemRow, type OrderItemStatus } from '@ds/components/molecules/OrderItemRow/OrderItemRow';
 import { ProductSummary } from '@ds/components/molecules/ProductSummary/ProductSummary';
 import { Chip } from '@ds/components/atoms/Chip/Chip';
 import { Button } from '@ds/components/atoms/Button/Button';
-import { productoRonda, type AvancePedido, type LineaConsolidada, type RondaState } from '../../domain/ronda';
+import iconoA from '@assets/icons/contenedor-a.svg';
+import iconoB from '@assets/icons/contenedor-b.svg';
+import iconoC from '@assets/icons/contenedor-c.svg';
+import { productoRonda, type AvancePedido, type LineaConsolidada } from '../../domain/ronda';
+import type { Contenedor } from '../../mocks/ronda';
 import styles from './SurtidoRonda.module.css';
 
 export const statusLinea = (avance: number, total: number): OrderItemStatus =>
   avance <= 0 ? 'no-iniciado' : avance < total ? 'parcial' : 'completado';
 
-/** Tres contenedores con su pedido y avance en piezas. */
-export function ContenedoresResumen({ avances }: { avances: AvancePedido[] }) {
+const ICONO_CONTENEDOR: Record<Contenedor, string> = { A: iconoA, B: iconoB, C: iconoC };
+
+/**
+ * Tres contenedores con su pedido y avance en piezas — "Container" 15:1500 (Handheld for Claude).
+ * Tocar uno filtra la lista a ese pedido (vista filtrada 15:1661: los demás al 50 % de opacidad); tocarlo otra vez quita el filtro.
+ */
+export function ContenedoresResumen({
+  avances,
+  seleccionado,
+  onSeleccionar,
+}: {
+  avances: AvancePedido[];
+  seleccionado?: string;
+  onSeleccionar?: (pedido: string | undefined) => void;
+}) {
   return (
     <div className={styles.contenedores}>
-      {avances.map((a) => (
-        <div key={a.pedido.id} className={`${styles.contenedor} ${a.completo ? styles.contenedorListo : ''}`}>
-          <span className={styles.letra}>{a.pedido.contenedor}</span>
-          <div className={styles.contenedorDatos}>
-            <b>{a.pedido.id}</b>
-            <span>{a.completo ? 'Listo' : `${a.separado} de ${a.solicitado} pz`}</span>
-          </div>
-        </div>
-      ))}
+      {avances.map((a) => {
+        const atenuado = seleccionado !== undefined && seleccionado !== a.pedido.id;
+        return (
+          <button
+            key={a.pedido.id}
+            type="button"
+            className={[styles.contenedor, a.completo ? styles.contenedorListo : '', atenuado ? styles.atenuado : ''].join(' ')}
+            aria-pressed={seleccionado === a.pedido.id}
+            disabled={!onSeleccionar}
+            onClick={() => onSeleccionar?.(seleccionado === a.pedido.id ? undefined : a.pedido.id)}
+          >
+            <img src={ICONO_CONTENEDOR[a.pedido.contenedor]} alt={`Contenedor ${a.pedido.contenedor}`} width={30} height={30} />
+            <span className={styles.contenedorDatos}>
+              <span>#{a.pedido.id}</span>
+              <b>
+                {a.separado} de {a.solicitado}
+              </b>
+            </span>
+          </button>
+        );
+      })}
     </div>
   );
 }
 
-/** Aviso fijo con el último escaneo: a qué contenedor va cada pieza (no bloquea el escaneo siguiente). */
-export function UltimoEscaneo({ ultimo }: { ultimo: RondaState['ultimo'] }) {
-  if (!ultimo) {
-    return <div className={`${styles.ultimo} ${styles.ultimoVacio}`}>Escanea una pieza para saber en qué contenedor va.</div>;
-  }
-  return (
-    <div className={styles.ultimo} aria-live="polite">
-      <span>
-        Coloca <b>{ultimo.codigo}</b> en:
-      </span>
-      <div className={styles.ultimoDestinos}>
-        {ultimo.asignaciones.map((a) => (
-          <span key={a.pedido} className={styles.destino}>
-            <span className={styles.letraGrande}>{a.contenedor}</span>
-            <b>{a.cantidad} pz</b>
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/** Fila de la lista consolidada: card de producto + desglose por contenedor. */
-export function LineaRonda({ linea, separando }: { linea: LineaConsolidada; separando: boolean }) {
+/**
+ * Card de la lista — 15:1528 (consolidada, con desglose "Stock" 15:1545) o 15:1752 (vista filtrada por pedido, sin desglose).
+ * En la vista filtrada el chip muestra el avance de ese pedido; en la consolidada, el total de la ronda.
+ */
+export function LineaRonda({ linea, pedido, separando }: { linea: LineaConsolidada; pedido?: string; separando: boolean }) {
   const p = productoRonda(linea.codigo)!;
+  const propio = pedido ? linea.porPedido.find((x) => x.pedido === pedido) : undefined;
+  const avance = propio ? propio.separado : linea.avance;
+  const total = propio ? propio.solicitado : linea.total;
   return (
-    <div className={styles.linea}>
-      <OrderItemRow
-        codigo={linea.codigo}
-        status={statusLinea(linea.avance, linea.total)}
-        surtido={linea.avance}
-        solicitado={linea.total}
-        ubicacion={p.ubicacion}
-        foto={p.foto}
-      />
-      <div className={styles.desglose}>
-        {linea.porPedido.map((x) => (
-          <span key={x.pedido} className={`${styles.tag} ${separando && x.separado >= x.solicitado ? styles.tagListo : ''}`}>
-            <b>{x.contenedor}</b> {separando ? `${x.separado}/${x.solicitado}` : `${x.solicitado} pz`}
+    <OrderItemRow
+      ronda
+      codigo={linea.codigo}
+      status={statusLinea(avance, total)}
+      surtido={avance}
+      solicitado={total}
+      ubicacion={p.ubicacion}
+      foto={p.foto}
+      detalle={
+        propio ? undefined : (
+          <span className={styles.desglose}>
+            {linea.porPedido.map((x) => (
+              <span key={x.pedido} className={`${styles.tag} ${separando && x.separado >= x.solicitado ? styles.tagListo : ''}`}>
+                <b>{x.contenedor}</b> {separando ? `${x.separado}/${x.solicitado}` : `${x.solicitado} pz`}
+              </span>
+            ))}
           </span>
-        ))}
-      </div>
-    </div>
+        )
+      }
+    />
   );
 }
 

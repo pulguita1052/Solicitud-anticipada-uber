@@ -19,8 +19,6 @@ export type RondaState = {
   recolectado: Record<string, number>;
   /** Piezas colocadas en el contenedor de cada pedido: separado[pedido][codigo]. */
   separado: Record<string, Record<string, number>>;
-  /** Último escaneo que separó piezas (aviso "Coloca en…"). */
-  ultimo?: { codigo: string; asignaciones: Asignacion[] };
 };
 
 export type RondaAction =
@@ -99,6 +97,17 @@ export function avancePedidos(s: RondaState): AvancePedido[] {
   });
 }
 
+/** Avance de la ronda (15:1455) por código consolidado: completo, parcial o pendiente. En la ronda no se niega. */
+export function conteosRonda(s: RondaState) {
+  const c = { completado: 0, negado: 0, parcial: 0, pendientes: 0 };
+  for (const l of consolidado(s)) {
+    if (l.avance >= l.total) c.completado++;
+    else if (l.avance > 0) c.parcial++;
+    else c.pendientes++;
+  }
+  return c;
+}
+
 /** Faltantes por pedido (lo que quedaría sin surtir si se finaliza ahora). */
 export function faltantes(s: RondaState) {
   return PEDIDOS_RONDA.map((p) => ({
@@ -127,11 +136,11 @@ export function rondaReducer(s: RondaState, a: RondaAction): RondaState {
       for (const x of a.asignaciones) {
         separado[x.pedido] = { ...separado[x.pedido], [a.codigo]: separadoDe(s, x.pedido, a.codigo) + x.cantidad };
       }
-      return { ...s, separado, ultimo: { codigo: a.codigo, asignaciones: a.asignaciones } };
+      return { ...s, separado };
     }
     case 'terminarRecoleccion':
-      return { ...s, fase: 'separacion', ultimo: undefined };
+      return { ...s, fase: 'separacion' };
     case 'finalizar':
-      return { ...s, fase: 'finalizada', ultimo: undefined };
+      return { ...s, fase: 'finalizada' };
   }
 }

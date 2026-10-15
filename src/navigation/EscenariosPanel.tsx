@@ -20,11 +20,12 @@ type Escenario = {
   reglas: string[];
 };
 
-type Grupo = { titulo: string; escenarios: Escenario[] };
+/** `oculto`: el grupo se conserva en el código pero no se muestra (propuestas B y C y un pedido por ronda, 2026-10-15). */
+type Grupo = { titulo: string; escenarios: Escenario[]; oculto?: boolean };
 
 const GRUPOS: Grupo[] = [
   {
-    titulo: 'Multipedido · A — Lista consolidada + separación en mesa (principal)',
+    titulo: 'Surtido multipedido',
     escenarios: [
       {
         id: 'ronda-a',
@@ -33,7 +34,8 @@ const GRUPOS: Grupo[] = [
         ruta: '/tareas',
         reglas: [
           'Lista consolidada en orden de recorrido: total de piezas por código y desglose por contenedor.',
-          'Cada escaneo dice en qué contenedor va la pieza ("Coloca 1394000 en: A 4 pz · B 2 pz").',
+          'Tocar un contenedor filtra la lista a su pedido; tocarlo otra vez muestra toda la ronda.',
+          'Cada escaneo avisa en qué contenedor va la pieza ("Coloca 1394000 · Contenedor A: 4 pz · B: 2 pz").',
           'Las piezas llenan primero el pedido capturado antes; si sobran, aviso "Piezas de más".',
           'Cada contenedor avisa cuando su pedido queda completo.',
         ],
@@ -49,6 +51,7 @@ const GRUPOS: Grupo[] = [
   },
   {
     titulo: 'Multipedido · B — Batch pick a contenedores',
+    oculto: true,
     escenarios: [
       {
         id: 'ronda-b',
@@ -72,6 +75,7 @@ const GRUPOS: Grupo[] = [
   },
   {
     titulo: 'Multipedido · C — Separación en la revisión',
+    oculto: true,
     escenarios: [
       {
         id: 'ronda-c',
@@ -94,6 +98,7 @@ const GRUPOS: Grupo[] = [
   },
   {
     titulo: 'Un pedido por ronda — Tareas',
+    oculto: true,
     escenarios: [
       {
         id: 'tareas-surtido',
@@ -113,6 +118,7 @@ const GRUPOS: Grupo[] = [
   },
   {
     titulo: 'Un pedido por ronda — Surtido',
+    oculto: true,
     escenarios: [
       {
         id: 'inicial',
@@ -201,11 +207,11 @@ export function EscenariosPanel() {
         <span className={styles.badge}>Flujo</span>
         <h2 className={styles.title}>Escenarios</h2>
         <p className={styles.subtitle}>
-          Multipedido (A, B, C) y un pedido por ronda. Selecciona un escenario para saltar a esa pantalla con el estado ya sembrado.
+          Surtido multipedido. Selecciona un escenario para saltar a esa pantalla con el estado ya sembrado.
         </p>
       </header>
       <div className={styles.grupos}>
-        {GRUPOS.map((g) => (
+        {GRUPOS.filter((g) => !g.oculto).map((g) => (
           <section key={g.titulo} className={styles.grupo}>
             <h3 className={styles.grupoTitulo}>{g.titulo}</h3>
             <ol className={styles.list}>

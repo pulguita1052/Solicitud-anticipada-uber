@@ -1,16 +1,9 @@
-/* Surtido multipedido — sin respaldo en Figma (D48). Solo tokens existentes; medidas alineadas a la lista de surtido. */
+/* Surtido multipedido. Interfaz principal y vista filtrada: mockups 15:1437 / 15:1661 (Handheld for Claude, Zf1wV1oULSD14o7TPW4da9).
+   La parada de la propuesta B y los modales siguen sin respaldo en Figma (D48). */
 .screen {
   position: absolute;
   inset: 0;
   background: var(--color-blanco);
-}
-
-.cabecera {
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  gap: 10px;
-  width: 100%;
 }
 
 .nota {
@@ -23,36 +16,50 @@
   line-height: normal;
 }
 
-/* ---- Contenedores */
+/* ---- Contenedores — "Container" 15:1500 */
 .contenedores {
   display: flex;
-  gap: 8px;
+  flex-shrink: 0;
+  gap: 6px;
   width: 100%;
 }
 
+/* "Item" 15:1501 */
 .contenedor {
   display: flex;
   flex: 1 0 0;
-  gap: 8px;
+  gap: 10px;
   align-items: center;
+  justify-content: center;
   min-width: 1px;
-  padding: 8px;
+  padding: 12px 0;
   border-radius: 5px;
   box-shadow: inset 0 0 0 1px var(--color-primary-azul-300);
   background: var(--color-blanco);
 }
 
-.contenedorListo {
-  background: var(--color-estatus-completado);
-  box-shadow: inset 0 0 0 1px var(--color-active-text);
+.contenedor:disabled {
+  cursor: default;
 }
 
+/* Vista filtrada 15:1661: los contenedores no seleccionados al 50 % */
+.atenuado {
+  opacity: 0.5;
+}
+
+/* Contenedor completo — sin respaldo en los mockups (D49) */
+.contenedorListo {
+  background: var(--color-estatus-completado);
+}
+
+/* "Info" 15:1506 */
 .contenedorDatos {
   display: flex;
   flex-direction: column;
-  min-width: 1px;
+  gap: 5px;
+  align-items: flex-end;
   color: var(--color-negro);
-  font: var(--font-label);
+  font: 400 12px/normal var(--font-family-roboto); /* figma: 15:1507 (sin estilo, 12 px) */
   white-space: nowrap;
 }
 
@@ -86,41 +93,6 @@
   line-height: normal;
 }
 
-/* ---- Último escaneo */
-.ultimo {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  min-height: 56px;
-  padding: 8px 12px;
-  border-radius: 5px;
-  background: var(--color-primary-azul-0);
-  color: var(--color-negro);
-  font: var(--font-b1-body);
-  line-height: normal;
-}
-
-.ultimoVacio {
-  justify-content: center;
-  color: var(--color-inactive-text);
-  text-align: center;
-}
-
-.ultimoDestinos {
-  display: flex;
-  gap: 12px;
-}
-
-.destino {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  font: var(--font-b2-body);
-  white-space: nowrap;
-}
-
 /* ---- Lista consolidada (mismas medidas que Orders List 3048:10157) */
 .list {
   display: flex;
@@ -143,27 +115,28 @@
   width: 100%;
 }
 
-.linea {
+/* Desglose por contenedor — "Stock" 15:1545 */
+.desglose {
   display: flex;
-  flex-direction: column;
   gap: 6px;
+  align-items: center;
   width: 100%;
 }
 
-/* Desglose por contenedor, alineado al texto de la card (60 px de foto + 10 px de separación) */
-.desglose {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  padding-left: 70px;
-}
-
+/* "Stock Item" 15:1546 */
 .tag {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 20px;
   padding: 2px 8px;
   border-radius: 5px;
   box-shadow: inset 0 0 0 1px var(--color-primary-azul-300);
+  background: var(--color-blanco);
   color: var(--color-primary-azul-300);
-  font: var(--font-label);
+  font: 400 12px/normal var(--font-family-roboto); /* figma: 15:1547 (sin estilo, 12 px) */
   white-space: nowrap;
 }
 
@@ -171,6 +144,7 @@
   font-weight: 700;
 }
 
+/* Partida separada por completo — sin respaldo en los mockups (D49) */
 .tagListo {
   background: var(--color-estatus-completado);
   box-shadow: none;

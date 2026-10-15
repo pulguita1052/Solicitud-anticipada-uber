@@ -62,13 +62,14 @@ fin → Asignación de tareas con "REVISAR PEDIDO CLIENTE" (197:20499) + toast "
 
 Rama `feature-surtido-multipedido`. La página `📲 Surtido - Multi. pedido x ronda` (2888:9537) está vacía: el flujo se diseña primero en código y después se pasa a Figma (D48). Requisito confirmado por stakeholders: **máximo 3 pedidos por ronda**. Contexto de sucursal (usuario, 2026-10-14): los operarios recogen todo en los anaqueles y escanean en la mesa de preparación; los pedidos suelen ser chicos (2–5 códigos) o grandes (~14); límite de ~25 min desde la captura en Entrega Local; la espera antes de iniciar (mediana 6 min, promedio 15.3 min) pesa más que el surtido (mediana 1.1 min).
 
-Las tres propuestas se eligen desde el panel de escenarios. Menú › Tareas abre la **A**; el flujo de un pedido se conserva en el panel ("Un pedido por ronda").
+**Decisión (2026-10-15): se sigue con la propuesta A.** B, C y el flujo de un pedido siguen en el código pero ocultos en el panel de escenarios. La interfaz principal y la vista filtrada por pedido de A siguen los mockups de `Handheld for Claude` › Surtido multipedido (archivo `Zf1wV1oULSD14o7TPW4da9`, frames 15:1437 y 15:1661; capturas en `docs/figma/cache/multipedido/`): título "Surtido de órdenes", "Avance de la ronda", tarjetas de contenedor (tocar una filtra la lista a su pedido y atenúa las demás; tocarla otra vez quita el filtro) y cards con desglose por contenedor. Lo que los mockups no definen está en D49.
 
 ```
 Asignación de tareas — SURTIR RONDA DE PEDIDOS · Contenedor A 123456 / B 123457 / C 123458
  ✓ → Surtido de ronda
-     A · lista consolidada por ubicación (total por código + desglose A/B/C) + resumen de contenedores
-         escaneo → "Coloca <código> en: A n pz · B n pz" (reparto del pedido más antiguo al más reciente)
+     A · Avance de la ronda + tarjetas de contenedor + lista consolidada por ubicación (total por código + desglose A/B/C)
+         tocar contenedor → vista filtrada: solo sus códigos con su avance, sin desglose (15:1661)
+         escaneo → toast "Coloca <código> · Contenedor A: n pz · B: n pz" (reparto del pedido más antiguo al más reciente)
      B · parada por parada (una ubicación a la vez): solo acepta el código de la parada,
          indica cuántas piezas van a cada contenedor y pasa sola a la siguiente parada incompleta
      C · lista consolidada sin separar: solo cuenta piezas recolectadas

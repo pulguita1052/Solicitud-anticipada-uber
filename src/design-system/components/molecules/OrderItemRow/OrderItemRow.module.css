@@ -88,3 +88,21 @@
   font: var(--font-b2-body);
   line-height: normal;
 }
+
+/* ---- Card de la ronda multipedido — 15:1528 / 15:1752 (Handheld for Claude): gap 15, alto automático,
+   foto de 60 sin invadir el relleno, filas apiladas arriba con 8 px entre ellas */
+.ronda {
+  gap: 15px;
+  height: auto;
+}
+
+.ronda .foto {
+  margin: 0;
+}
+
+.ronda .content {
+  align-self: stretch;
+  height: auto;
+  justify-content: flex-start;
+  gap: 8px;
+}

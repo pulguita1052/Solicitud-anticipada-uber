@@ -87,3 +87,20 @@
   left: 4.42px; /* figma: 1324:7077 */
   top: 4.42px;
 }
+
+/* ---- Variante "ronda" — 15:1455 (Handheld for Claude): título centrado, sin etiquetas, relleno 13/12 */
+.ronda .headerInner {
+  justify-content: center;
+}
+
+.ronda .body {
+  padding: 13px 12px;
+}
+
+.ronda .col {
+  height: auto;
+}
+
+.ronda .colLabel {
+  display: none;
+}
