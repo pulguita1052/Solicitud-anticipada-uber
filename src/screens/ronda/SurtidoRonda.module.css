@@ -147,6 +147,14 @@
   font-weight: 700;
 }
 
+/* Pedido con piezas separadas a medias: mismo azul que el chip "parcial" (--color-estatus-parcialidad) — sin
+   respaldo en los mockups, por indicación del usuario (2026-10-15, D49) */
+.tagParcial {
+  background: var(--color-estatus-parcialidad);
+  box-shadow: none;
+  color: var(--color-negro);
+}
+
 /* Partida separada por completo — sin respaldo en los mockups (D49) */
 .tagListo {
   background: var(--color-estatus-completado);

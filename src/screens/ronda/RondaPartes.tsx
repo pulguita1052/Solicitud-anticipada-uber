@@ -59,6 +59,9 @@ export function ContenedoresResumen({
   );
 }
 
+/** Chip de pedido: en 0 se queda blanco; parcial y completo toman los colores del chip de avance (D49). */
+const ESTADO_TAG: Partial<Record<OrderItemStatus, string>> = { parcial: styles.tagParcial, completado: styles.tagListo };
+
 /**
  * Card de la lista — 15:1528 (consolidada, con desglose "Stock" 15:1545) o 15:1752 (vista filtrada por pedido, sin desglose).
  * En la vista filtrada el chip muestra el avance de ese pedido; en la consolidada, el total de la ronda.
@@ -81,7 +84,7 @@ export function LineaRonda({ linea, pedido, separando }: { linea: LineaConsolida
         propio ? undefined : (
           <span className={styles.desglose}>
             {linea.porPedido.map((x) => (
-              <span key={x.pedido} className={`${styles.tag} ${separando && x.separado >= x.solicitado ? styles.tagListo : ''}`}>
+              <span key={x.pedido} className={`${styles.tag} ${separando ? (ESTADO_TAG[statusLinea(x.separado, x.solicitado)] ?? '') : ''}`}>
                 <b>{x.contenedor}</b> {separando ? `${x.separado}/${x.solicitado}` : `${x.solicitado} pz`}
               </span>
             ))}
