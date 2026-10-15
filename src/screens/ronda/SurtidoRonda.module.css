@@ -106,6 +106,12 @@
   padding: 2px 0;
   overflow-x: clip;
   overflow-y: auto;
+  /* Sin barra de desplazamiento visible; el scroll sigue funcionando (indicación del usuario, 2026-10-15) */
+  scrollbar-width: none;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
 }
 
 .itemContainer {
