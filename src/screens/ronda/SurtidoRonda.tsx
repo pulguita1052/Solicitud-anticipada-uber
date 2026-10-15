@@ -236,9 +236,12 @@ export function SurtidoRonda() {
     <div className={styles.screen}>
       <AppHeader backLabel="Menú" onBack={() => navigate('/menu')} onMenu={() => setOverlay({ k: 'menu' })} />
       <ContentPanel title={titulo}>
-        {!avanceOculto && (
-          <OrderProgress variante="ronda" completado={c.completado} negado={c.negado} parcial={c.parcial} pendientes={c.pendientes} />
-        )}
+        {/* Siempre montado: al ocultarse se desliza hacia arriba y el resto sube a ocupar su lugar */}
+        <div className={`${styles.avance} ${avanceOculto ? styles.avanceOculto : ''}`} aria-hidden={avanceOculto}>
+          <div className={styles.avanceRecorte}>
+            <OrderProgress variante="ronda" completado={c.completado} negado={c.negado} parcial={c.parcial} pendientes={c.pendientes} />
+          </div>
+        </div>
         {separando ? (
           <ContenedoresResumen avances={avances} seleccionado={esB ? undefined : filtro} onSeleccionar={esB ? undefined : setFiltro} />
         ) : (

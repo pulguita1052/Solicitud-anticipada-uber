@@ -16,6 +16,47 @@
   line-height: normal;
 }
 
+/* ---- "Avance de la ronda" que se oculta desde el menú ⋮ (D53): se desliza hacia arriba y se desvanece mientras su
+   alto se cierra; el margen negativo absorbe los 21 px de separación del ContentPanel para que no quede hueco */
+.avance {
+  display: grid;
+  flex-shrink: 0;
+  grid-template-rows: 1fr;
+  width: 100%;
+  opacity: 1;
+  transition:
+    grid-template-rows var(--duration-300) var(--easing-ease-in-and-out),
+    margin-bottom var(--duration-300) var(--easing-ease-in-and-out),
+    opacity var(--duration-300) var(--easing-ease-in-and-out);
+}
+
+.avanceRecorte {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.avanceRecorte > * {
+  transition: transform var(--duration-300) var(--easing-ease-in-and-out);
+}
+
+.avanceOculto {
+  grid-template-rows: 0fr;
+  margin-bottom: -21px; /* gap del ContentPanel (3048:10150) */
+  opacity: 0;
+  pointer-events: none;
+}
+
+.avanceOculto .avanceRecorte > * {
+  transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .avance,
+  .avanceRecorte > * {
+    transition: none;
+  }
+}
+
 /* ---- Contenedores — "Container" 15:1500. Separación de 10 px entre tarjetas en lugar de 6, por indicación del
    usuario (2026-10-15, D49) */
 .contenedores {
