@@ -58,8 +58,9 @@ const GRUPOS: Grupo[] = [
         ruta: '/ronda/producto/2546000',
         reglas: [
           '"Solicitado ronda" suma lo que piden todos los pedidos (A + C = 3).',
-          'En "Surtido por pedido" se edita la cantidad de cada pedido.',
-          '"Negar producto" solo ofrece pedidos con el producto en 0 (aquí, C) y pide un solo motivo para todos.',
+          'Cada pedido tiene su fila (contenedor, "Solicitado n" y spinner) para editar su cantidad.',
+          '"Negar producto" en dos pasos: pedidos a negar (solo los que están en 0) y después un solo motivo.',
+          'Prioridad: marcar A marca también B y C; marcar B marca C.',
         ],
       },
       {

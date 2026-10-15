@@ -5,8 +5,6 @@
 import { Fragment, useState } from 'react';
 import iconoPregunta from '@assets/icons/modal-icono-pregunta.svg';
 import iconoMotivo from '@assets/icons/modal-icono-motivo-negado.svg';
-import selectCheck from '@assets/icons/select-check.svg';
-import selectPoligono from '@assets/icons/select-poligono.svg';
 import iconoA from '@assets/icons/contenedor-a.svg';
 import iconoB from '@assets/icons/contenedor-b.svg';
 import iconoC from '@assets/icons/contenedor-c.svg';
@@ -107,29 +105,39 @@ const ICONO_CONTENEDOR: Record<Contenedor, string> = { A: iconoA, B: iconoB, C: 
 export type PedidoNegable = { pedido: string; contenedor: Contenedor; solicitado: number };
 
 /**
- * Negar producto en la ronda — basado en "Selección de motivo negado" (1246:7590): el operador marca los pedidos a
- * negar (solo los que tienen el producto en 0) y elige un solo motivo para todos. ✓ se habilita con al menos un pedido
- * y un motivo. Sin respaldo en Figma para la selección de pedidos (D51).
+ * Negar producto en la ronda, paso 1 de 2: selección de los pedidos a negar (solo los que tienen el producto en 0).
+ * El paso 2 es "Selección de motivo negado" (MotivoNegadoModal, 1246:7590): un mismo motivo para todos. Sin respaldo en
+ * Figma para este paso (D51).
+ *
+ * Regla de prioridad (los pedidos van en orden de captura, A primero): un pedido no puede quedarse sin la pieza mientras
+ * uno de menor prioridad sí la recibe. Por eso marcar un pedido marca también los siguientes (A → B y C, B → C) y
+ * desmarcarlo desmarca los anteriores.
  */
-export function NegarRondaModal({
+export function SeleccionNegadoModal({
   codigo,
   descripcion,
   pedidos,
-  motivos,
+  inicial,
   onCancel,
   onConfirm,
 }: {
   codigo: string;
   descripcion: string;
+  /** En orden de prioridad (captura). */
   pedidos: PedidoNegable[];
-  motivos: string[];
+  inicial?: string[];
   onCancel: () => void;
-  onConfirm: (pedidos: string[], motivo: string) => void;
+  onConfirm: (pedidos: string[]) => void;
 }) {
   // Si solo hay un pedido que se puede negar, ya va marcado
-  const [marcados, setMarcados] = useState<string[]>(pedidos.length === 1 ? [pedidos[0].pedido] : []);
-  const [motivo, setMotivo] = useState('');
-  const alternar = (id: string) => setMarcados((m) => (m.includes(id) ? m.filter((x) => x !== id) : [...m, id]));
+  const [marcados, setMarcados] = useState<string[]>(inicial ?? (pedidos.length === 1 ? [pedidos[0].pedido] : []));
+  const alternar = (id: string) => {
+    const i = pedidos.findIndex((p) => p.pedido === id);
+    const on = !marcados.includes(id);
+    // Marcar: este y los de menor prioridad · Desmarcar: este y los de mayor prioridad
+    const afectados = (on ? pedidos.slice(i) : pedidos.slice(0, i + 1)).map((p) => p.pedido);
+    setMarcados((m) => (on ? [...new Set([...m, ...afectados])] : m.filter((x) => !afectados.includes(x))));
+  };
   return (
     <ModalSheet icon={<ModalIcon src={iconoMotivo} inset="-2.84% -2.27% -0.56% -1.14%" />} gap={10} doubleShadow>
       <div className={styles.col} style={{ gap: 18 }}>
@@ -146,52 +154,43 @@ export function NegarRondaModal({
         </div>
         <div className={styles.col} style={{ gap: 8 }}>
           <p className={ronda.negarEtiqueta}>Pedidos a negar</p>
-          {pedidos.map((p) => {
-            const on = marcados.includes(p.pedido);
-            return (
-              <button
-                key={p.pedido}
-                type="button"
-                role="checkbox"
-                aria-checked={on}
-                className={`${ronda.negarPedido} ${on ? ronda.negarPedidoOn : ''}`}
-                onClick={() => alternar(p.pedido)}
-              >
-                <img src={ICONO_CONTENEDOR[p.contenedor]} alt="" width={30} height={30} />
-                <span className={ronda.negarPedidoDatos}>
-                  <b>#{p.pedido}</b>
-                  <span>Pide {p.solicitado} pz</span>
-                </span>
-                <span className={ronda.casilla} aria-hidden>
-                  {on ? '✓' : ''}
-                </span>
-              </button>
-            );
-          })}
+          <div className={ronda.negarLista}>
+            {pedidos.map((p, i) => {
+              const on = marcados.includes(p.pedido);
+              return (
+                <Fragment key={p.pedido}>
+                  {i > 0 && <Divider variant="modal" />}
+                  <button
+                    type="button"
+                    role="checkbox"
+                    aria-checked={on}
+                    aria-label={`Contenedor ${p.contenedor}, pedido ${p.pedido}`}
+                    className={ronda.negarPedido}
+                    onClick={() => alternar(p.pedido)}
+                  >
+                    <span className={`${ronda.casilla} ${on ? ronda.casillaOn : ''}`} aria-hidden>
+                      {on ? '✓' : ''}
+                    </span>
+                    <img src={ICONO_CONTENEDOR[p.contenedor]} alt="" width={30} height={30} />
+                    <span className={ronda.negarPedidoDatos}>
+                      <b>#{p.pedido}</b>
+                      <span>Solicitado {p.solicitado}</span>
+                    </span>
+                  </button>
+                </Fragment>
+              );
+            })}
+          </div>
         </div>
-        <label className={styles.select}>
-          <img src={selectCheck} alt="" width={18} height={18} />
-          <select value={motivo} onChange={(e) => setMotivo(e.target.value)} aria-label="Motivo negado">
-            <option value="" disabled>
-              Seleccionar una opción
-            </option>
-            {motivos.map((m) => (
-              <option key={m} value={m}>
-                {m}
-              </option>
-            ))}
-          </select>
-          <img className={styles.selectArrow} src={selectPoligono} alt="" width={13} height={6} />
-        </label>
         <div className={styles.buttons}>
           <Button asset={grupo45} label="Cancelar" className={styles.flex1} onClick={onCancel} />
           <Button
             variant="success"
             icon="check"
             label="Aceptar"
-            disabled={!marcados.length || !motivo}
+            disabled={!marcados.length}
             className={styles.flex1}
-            onClick={() => onConfirm(marcados, motivo)}
+            onClick={() => onConfirm(pedidos.map((p) => p.pedido).filter((id) => marcados.includes(id)))}
           />
         </div>
       </div>

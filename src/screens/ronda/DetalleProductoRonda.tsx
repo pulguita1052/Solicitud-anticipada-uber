@@ -1,25 +1,25 @@
 /**
  * Detalle de producto en la ronda multipedido.
- * Base: "Detalle de producto con despliegue" 41:2429 (Handheld for Claude, Zf1wV1oULSD14o7TPW4da9) y el desplegable
- * "Pedidos del embarque" (46:3957 cerrado / 46:3961 abierto). Propuesta de Claude sobre esa idea (D51).
+ * Base: "Detalle de producto con despliegue" 41:2429 (Handheld for Claude, Zf1wV1oULSD14o7TPW4da9). Propuesta de Claude
+ * sobre esa idea con ajustes del usuario (D51).
  *
  * Reglas (usuario, 2026-10-15):
  *   - "Solicitado ronda" = lo que piden todos los pedidos de la ronda (A + B + C).
- *   - La cantidad surtida se edita por pedido (panel "Surtido por pedido", spinner por pedido).
- *   - "Negar producto" abre un modal para elegir los pedidos a negar; solo aparecen los que tienen el producto en 0.
- *     Un mismo motivo para todos los pedidos negados.
+ *   - La cantidad surtida se edita por pedido: una fila por pedido (contenedor, "Solicitado n", spinner) con divisor.
+ *   - "Negar producto" en dos pasos: (1) pedidos a negar, solo los que tienen el producto en 0, con regla de prioridad
+ *     (marcar A marca B y C; marcar B marca C); (2) un mismo motivo para todos.
  */
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import iconoA from '@assets/icons/contenedor-a.svg';
 import iconoB from '@assets/icons/contenedor-b.svg';
 import iconoC from '@assets/icons/contenedor-c.svg';
-import flecha from '@assets/icons/desplegable-flecha.svg';
 import { AppHeader } from '@ds/components/organisms/AppHeader/AppHeader';
 import { ContentPanel } from '@ds/components/organisms/ContentPanel/ContentPanel';
 import { BottomBar } from '@ds/components/organisms/BottomBar/BottomBar';
 import { Button } from '@ds/components/atoms/Button/Button';
 import { Chip } from '@ds/components/atoms/Chip/Chip';
+import { Divider } from '@ds/components/atoms/Divider/Divider';
 import { Stepper } from '@ds/components/atoms/Stepper/Stepper';
 import { LabeledField } from '@ds/components/molecules/LabeledField/LabeledField';
 import { ProductSummary } from '@ds/components/molecules/ProductSummary/ProductSummary';
@@ -28,7 +28,8 @@ import { MOTIVOS_NEGADO } from '../../mocks/pedido';
 import type { Contenedor } from '../../mocks/ronda';
 import { useStore } from '../../store/AppStore';
 import { VistaFoto } from '../surtido/overlays/VistaFoto';
-import { NegarRondaModal } from './RondaModals';
+import { MotivoNegadoModal } from '../surtido/overlays/SurtidoModals';
+import { SeleccionNegadoModal } from './RondaModals';
 import base from '../surtido/DetalleProducto.module.css';
 import styles from './DetalleProductoRonda.module.css';
 
@@ -51,8 +52,8 @@ export function DetalleProductoRonda() {
   const { codigo = '' } = useParams();
   const navigate = useNavigate();
   const { ronda, rondaDispatch, mostrarToast } = useStore();
-  const [abierto, setAbierto] = useState(true);
-  const [negando, setNegando] = useState(false);
+  /** Negar en dos pasos: selección de pedidos → motivo. */
+  const [negando, setNegando] = useState<{ paso: 'pedidos' } | { paso: 'motivo'; pedidos: string[] } | null>(null);
   const [viendoFoto, setViendoFoto] = useState(false);
   const p = productoRonda(codigo);
   const linea = consolidado(ronda).find((l) => l.codigo === codigo);
@@ -96,45 +97,31 @@ export function DetalleProductoRonda() {
             </div>
           </div>
 
-          {/* Desplegable "Pedidos del embarque" (46:3957 / 46:3961) usado como "Surtido por pedido" */}
-          <section className={styles.desplegable}>
-            <button type="button" className={styles.desplegableHeader} aria-expanded={abierto} onClick={() => setAbierto((a) => !a)}>
-              <span>Surtido por pedido</span>
-              <span className={styles.desplegableTotal}>
-                {linea.avance} de {linea.total}
-                <img src={flecha} alt="" width={19} height={10.5858} className={abierto ? '' : styles.flechaCerrada} />
-              </span>
-            </button>
-            {abierto && (
-              <>
-                <div className={styles.divider} />
-                <div className={styles.pedidos}>
-                  {linea.porPedido.map((x) => (
-                    <div key={x.pedido} className={styles.pedido}>
-                      <img src={ICONO_CONTENEDOR[x.contenedor]} alt={`Contenedor ${x.contenedor}`} width={30} height={30} />
-                      <div className={styles.pedidoDatos}>
-                        <b>#{x.pedido}</b>
-                        <span>{x.motivoNegado ?? `Pide ${x.solicitado} pz`}</span>
-                      </div>
-                      {x.motivoNegado ? (
-                        <div className={styles.negado}>
-                          <Chip status="negado" />
-                        </div>
-                      ) : (
-                        <div className={styles.stepper}>
-                          <Stepper
-                            value={x.separado}
-                            min={0}
-                            max={x.solicitado}
-                            onChange={(cantidad) => rondaDispatch({ type: 'fijarSeparado', pedido: x.pedido, codigo, cantidad })}
-                          />
-                        </div>
-                      )}
+          {/* Surtido por pedido: una fila por pedido con divisor */}
+          <section className={styles.pedidos} aria-label="Surtido por pedido">
+            {linea.porPedido.map((x, i) => (
+              <div key={x.pedido} className={styles.pedidoItem}>
+                {i > 0 && <Divider variant="list" />}
+                <div className={styles.pedido}>
+                  <img src={ICONO_CONTENEDOR[x.contenedor]} alt={`Contenedor ${x.contenedor}`} width={30} height={30} />
+                  <span className={styles.solicitado}>Solicitado {x.solicitado}</span>
+                  {x.motivoNegado ? (
+                    <div className={styles.negado}>
+                      <Chip status="negado" />
                     </div>
-                  ))}
+                  ) : (
+                    <div className={styles.stepper}>
+                      <Stepper
+                        value={x.separado}
+                        min={0}
+                        max={x.solicitado}
+                        onChange={(cantidad) => rondaDispatch({ type: 'fijarSeparado', pedido: x.pedido, codigo, cantidad })}
+                      />
+                    </div>
+                  )}
                 </div>
-              </>
-            )}
+              </div>
+            ))}
           </section>
         </div>
       </ContentPanel>
@@ -145,21 +132,30 @@ export function DetalleProductoRonda() {
           label="Negar producto"
           disabled={linea.negado}
           className={base.flex1}
-          onClick={() => (negables.length ? setNegando(true) : mostrarToast(TOAST_NO_NEGAR))}
+          onClick={() => (negables.length ? setNegando({ paso: 'pedidos' }) : mostrarToast(TOAST_NO_NEGAR))}
         />
       </BottomBar>
 
       {viendoFoto && <VistaFoto foto={p.foto} onClose={() => setViendoFoto(false)} />}
-      {negando && (
-        <NegarRondaModal
+      {negando?.paso === 'pedidos' && (
+        <SeleccionNegadoModal
           codigo={p.codigo}
           descripcion={p.descripcion}
           pedidos={negables.map((x) => ({ pedido: x.pedido, contenedor: x.contenedor, solicitado: x.solicitado }))}
+          onCancel={() => setNegando(null)}
+          onConfirm={(pedidos) => setNegando({ paso: 'motivo', pedidos })}
+        />
+      )}
+      {negando?.paso === 'motivo' && (
+        <MotivoNegadoModal
+          codigo={p.codigo}
+          descripcion={p.descripcion}
           motivos={MOTIVOS_NEGADO}
-          onCancel={() => setNegando(false)}
-          onConfirm={(pedidos, motivo) => {
+          onCancel={() => setNegando(null)}
+          onConfirm={(motivo) => {
+            const pedidos = negando.pedidos;
             rondaDispatch({ type: 'negar', codigo, pedidos, motivo });
-            setNegando(false);
+            setNegando(null);
             const letras = negables.filter((x) => pedidos.includes(x.pedido)).map((x) => x.contenedor);
             mostrarToast({
               kind: 'success',
