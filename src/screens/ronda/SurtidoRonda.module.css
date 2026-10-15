@@ -60,9 +60,11 @@
   color: var(--color-blanco);
 }
 
-/* Contenedor completo — sin respaldo en los mockups (D49) */
+/* Contenedor completo sin seleccionar — "Item" 41:3174 (Surtido multipedido nuevo estado completado contenedor):
+   verde claro con borde verde; la letra va en verde y el avance lleva ✓ */
 .contenedorListo {
   background: var(--color-estatus-completado);
+  box-shadow: inset 0 0 0 1px var(--color-botones-success);
 }
 
 /* "Info" 15:1506 */

@@ -13,6 +13,9 @@ import iconoC from '@assets/icons/contenedor-c.svg';
 import iconoAInv from '@assets/icons/contenedor-a-invertido.svg';
 import iconoBInv from '@assets/icons/contenedor-b-invertido.svg';
 import iconoCInv from '@assets/icons/contenedor-c-invertido.svg';
+import iconoACompleto from '@assets/icons/contenedor-a-completo.svg';
+import iconoBCompleto from '@assets/icons/contenedor-b-completo.svg';
+import iconoCCompleto from '@assets/icons/contenedor-c-completo.svg';
 import { productoRonda, type AvancePedido, type LineaConsolidada } from '../../domain/ronda';
 import type { Contenedor } from '../../mocks/ronda';
 import styles from './SurtidoRonda.module.css';
@@ -23,6 +26,8 @@ export const statusLinea = (avance: number, total: number): OrderItemStatus =>
 const ICONO_CONTENEDOR: Record<Contenedor, string> = { A: iconoA, B: iconoB, C: iconoC };
 /** Círculo blanco con la letra recortada: sobre el fondo azul del contenedor seleccionado la letra se ve azul. */
 const ICONO_SELECCIONADO: Record<Contenedor, string> = { A: iconoAInv, B: iconoBInv, C: iconoCInv };
+/** Contenedor completo sin seleccionar: letra en verde (41:3176 / 41:3192). */
+const ICONO_COMPLETO: Record<Contenedor, string> = { A: iconoACompleto, B: iconoBCompleto, C: iconoCCompleto };
 
 /**
  * Tres contenedores con su pedido y avance en piezas — "Container" 15:1500 (Handheld for Claude).
@@ -52,12 +57,12 @@ export function ContenedoresResumen({
             disabled={!onSeleccionar}
             onClick={() => onSeleccionar?.(seleccionado === a.pedido.id ? undefined : a.pedido.id)}
           >
-            <img src={(activo ? ICONO_SELECCIONADO : ICONO_CONTENEDOR)[a.pedido.contenedor]} alt={`Contenedor ${a.pedido.contenedor}`} width={30} height={30} />
+            <img src={(activo ? ICONO_SELECCIONADO : a.completo ? ICONO_COMPLETO : ICONO_CONTENEDOR)[a.pedido.contenedor]} alt={`Contenedor ${a.pedido.contenedor}`} width={30} height={30} />
             <span className={styles.contenedorDatos}>
               <span>#{a.pedido.id}</span>
               <b>
                 {a.separado} de {a.solicitado}
-                {activo && a.completo && ' ✓'}
+                {a.completo && ' ✓'}
               </b>
             </span>
           </button>
