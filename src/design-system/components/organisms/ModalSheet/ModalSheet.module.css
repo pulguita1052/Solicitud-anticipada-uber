@@ -76,6 +76,44 @@
   text-align: center;
 }
 
+/* Salida: la hoja se desliza hacia abajo y el fondo se desvanece (300 ms, ease-in); sin interacción mientras sale */
+.saliendo {
+  pointer-events: none;
+}
+
+.backdrop.saliendo {
+  animation: fade-out var(--duration-300) var(--easing-ease-in) forwards;
+}
+
+.wrapper.saliendo {
+  animation: slide-down var(--duration-300) var(--easing-ease-in) forwards;
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .wrapper {
+    animation: none;
+  }
+}
+
 @keyframes slide-up {
   from {
     transform: translateY(100%);
