@@ -123,20 +123,16 @@
   width: 100%;
 }
 
-/* "Stock Item" 15:1546 */
+/* "Stock Item" 15:1546 — ancho automático en lugar de los 50 px fijos del mockup, por indicación del usuario
+   (2026-10-15): con 50 px la letra quedaba pegada al conteo (D49) */
 .tag {
-  display: flex;
   flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 20px;
   padding: 2px 8px;
   border-radius: 5px;
   box-shadow: inset 0 0 0 1px var(--color-primary-azul-300);
   background: var(--color-blanco);
   color: var(--color-primary-azul-300);
-  font: 400 12px/normal var(--font-family-roboto); /* figma: 15:1547 (sin estilo, 12 px) */
+  font: var(--font-label);
   white-space: nowrap;
 }
 
