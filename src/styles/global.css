@@ -49,7 +49,9 @@ img {
   max-width: var(--frame-width);
   height: 100%;
   margin: 0 auto;
-  overflow: hidden;
+  /* clip en lugar de hidden: recorta igual pero el navegador no puede desplazarlo al enfocar un campo (evita que
+     toda la interfaz brinque al abrir un modal con campo de texto) */
+  overflow: clip;
   background: var(--color-blanco);
 }
 

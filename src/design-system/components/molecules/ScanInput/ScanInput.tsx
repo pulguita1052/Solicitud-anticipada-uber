@@ -26,7 +26,7 @@ export const ScanInput = forwardRef<ScanInputHandle, Props>(function ScanInput({
   const [manual, setManual] = useState(false);
   const timer = useRef<number>();
 
-  useImperativeHandle(ref, () => ({ focus: () => inputRef.current?.focus() }));
+  useImperativeHandle(ref, () => ({ focus: () => inputRef.current?.focus({ preventScroll: true }) }));
 
   const submit = (v: string) => {
     window.clearTimeout(timer.current);
@@ -46,7 +46,7 @@ export const ScanInput = forwardRef<ScanInputHandle, Props>(function ScanInput({
         aria-pressed={manual}
         onClick={() => {
           setManual((m) => !m);
-          inputRef.current?.focus();
+          inputRef.current?.focus({ preventScroll: true });
         }}
       >
         <img src={teclado} alt="" width={50} height={50} />

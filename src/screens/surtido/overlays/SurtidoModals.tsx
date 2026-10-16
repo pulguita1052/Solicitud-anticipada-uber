@@ -6,7 +6,7 @@
  * URL: https://www.figma.com/design/zZBoCtJor0tdJ91umiqb7l/?node-id=24-16
  * Última sincronización: 2026-10-09
  */
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import iconoCantidad from '@assets/icons/modal-icono-cantidad.svg';
 import iconoMenu from '@assets/icons/modal-icono-menu.svg';
 import iconoPregunta from '@assets/icons/modal-icono-pregunta.svg';
@@ -42,6 +42,10 @@ export function CantidadModal({
 }) {
   const [valor, setValor] = useState(inicial);
   const vacio = valor === '';
+  // Enfocar sin desplazar: al abrir, la hoja aún está abajo (animación de entrada) y el navegador movería toda la
+  // pantalla para mostrar el campo
+  const inputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => inputRef.current?.focus({ preventScroll: true }), []);
   return (
     <ModalSheet icon={<ModalIcon src={iconoCantidad} inset="-2.84% -3.98% -0.56% -2.84%" offsetX={-1} />} gap={10}>
       <div className={styles.col} style={{ gap: 16 }}>
@@ -52,10 +56,10 @@ export function CantidadModal({
           </div>
         </ModalHeader>
         <input
+          ref={inputRef}
           className={styles.qtyInput}
           value={valor}
           inputMode="numeric"
-          autoFocus
           aria-label="Cantidad"
           onChange={(e) => setValor(e.target.value.replace(/\D/g, ''))}
           onKeyDown={(e) => e.key === 'Enter' && !vacio && onConfirm(parseInt(valor, 10))}
