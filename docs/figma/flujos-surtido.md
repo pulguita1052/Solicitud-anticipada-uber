@@ -78,6 +78,7 @@ Asignación de tareas — SURTIR RONDA DE PEDIDOS · Contenedor A 123456 / B 123
              Negar producto → (1) pedidos en 0, con prioridad A → B, C · B → C → (2) un solo motivo; Regresar conserva el filtro
          escaneo → se reparte del pedido más antiguo al más reciente, sin toast de "Coloca…" (solo "Pedido N completo")
          cantidad cero / mayor a lo que falta / mayor a la existencia → toast "Cantidad inválida" y no se registra
+         código que ya está completo → toast "Escaneo sobrante" (4762:2069) y no se registra
          código de 7 dígitos → "Ingresa la cantidad surtida" → "Coloca la mercancía en los contenedores" (solo los que
              reciben piezas, por prioridad; ✕ vuelve a la cantidad, ✓ registra) (D52)
      B · parada por parada (una ubicación a la vez): solo acepta el código de la parada,

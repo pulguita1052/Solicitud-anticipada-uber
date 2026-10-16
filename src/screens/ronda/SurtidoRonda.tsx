@@ -37,7 +37,7 @@ import { useStore } from '../../store/AppStore';
 import { CantidadModal, MenuModal } from '../surtido/overlays/SurtidoModals';
 import { ColocarModal, FaltantesModal, FinalizarRondaModal, SinIniciarRondaModal, type GrupoFaltante } from './RondaModals';
 import { ContenedoresResumen, LineaRonda, Parada } from './RondaPartes';
-import { TOAST_CANTIDAD } from '../surtido/avisosCantidad';
+import { TOAST_CANTIDAD, TOAST_ESCANEO_SOBRANTE } from '../surtido/avisosCantidad';
 import styles from './SurtidoRonda.module.css';
 
 type Overlay =
@@ -120,11 +120,8 @@ export function SurtidoRonda() {
       return { kind: 'error' as const, title: 'Producto de otra parada', message: `Escanea el código ${lineaParada.codigo} de la parada actual.` };
     }
     if (linea.avance >= linea.total) {
-      return {
-        kind: 'error' as const,
-        title: 'Código completo',
-        message: recolectandoC ? 'Ya recolectaste todas las piezas de este código.' : 'Ya se separaron todas las piezas de este código.',
-      };
+      // Código ya completo: "Escaneo sobrante" (4762:2069)
+      return TOAST_ESCANEO_SOBRANTE;
     }
     if (cantidad <= 0) return TOAST_CANTIDAD.cero;
     if (cantidad > linea.total - linea.avance) return TOAST_CANTIDAD.mayorSolicitada;
