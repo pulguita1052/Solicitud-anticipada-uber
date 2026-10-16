@@ -70,14 +70,37 @@
 .contenedor {
   display: flex;
   flex: 1 0 0;
-  gap: 10px;
+  gap: 6px; /* 10 en 15:1502; más junto para que quepa "12 de 12" (indicación del usuario, 2026-10-15) */
   align-items: center;
   justify-content: center;
   min-width: 1px;
-  padding: 12px 0;
+  padding: 12px 8px; /* 12/0 en 15:1501; 8 a los lados para que el contenido no toque el borde */
   border-radius: 5px;
   box-shadow: inset 0 0 0 1px var(--color-primary-azul-300);
   background: var(--color-blanco);
+}
+
+/* Ícono de la letra con la insignia ✓ de completo en la esquina superior derecha */
+.iconoContenedor {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+}
+
+.insigniaListo {
+  position: absolute;
+  top: -4px;
+  right: -5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1.5px var(--color-blanco);
+  background: var(--color-botones-success);
+  color: var(--color-blanco);
+  font: 700 10px/1 var(--font-family-roboto);
 }
 
 .contenedor:disabled {

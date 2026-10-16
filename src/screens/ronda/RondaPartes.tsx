@@ -57,12 +57,19 @@ export function ContenedoresResumen({
             disabled={!onSeleccionar}
             onClick={() => onSeleccionar?.(seleccionado === a.pedido.id ? undefined : a.pedido.id)}
           >
-            <img src={(activo ? ICONO_SELECCIONADO : a.completo ? ICONO_COMPLETO : ICONO_CONTENEDOR)[a.pedido.contenedor]} alt={`Contenedor ${a.pedido.contenedor}`} width={30} height={30} />
+            <span className={styles.iconoContenedor}>
+              <img src={(activo ? ICONO_SELECCIONADO : a.completo ? ICONO_COMPLETO : ICONO_CONTENEDOR)[a.pedido.contenedor]} alt={`Contenedor ${a.pedido.contenedor}`} width={30} height={30} />
+              {/* Completo: ✓ como insignia sobre la letra para no alargar el texto del avance */}
+              {a.completo && (
+                <span className={styles.insigniaListo} aria-label="Completo">
+                  ✓
+                </span>
+              )}
+            </span>
             <span className={styles.contenedorDatos}>
               <span>#{a.pedido.id}</span>
               <b>
                 {a.separado} de {a.solicitado}
-                {a.completo && ' ✓'}
               </b>
             </span>
           </button>
