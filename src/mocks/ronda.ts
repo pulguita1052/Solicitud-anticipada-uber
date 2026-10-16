@@ -97,7 +97,8 @@ export type PedidoRonda = {
 };
 
 /**
- * Tres pedidos chicos (2–3 códigos) con códigos compartidos: 1394000 (A y B) y 2546000 (A y C).
+ * Tres pedidos chicos (3–4 códigos) con varios códigos compartidos (indicación del usuario, 2026-10-15):
+ * 1394000 en los tres pedidos; 0486600 (A y B), 1394001 (A y C) y 2546000 (A y C); 1365800 solo en B y 0245134 solo en C.
  * A y B son del mismo cliente (venta dividida en dos pedidos): el Detalle de la ronda lo marca con "Mismo cliente".
  * Nombre de RAUL IGNACIO LIMA GUTIERREZ tomado de 34:2 (Detalle de la ronda); los demás datos de cliente son de demo.
  */
@@ -111,6 +112,7 @@ export const PEDIDOS_RONDA: PedidoRonda[] = [
       { codigo: '1394000', solicitado: 4 },
       { codigo: '2546000', solicitado: 2 },
       { codigo: '0486600', solicitado: 1 },
+      { codigo: '1394001', solicitado: 1 },
     ],
   },
   {
@@ -121,6 +123,7 @@ export const PEDIDOS_RONDA: PedidoRonda[] = [
     partidas: [
       { codigo: '1365800', solicitado: 3 },
       { codigo: '1394000', solicitado: 2 },
+      { codigo: '0486600', solicitado: 2 },
     ],
   },
   {
@@ -132,6 +135,7 @@ export const PEDIDOS_RONDA: PedidoRonda[] = [
       { codigo: '2546000', solicitado: 1 },
       { codigo: '0245134', solicitado: 6 },
       { codigo: '1394001', solicitado: 2 },
+      { codigo: '1394000', solicitado: 3 },
     ],
   },
 ];

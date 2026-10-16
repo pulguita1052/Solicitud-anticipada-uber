@@ -24,12 +24,12 @@ function rondaCon(
 
 /** Ronda a medias: el pedido A ya está completo, B a la mitad y C sin empezar. */
 const SEPARADO_EN_CURSO: RondaState['separado'] = {
-  '123456': { '1394000': 4, '2546000': 2, '0486600': 1 },
+  '123456': { '1394000': 4, '2546000': 2, '0486600': 1, '1394001': 1 },
   '123457': { '1394000': 2, '1365800': 1 },
 };
 
 /** Recolección completa de la propuesta C excepto 0245134 (4 de 6): el faltante cae en el pedido C. */
-const RECOLECTADO_C = { '0486600': 1, '1365800': 3, '1394000': 6, '1394001': 2, '2546000': 3, '0245134': 4 };
+const RECOLECTADO_C = { '0486600': 3, '1365800': 3, '1394000': 9, '1394001': 3, '2546000': 3, '0245134': 4 };
 
 export const ESCENARIOS: Record<string, Semilla> = {
   /* ───────── Multipedido (sin Figma) ───────── */
