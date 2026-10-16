@@ -322,6 +322,11 @@
   width: 100%;
   max-height: 260px;
   overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.faltantes::-webkit-scrollbar {
+  display: none;
 }
 
 .faltanteGrupo {
@@ -457,4 +462,10 @@
   color: var(--color-primary-azul-300);
   font: var(--font-h1-headline);
   line-height: normal;
+}
+
+/* Fila tocable del modal de productos sin iniciar: abre el Detalle del producto (D55) */
+.filaAbrir {
+  padding: 4px 0;
+  text-align: left;
 }

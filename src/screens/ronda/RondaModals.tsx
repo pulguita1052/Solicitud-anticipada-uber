@@ -5,6 +5,7 @@
 import { Fragment, useState } from 'react';
 import iconoPregunta from '@assets/icons/modal-icono-pregunta.svg';
 import iconoMotivo from '@assets/icons/modal-icono-motivo-negado.svg';
+import iconoNegado from '@assets/icons/modal-icono-negado.svg';
 import iconoInfo from '@assets/icons/info.svg';
 import iconoA from '@assets/icons/contenedor-a.svg';
 import iconoB from '@assets/icons/contenedor-b.svg';
@@ -247,6 +248,57 @@ export function ColocarModal({
           ))}
         </div>
         <Botones onCancel={onCancel} onConfirm={onConfirm} />
+      </div>
+    </ModalSheet>
+  );
+}
+
+/**
+ * No es posible finalizar la ronda — "No es posible finalizar surtido" (190:10418, archivo principal) adaptado a la
+ * ronda: debajo del texto, los productos sin iniciar (0 piezas) agrupados por pedido. Solo ✕: hay que negarlos desde el
+ * Detalle de producto. Tocar un código abre su Detalle (D55).
+ */
+export function SinIniciarRondaModal({
+  grupos,
+  onAbrir,
+  onCancel,
+}: {
+  grupos: { contenedor: Contenedor; pedido: string; filas: { codigo: string; solicitado: number }[] }[];
+  onAbrir: (codigo: string) => void;
+  onCancel: () => void;
+}) {
+  return (
+    <ModalSheet icon={<ModalIcon src={iconoNegado} inset="-2.84% -2.27% -0.56% -1.14%" />} gap={10} doubleShadow>
+      <div className={styles.col} style={{ gap: 18 }}>
+        <p className={styles.subtitle} style={{ width: '100%', textAlign: 'center' }}>
+          No es posible finalizar surtido
+        </p>
+        <Divider variant="modal" />
+        <p className={styles.text}>
+          Tienes <b>códigos sin surtir</b>, para finalizar el surtido primero deberás negarlos entrando al detalle del producto.
+        </p>
+        <div className={ronda.faltantes}>
+          {grupos.map((g) => (
+            <div key={g.pedido} className={ronda.faltanteGrupo}>
+              <div className={ronda.faltanteTitulo}>
+                <img src={ICONO_CONTENEDOR[g.contenedor]} alt="" width={28} height={28} />
+                <b>Pedido {g.pedido}</b>
+              </div>
+              <div className={styles.partialList}>
+                {g.filas.map((f, i) => (
+                  <Fragment key={f.codigo}>
+                    {i > 0 && <Divider variant="modal" />}
+                    <button type="button" className={`${styles.partialRow} ${ronda.filaAbrir}`} onClick={() => onAbrir(f.codigo)}>
+                      <span className={styles.code20}>{f.codigo}</span>
+                      <Chip status="no-iniciado" value={0} total={f.solicitado} />
+                    </button>
+                  </Fragment>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <Button variant="error" icon="cross" label="Cancelar" className={styles.full} onClick={onCancel} />
       </div>
     </ModalSheet>
   );

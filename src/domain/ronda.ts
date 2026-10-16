@@ -157,6 +157,20 @@ export function faltantes(s: RondaState) {
   })).filter((x) => x.partidas.length > 0);
 }
 
+/**
+ * Partidas sin iniciar por pedido: el pedido aún las pide (no negadas) y no tienen ninguna pieza. Impiden finalizar la
+ * ronda; hay que negarlas desde el Detalle de producto ("No es posible finalizar surtido", 190:10418).
+ */
+export function sinIniciar(s: RondaState) {
+  return PEDIDOS_RONDA.map((p) => ({
+    pedido: p,
+    partidas: p.partidas
+      .filter((x) => solicitadoEfectivo(s, p, x.codigo) > 0 && separadoDe(s, p.id, x.codigo) === 0)
+      .map((x) => ({ codigo: x.codigo, solicitado: x.solicitado }))
+      .sort((a, b) => a.codigo.localeCompare(b.codigo)),
+  })).filter((x) => x.partidas.length > 0);
+}
+
 /** Propuesta C, fase de surtido: códigos con menos piezas recolectadas que el total de la ronda. */
 export const faltantesRecoleccion = (s: RondaState) => consolidado(s).filter((l) => l.avance < l.total);
 

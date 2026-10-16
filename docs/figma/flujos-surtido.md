@@ -85,7 +85,9 @@ Asignación de tareas — SURTIR RONDA DE PEDIDOS · Contenedor A 123456 / B 123
      C · lista consolidada sin separar: solo cuenta piezas recolectadas
      comunes: "Pedido N completo" al llenar un contenedor,
               código de 7 dígitos → modal de cantidad, "Producto incorrecto" si no es de la ronda
-     todo completo → 600 ms → "Finalizar ronda" · Menú ⋮ › Finalizar ronda con faltantes → modal informativo
+     todo completo → 600 ms → "Finalizar ronda"
+     Menú ⋮ › Finalizar ronda: ¿productos sin iniciar (0 piezas)? → "No es posible finalizar surtido" por pedido (190:10418,
+         D55), solo ✕, tocar un código abre su Detalle para negarlo · ¿parciales? → modal informativo → fin
  A, B: fin → REVISAR PEDIDO CLIENTE (bloqueada) + toast "Ronda finalizada"
  C:    fin del surtido → REVISAR Y SEPARAR RONDA (se puede aceptar) → "Revisión y separación"
          escaneo reparte en contenedores, sin pasar de lo recolectado → fin → FACTURAR Y EMBARCAR PEDIDO (bloqueada)
@@ -97,7 +99,7 @@ Asignación de tareas — SURTIR RONDA DE PEDIDOS · Contenedor A 123456 / B 123
 |---|---|
 | Reparto de piezas de un código compartido | Del pedido capturado antes al más reciente; el faltante cae en el más reciente. |
 | Pedido completo | Aviso al llenar su contenedor; en A y B pasa a revisión, en C a facturación. |
-| Faltantes al finalizar | Modal informativo por pedido (o por código en la recolección de C); se puede finalizar. |
+| Faltantes al finalizar | Productos sin iniciar (0 piezas): bloquean, hay que negarlos desde el Detalle. Parciales: modal informativo por pedido (o por código en la recolección de C); se puede finalizar. |
 | Negar producto | Desde el Detalle de producto, por pedido: solo pedidos con el producto en 0, un motivo para todos; negar un pedido obliga a negar los de menor prioridad. La partida negada deja de contar como solicitada (no recibe piezas ni queda como faltante). |
 | Contenedores | Identificados por letra; no se escanea el contenedor. |
 

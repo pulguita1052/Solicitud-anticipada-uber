@@ -30,11 +30,12 @@ import {
   productoRonda,
   repartir,
   rondaCompleta,
+  sinIniciar,
   separaAlEscanear,
 } from '../../domain/ronda';
 import { useStore } from '../../store/AppStore';
 import { CantidadModal, MenuModal } from '../surtido/overlays/SurtidoModals';
-import { ColocarModal, FaltantesModal, FinalizarRondaModal, type GrupoFaltante } from './RondaModals';
+import { ColocarModal, FaltantesModal, FinalizarRondaModal, SinIniciarRondaModal, type GrupoFaltante } from './RondaModals';
 import { ContenedoresResumen, LineaRonda, Parada } from './RondaPartes';
 import { TOAST_CANTIDAD } from '../surtido/avisosCantidad';
 import styles from './SurtidoRonda.module.css';
@@ -45,6 +46,8 @@ type Overlay =
   | { k: 'colocar'; codigo: string; cantidad: number; asignaciones: Asignacion[] }
   | { k: 'menu' }
   | { k: 'finalizar' }
+  /** Productos sin iniciar: no se puede finalizar (190:10418, D55). */
+  | { k: 'sinIniciar' }
   | { k: 'faltantes' };
 
 const TOAST = {
@@ -209,7 +212,9 @@ export function SurtidoRonda() {
     navigate('/tareas');
   };
 
+  /** Menú › Finalizar ronda: ¿productos sin iniciar? (bloquea) → ¿parciales? (informativo) → fin. */
   const finalizarManual = () => {
+    if (!recolectandoC && sinIniciar(ronda).length) return setOverlay({ k: 'sinIniciar' });
     const hayFaltantes = recolectandoC ? faltantesRecoleccion(ronda).length > 0 : faltantes(ronda).length > 0;
     if (hayFaltantes) setOverlay({ k: 'faltantes' });
     else terminar();
@@ -332,6 +337,17 @@ export function SurtidoRonda() {
             cerrar();
           }}
           onConfirm={terminar}
+        />
+      )}
+      {ov?.k === 'sinIniciar' && (
+        <SinIniciarRondaModal
+          grupos={sinIniciar(ronda).map((g) => ({
+            contenedor: g.pedido.contenedor,
+            pedido: g.pedido.id,
+            filas: g.partidas,
+          }))}
+          onAbrir={(codigo) => navigate(`/ronda/producto/${codigo}`)}
+          onCancel={cerrar}
         />
       )}
       {ov?.k === 'faltantes' && (
