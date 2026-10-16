@@ -183,10 +183,13 @@ export function SeleccionNegadoModal({
               );
             })}
           </div>
-          <div className={ronda.negarNota} role="note">
-            <img src={iconoInfo} alt="" width={20} height={20} />
-            <p>Los pedidos se listan en prioridad de surtido, no se podrá negar la pieza a un pedido con mayor prioridad que otro.</p>
-          </div>
+          {/* Con un solo pedido no hay prioridad que explicar */}
+          {pedidos.length > 1 && (
+            <div className={ronda.negarNota} role="note">
+              <img src={iconoInfo} alt="" width={20} height={20} />
+              <p>Los pedidos se listan en prioridad de surtido, no se podrá negar la pieza a un pedido con mayor prioridad que otro.</p>
+            </div>
+          )}
         </div>
         <div className={styles.buttons}>
           <Button asset={grupo45} label="Cancelar" className={styles.flex1} onClick={onCancel} />
