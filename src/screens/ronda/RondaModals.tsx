@@ -155,7 +155,8 @@ export function SeleccionNegadoModal({
           <p className={styles.descripcion}>{descripcion}</p>
         </div>
         <div className={styles.col} style={{ gap: 14 }}>
-          <p className={ronda.negarEtiqueta}>Pedidos a negar</p>
+          {/* "Pedidos a negar" se leía como negar el pedido completo; se niega el producto en esos pedidos */}
+          <p className={ronda.negarEtiqueta}>Negar este producto en:</p>
           <div className={ronda.negarLista}>
             {pedidos.map((p, i) => {
               const on = marcados.includes(p.pedido);
